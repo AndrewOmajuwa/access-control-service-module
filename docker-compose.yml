@@ -3,7 +3,7 @@ version: '3.9'
 services:
 
   mysql-kc:
-    image: mysql
+    image: mysql:8.0.29
     ports:
       - 3306:3306
     restart: unless-stopped
@@ -20,14 +20,14 @@ services:
       - keycloak-and-mysql-network
 
   keycloak-w:
-    image: jboss/keycloak
+    image: jboss/keycloak:16.1.1
     ports:
       - 8180:8080
     restart: unless-stopped
     environment:
       # User and password for the Administration Console
-      KEYCLOAK_USER: admin_user
-      KEYCLOAK_PASSWORD: admin_password
+      KEYCLOAK_USER: ${USERNAME_KEYCLOAK}
+      KEYCLOAK_PASSWORD: ${PASSWORD_KEYCLOAK}
       DB_VENDOR: mysql
       DB_ADDR: mysql-kc
       DB_PORT: 3306
