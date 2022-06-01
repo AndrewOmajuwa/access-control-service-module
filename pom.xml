@@ -11,6 +11,7 @@
   <modules>
     <module>gateway-service</module>
     <module>eureka-server</module>
+    <module>access-control-service</module>
   </modules>
 
 </project>
