@@ -14,7 +14,9 @@
 	<name>access-control-service</name>
 	<description>access-control-service</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
+		<keycloak.version>18.0.0</keycloak.version>
+		<resteasy.version>6.0.1.Final</resteasy.version>
 	</properties>
 	<dependencies>
 
@@ -52,6 +54,25 @@
 			<artifactId>springdoc-openapi-ui</artifactId>
 			<version>1.6.8</version>
 		</dependency>
+
+		<dependency>
+			<artifactId>keycloak-admin-client</artifactId>
+			<groupId>org.keycloak</groupId>
+			<version>${keycloak.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-client</artifactId>
+			<version>${resteasy.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jboss.resteasy</groupId>
+			<artifactId>resteasy-jackson2-provider</artifactId>
+			<version>${resteasy.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>
