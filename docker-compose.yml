@@ -10,8 +10,8 @@ services:
     environment:
       # The user, password and database that Keycloak
       # is going to create and use
-      MYSQL_USER: keycloak_user
-      MYSQL_PASSWORD: keycloak_password
+      MYSQL_USER: user
+      MYSQL_PASSWORD: root_password
       MYSQL_DATABASE: keycloak_db
       MYSQL_ROOT_PASSWORD: root_password
     volumes:
@@ -22,7 +22,7 @@ services:
   keycloak-w:
     image: jboss/keycloak:16.1.1
     ports:
-      - 8180:8080
+      - "8180:8080"
     restart: unless-stopped
     environment:
       # User and password for the Administration Console
@@ -32,8 +32,8 @@ services:
       DB_ADDR: mysql-kc
       DB_PORT: 3306
       # Same values as the mysql-kc service
-      DB_USER: keycloak_user
-      DB_PASSWORD: keycloak_password
+      DB_USER: root
+      DB_PASSWORD: root_password
       DB_DATABASE: keycloak_db
     depends_on:
       - mysql-kc

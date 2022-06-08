@@ -2,7 +2,7 @@ spring:
   application:
     name: ACCESS-CONTROL-SERVICE
   datasource:
-    url: jdbc:mysql://localhost:3306/access-control
+    url: jdbc:mysql://localhost:3306/access_control
     username: root
     password: ${MYSQL_ROOT_PASSWORD}
   jpa:
