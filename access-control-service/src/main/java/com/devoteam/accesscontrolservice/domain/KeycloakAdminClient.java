@@ -10,9 +10,9 @@ import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import javax.transaction.Transactional;
 import javax.ws.rs.core.Response;
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,14 +22,17 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class KeycloakAdminClient {
 
+    @Value("${user.password}")
+    private String password;
+
     private final UserRepository userRepository;
-    @Transactional
     public UUID createUserUuid(String firstName, String lastName, String email){
+
 
         String serverUrl = "http://localhost:8180/auth";
         String realm = "devoteam";
         String clientId = "idm-client";
-        String clientSecret = "WsJIEUslfN3MrEEsCSOXt68XzCF8sniz";
+        String clientSecret = password;
 
         Keycloak keycloak = KeycloakBuilder.builder()
                 .serverUrl(serverUrl).realm(realm)

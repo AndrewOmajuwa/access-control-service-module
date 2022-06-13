@@ -27,8 +27,6 @@ class CreateUserControllerTest {
     private TestRestTemplate testRestTemplate;
     @MockBean
     private KeycloakAdminClient keycloakAdminClient;
-    @LocalServerPort
-    private int port;
 
     @BeforeEach
     public void setUp(){
@@ -40,7 +38,7 @@ class CreateUserControllerTest {
     @DisplayName("Save creates user when successfull")
     public void save_User_WhenSuccessfull(){
         User userToBeSaved = creatUserToBeSaved();
-        User user = testRestTemplate.exchange("/users", HttpMethod.POST, createJsonHttpEntity(userToBeSaved), User.class).getBody();
+        User user = testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, createJsonHttpEntity(userToBeSaved), User.class).getBody();
         Assertions.assertThat(user).isNotNull();
         Assertions.assertThat(user.getUuid()).isNotNull();
     }

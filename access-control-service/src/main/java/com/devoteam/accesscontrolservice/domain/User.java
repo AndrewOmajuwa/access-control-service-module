@@ -16,7 +16,6 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Data
 public class User {
 
     @Id
@@ -32,4 +31,18 @@ public class User {
     @NotEmpty
     private String lastName;
 
+    public UUID getUuid() {
+        return uuid;
+    }
+    public String getEmail() {
+        return email;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
 }

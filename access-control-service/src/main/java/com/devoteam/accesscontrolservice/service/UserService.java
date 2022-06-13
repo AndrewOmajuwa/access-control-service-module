@@ -25,7 +25,7 @@ public class UserService {
 
         UUID userUuid = keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail());
 
-        checkIfUuidWasReturned(userUuid);
+        assertUuidIsNotNull(userUuid);
 
         User user = User.builder()
                 .uuid(userUuid)
@@ -37,7 +37,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void checkIfUuidWasReturned(UUID uuid){
+    public void assertUuidIsNotNull(UUID uuid){
         if(uuid == null){
             throw new BadRequest("User was not created in Keycloak");
         }
