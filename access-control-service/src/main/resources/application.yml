@@ -4,14 +4,15 @@ spring:
   datasource:
     url: jdbc:mysql://localhost:3306/access_control
     username: root
-    password: ${MYSQL_ROOT_PASSWORD}
+    password: password
   jpa:
     hibernate:
-      ddl-auto: update
-
+      ddl-auto: create-drop
 
 server:
   port: 8090
+  error:
+    include-stacktrace: always
 
 eureka:
   client:

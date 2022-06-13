@@ -1,36 +1,27 @@
 package com.devoteam.accesscontrolservice.domain;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
 
-@Entity
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
-public class User {
-
+@Builder
+public class UserPostRequest {
     @Id
-    @Column(name = "uuid",columnDefinition = "BINARY(16)")
-    private UUID uuid;
-    @NotNull
-    @NotEmpty
-    private String email;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
     @NotNull
     @NotEmpty
     private String firstName;
     @NotNull
     @NotEmpty
     private String lastName;
-
+    @Email
+    private String email;
 }

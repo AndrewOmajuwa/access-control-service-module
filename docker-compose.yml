@@ -1,7 +1,6 @@
 version: '3.9'
 
 services:
-
   mysql-kc:
     image: mysql:8.0.29
     ports:
@@ -13,7 +12,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: root_password
       MYSQL_DATABASE: keycloak_db
-      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_ROOT_PASSWORD: password
     volumes:
       - keycloak-and-mysql-volume:/var/lib/mysql
     networks:
@@ -32,7 +31,7 @@ services:
       DB_ADDR: mysql-kc
       DB_PORT: 3306
       # Same values as the mysql-kc service
-      DB_USER: root
+      DB_USER: user
       DB_PASSWORD: root_password
       DB_DATABASE: keycloak_db
     depends_on:

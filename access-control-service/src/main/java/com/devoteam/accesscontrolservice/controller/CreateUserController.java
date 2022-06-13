@@ -2,32 +2,33 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.KeycloakAdminClient;
 import com.devoteam.accesscontrolservice.domain.User;
+import com.devoteam.accesscontrolservice.domain.UserPostRequest;
 import com.devoteam.accesscontrolservice.service.UserService;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
-@RequestMapping("createuser")
+@RequestMapping("users")
 @RequiredArgsConstructor
 public class CreateUserController {
 
-    private UserService userService;
-    private final KeycloakAdminClient keycloakAdminClient;
+    private final UserService userService;
+
+    @GetMapping
+    public ResponseEntity<List<User>> findAll(){
+        return ResponseEntity.ok(userService.findAll());
+    }
+
 
     @PostMapping
-    public ResponseEntity<User> save(@RequestBody @Valid String firstName, String lastName, String email){
-        User user = keycloakAdminClient.createUser(firstName, lastName, email);
-        return ResponseEntity.ok(userService.save(user));
+    public ResponseEntity<User> save(@Valid @RequestBody UserPostRequest userPostRequest){
+        return ResponseEntity.ok(userService.save(userPostRequest));
     }
+
 
 }
 
