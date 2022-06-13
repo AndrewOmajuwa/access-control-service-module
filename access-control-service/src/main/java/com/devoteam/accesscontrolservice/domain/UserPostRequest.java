@@ -1,13 +1,13 @@
 package com.devoteam.accesscontrolservice.domain;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-@Data
+@Getter
 @Builder
 public class UserPostRequest {
     @NotNull

@@ -1,9 +1,6 @@
 package com.devoteam.accesscontrolservice.domain;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,6 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Getter
 public class User {
 
     @Id
@@ -31,18 +29,4 @@ public class User {
     @NotEmpty
     private String lastName;
 
-    public UUID getUuid() {
-        return uuid;
-    }
-    public String getEmail() {
-        return email;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
 }

@@ -11,7 +11,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping
+@RequestMapping(value = "api/v1/users")
 @RequiredArgsConstructor
 public class CreateUserController {
 
@@ -23,7 +23,7 @@ public class CreateUserController {
     }
 
 
-    @PostMapping(path = "api/v1/users")
+    @PostMapping
     public ResponseEntity<User> save(@Valid @RequestBody UserPostRequest userPostRequest){
         return ResponseEntity.ok(userService.save(userPostRequest));
     }
