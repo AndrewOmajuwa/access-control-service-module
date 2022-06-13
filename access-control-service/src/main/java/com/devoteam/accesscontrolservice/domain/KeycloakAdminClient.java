@@ -44,9 +44,9 @@ public class KeycloakAdminClient {
         user.setLastName(lastName);
         user.setEmail(email);
         user.setAttributes(Collections.singletonMap("origin", Arrays.asList("demo")));
-        if(userRepository.searchByEmail(email).stream().findAny().isPresent()){
-            throw new BadRequest("There is already an existing user registered with this email address");
-        }
+
+        checkIfEmailAlreadyExists(email);
+
         RealmResource realmResource = keycloak.realm(realm);
         UsersResource usersResource = realmResource.users();
 
@@ -55,5 +55,12 @@ public class KeycloakAdminClient {
         String userId = CreatedResponseUtil.getCreatedId(response);
 
         return UUID.fromString(userId);
+    }
+
+    public void checkIfEmailAlreadyExists(String email){
+        boolean present = userRepository.searchByEmail(email).stream().findAny().isPresent();
+        if(present){
+            throw new BadRequest("There is already an existing user registered with this email address");
+        }
     }
 }

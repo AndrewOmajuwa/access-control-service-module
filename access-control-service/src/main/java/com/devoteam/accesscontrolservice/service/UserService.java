@@ -3,6 +3,7 @@ package com.devoteam.accesscontrolservice.service;
 import com.devoteam.accesscontrolservice.domain.KeycloakAdminClient;
 import com.devoteam.accesscontrolservice.domain.User;
 import com.devoteam.accesscontrolservice.domain.UserPostRequest;
+import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -24,6 +25,8 @@ public class UserService {
 
         UUID userUuid = keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail());
 
+        checkIfUuidWasReturned(userUuid);
+
         User user = User.builder()
                 .uuid(userUuid)
                 .firstName(userPostRequest.getFirstName())
@@ -32,5 +35,11 @@ public class UserService {
                 .build();
 
         return userRepository.save(user);
+    }
+
+    public void checkIfUuidWasReturned(UUID uuid){
+        if(uuid == null){
+            throw new BadRequest("User was not created in Keycloak");
+        }
     }
 }

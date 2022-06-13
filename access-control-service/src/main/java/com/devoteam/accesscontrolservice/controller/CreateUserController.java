@@ -1,6 +1,5 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.accesscontrolservice.domain.KeycloakAdminClient;
 import com.devoteam.accesscontrolservice.domain.User;
 import com.devoteam.accesscontrolservice.domain.UserPostRequest;
 import com.devoteam.accesscontrolservice.service.UserService;
@@ -28,8 +27,6 @@ public class CreateUserController {
     public ResponseEntity<User> save(@Valid @RequestBody UserPostRequest userPostRequest){
         return ResponseEntity.ok(userService.save(userPostRequest));
     }
-
-
 }
 
 
