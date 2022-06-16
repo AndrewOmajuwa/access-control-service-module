@@ -29,7 +29,7 @@ public class KeycloakAdminClient {
     public UUID createUserUuid(String firstName, String lastName, String email){
 
 
-        String serverUrl = "http://localhost:8180/auth";
+        String serverUrl = "http://localhost:8180";
         String realm = "devoteam";
         String clientId = "idm-client";
         String clientSecret = password;

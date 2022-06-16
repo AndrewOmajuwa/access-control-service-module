@@ -16,6 +16,38 @@ server:
 user:
   password: ${IDM_PASSWORD}
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 eureka:
   client:
     register-with-eureka: true
