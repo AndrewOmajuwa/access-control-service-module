@@ -1,6 +1,6 @@
 package com.devoteam.accesscontrolservice.service;
 
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionResponse;
+import com.devoteam.accesscontrolservice.domain.BusinessFunction;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -12,18 +12,15 @@ import java.util.List;
 public class BusinessFunctionService {
     final private BusinessFunctionRepository businessFunctionRepository;
 
-    public BusinessFunctionResponse save(BusinessFunctionResponse businessFunctionResponse){
+    public BusinessFunction save(BusinessFunction businessFunction){
 
-        List<BusinessFunctionResponse> byApplicationNameAndFunctionName = businessFunctionRepository.findByApplicationNameAndFunctionName(businessFunctionResponse.getApplicationName(), businessFunctionResponse.getFunctionName());
+        List<BusinessFunction> byApplicationNameAndFunctionName = businessFunctionRepository.findByApplicationNameAndFunctionName(businessFunction.getApplicationName(), businessFunction.getFunctionName());
 
-        if(byApplicationNameAndFunctionName.stream().findAny().isPresent()){
-            return byApplicationNameAndFunctionName.stream().findFirst().get();
-        }
+        return byApplicationNameAndFunctionName.size() > 0 ? byApplicationNameAndFunctionName.get(0) : businessFunctionRepository.save(businessFunction);
 
-        return businessFunctionRepository.save(businessFunctionResponse);
     }
 
-    public List<BusinessFunctionResponse> listAll(){
+    public List<BusinessFunction> listAll(){
         return businessFunctionRepository.findAll();
     }
 

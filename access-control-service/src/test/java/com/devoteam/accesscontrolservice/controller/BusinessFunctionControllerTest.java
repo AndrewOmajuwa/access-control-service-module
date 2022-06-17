@@ -1,5 +1,6 @@
 package com.devoteam.accesscontrolservice.controller;
 
+import com.devoteam.accesscontrolservice.domain.BusinessFunctionPostRequest;
 import com.devoteam.accesscontrolservice.domain.BusinessFunctionResponse;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import org.assertj.core.api.Assertions;
@@ -14,7 +15,7 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-class BusinessFunctionResponseControllerTest {
+class BusinessFunctionControllerTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -26,32 +27,39 @@ class BusinessFunctionResponseControllerTest {
     public void save_BusinessFunction_WhenSuccessfull(){
 
         Integer expectedId = 1;
-        BusinessFunctionResponse businessFunctionResponse = testRestTemplate.withBasicAuth("andrew", "devoteam").exchange( "/api/v1/business-functions", HttpMethod.POST, createJsonHttpEntity(createBusinessFunctionToBeSaved()), BusinessFunctionResponse.class).getBody();
+        BusinessFunctionResponse businessFunctionResponse = createTemplatePostBusinessFunction();
         Assertions.assertThat(businessFunctionResponse).isNotNull();
         Assertions.assertThat(businessFunctionResponse.getId()).isNotNull();
         Assertions.assertThat(businessFunctionResponse.getId()).isEqualTo(expectedId);
 
     }
+
+
     @Test
     @DisplayName("Save does not create Business Function when already present")
     public void doesNotSave_BusinessFunction_WhenAlreadyPresent(){
 
-        BusinessFunctionResponse businessFunctionResponse1 = testRestTemplate.withBasicAuth("andrew", "devoteam").exchange( "/api/v1/business-functions", HttpMethod.POST, createJsonHttpEntity(createBusinessFunctionToBeSaved()), BusinessFunctionResponse.class).getBody();
-        BusinessFunctionResponse businessFunctionResponse2 = testRestTemplate.withBasicAuth("andrew", "devoteam").exchange( "/api/v1/business-functions", HttpMethod.POST, createJsonHttpEntity(createBusinessFunctionToBeSaved()), BusinessFunctionResponse.class).getBody();
-        Assertions.assertThat(businessFunctionResponse2.getFunctionName()).isEqualTo(businessFunctionResponse1.getFunctionName());
-        Assertions.assertThat(businessFunctionResponse2.getApplicationName()).isEqualTo(businessFunctionResponse1.getApplicationName());
+        BusinessFunctionResponse businessFunction1 = createTemplatePostBusinessFunction();
+        BusinessFunctionResponse businessFunction2 = createTemplatePostBusinessFunction();
+        Assertions.assertThat(businessFunction1.getId()).isEqualTo(businessFunction2.getId());
         Assertions.assertThat(businessFunctionRepository.findById(2)).isEmpty();
     }
 
-    public BusinessFunctionResponse createBusinessFunctionToBeSaved(){
-        return BusinessFunctionResponse.builder()
-                .functionName("Doctor")
+    public BusinessFunctionResponse createTemplatePostBusinessFunction(){
+        return testRestTemplate
+                .exchange( "/api/v1/business-functions", HttpMethod.POST, createJsonHttpEntity(createBusinessFunctionToBeSaved()), BusinessFunctionResponse.class)
+                .getBody();
+    }
+
+    public BusinessFunctionPostRequest createBusinessFunctionToBeSaved(){
+        return BusinessFunctionPostRequest.builder()
                 .applicationName("Doctor-Service")
+                .functionName("Doctor")
                 .build();
     }
 
-    private HttpEntity<BusinessFunctionResponse> createJsonHttpEntity(BusinessFunctionResponse businessFunctionResponse){
-        return new HttpEntity<>(businessFunctionResponse, createJsonHeader());
+    private HttpEntity<BusinessFunctionPostRequest> createJsonHttpEntity(BusinessFunctionPostRequest businessFunctionPostRequest){
+        return new HttpEntity<>(businessFunctionPostRequest, createJsonHeader());
     }
 
     private static HttpHeaders createJsonHeader(){

@@ -1,6 +1,7 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionRequest;
+import com.devoteam.accesscontrolservice.domain.BusinessFunctionPostRequest;
+import com.devoteam.accesscontrolservice.domain.BusinessFunction;
 import com.devoteam.accesscontrolservice.domain.BusinessFunctionResponse;
 import com.devoteam.accesscontrolservice.service.BusinessFunctionService;
 import lombok.RequiredArgsConstructor;
@@ -18,16 +19,23 @@ public class BusinessFunctionController {
     private final BusinessFunctionService businessFunctionService;
 
     @GetMapping
-    public List<BusinessFunctionResponse> findAllBusinessFunctions(){
+    public List<BusinessFunction> findAllBusinessFunctions(){
         return businessFunctionService.listAll();
     }
 
     @PostMapping
-    ResponseEntity<BusinessFunctionResponse> save(@Valid @RequestBody BusinessFunctionRequest businessFunctionRequest){
+    ResponseEntity<BusinessFunctionResponse> save(@Valid @RequestBody BusinessFunctionPostRequest businessFunctionPostRequest){
 
-        BusinessFunctionResponse businessFunctionResponse = BusinessFunctionResponse.builder().functionName(businessFunctionRequest.getFunctionName()).applicationName(businessFunctionRequest.getApplicationName()).build();
+        BusinessFunction businessFunction = BusinessFunction.builder()
+                .functionName(businessFunctionPostRequest.getFunctionName())
+                .applicationName(businessFunctionPostRequest.getApplicationName())
+                .build();
 
-        return ResponseEntity.ok(businessFunctionService.save(businessFunctionResponse));
+        BusinessFunction savedBusinessFunction = businessFunctionService.save(businessFunction);
+
+        BusinessFunctionResponse businessFunctionResponse = BusinessFunctionResponse.builder().id(savedBusinessFunction.getId()).build();
+
+        return ResponseEntity.ok(businessFunctionResponse);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.devoteam.accesscontrolservice.domain;
 
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -9,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Builder
-public class BusinessFunctionResponse {
-    private Integer id;
+public class UserResponse {
+    private UUID uuid;
 }

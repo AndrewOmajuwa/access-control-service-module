@@ -14,7 +14,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @EnableWebSecurity
-//@Configuration
 public class SecurityConfig {
 
     private static final String ENCODED_PASSWORD = passwordEncoder().encode("devoteam");

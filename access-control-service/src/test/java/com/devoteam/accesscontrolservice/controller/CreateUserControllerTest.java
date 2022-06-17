@@ -1,7 +1,6 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.accesscontrolservice.domain.KeycloakAdminClient;
-import com.devoteam.accesscontrolservice.domain.User;
+import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.repository.UserRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,29 +29,31 @@ class CreateUserControllerTest {
 
     @BeforeEach
     public void setUp(){
-        User user = creatUserToBeSaved();
-        BDDMockito.when(keycloakAdminClient.createUserUuid(user.getFirstName(), user.getLastName(), user.getEmail())).thenReturn(UUID);
+        UserPostRequest userPostRequest = creatUserToBeSaved();
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail())).thenReturn(UUID);
     }
 
     @Test
     @DisplayName("Save creates user when successfull")
     public void save_User_WhenSuccessfull(){
-        User userToBeSaved = creatUserToBeSaved();
-        User user = testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, createJsonHttpEntity(userToBeSaved), User.class).getBody();
-        Assertions.assertThat(user).isNotNull();
-        Assertions.assertThat(user.getUuid()).isNotNull();
+        UserPostRequest userToBeSaved = creatUserToBeSaved();
+        System.out.println(testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, createJsonHttpEntity(userToBeSaved), UserResponse.class).getBody().getUuid());
+
+        UserResponse userResponse = testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, createJsonHttpEntity(userToBeSaved), UserResponse.class).getBody();
+        Assertions.assertThat(userResponse).isNotNull();
+        Assertions.assertThat(userResponse.getUuid()).isNotNull();
     }
 
-    public User creatUserToBeSaved(){
-        return User.builder()
+    public UserPostRequest creatUserToBeSaved(){
+        return UserPostRequest.builder()
                 .firstName("Eric")
                 .lastName("Cartman")
                 .email("eric.cartman@email.com")
                 .build();
     }
 
-    private HttpEntity<User> createJsonHttpEntity(User user){
-        return new HttpEntity<>(user, createJsonHeader());
+    private HttpEntity<UserPostRequest> createJsonHttpEntity(UserPostRequest userPostRequest){
+        return new HttpEntity<>(userPostRequest, createJsonHeader());
     }
 
     private static HttpHeaders createJsonHeader(){

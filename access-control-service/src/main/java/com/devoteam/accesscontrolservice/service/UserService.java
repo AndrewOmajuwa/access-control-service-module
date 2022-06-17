@@ -15,31 +15,14 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final KeycloakAdminClient keycloakAdminClient;
 
     public List<User> findAll(){
         return userRepository.findAll();
     }
 
-    public User save(UserPostRequest userPostRequest){
-
-        UUID userUuid = keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail());
-
-        assertUuidIsNotNull(userUuid);
-
-        User user = User.builder()
-                .uuid(userUuid)
-                .firstName(userPostRequest.getFirstName())
-                .lastName(userPostRequest.getLastName())
-                .email(userPostRequest.getEmail())
-                .build();
-
+    public User save(User user){
         return userRepository.save(user);
     }
 
-    public void assertUuidIsNotNull(UUID uuid){
-        if(uuid == null){
-            throw new BadRequest("User was not created in Keycloak");
-        }
-    }
+
 }
