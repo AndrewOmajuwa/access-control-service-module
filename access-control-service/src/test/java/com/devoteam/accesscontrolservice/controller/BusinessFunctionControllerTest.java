@@ -45,7 +45,7 @@ class BusinessFunctionControllerTest {
     }
 
     public BusinessFunctionResponse createTemplatePostBusinessFunction(){
-        return testRestTemplate.withBasicAuth("andrew", "devoteam")
+        return testRestTemplate
                 .exchange( "/api/v1/business-functions", HttpMethod.POST, createJsonHttpEntity(createBusinessFunctionToBeSaved()), BusinessFunctionResponse.class)
                 .getBody();
     }
