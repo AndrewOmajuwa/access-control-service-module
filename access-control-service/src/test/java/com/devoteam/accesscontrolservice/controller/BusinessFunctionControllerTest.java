@@ -34,7 +34,6 @@ class BusinessFunctionControllerTest {
 
     }
 
-
     @Test
     @DisplayName("Save does not create Business Function when already present")
     public void doesNotSave_BusinessFunction_WhenAlreadyPresent(){
@@ -46,7 +45,7 @@ class BusinessFunctionControllerTest {
     }
 
     public BusinessFunctionResponse createTemplatePostBusinessFunction(){
-        return testRestTemplate
+        return testRestTemplate.withBasicAuth("andrew", "devoteam")
                 .exchange( "/api/v1/business-functions", HttpMethod.POST, createJsonHttpEntity(createBusinessFunctionToBeSaved()), BusinessFunctionResponse.class)
                 .getBody();
     }

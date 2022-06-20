@@ -1,7 +1,7 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.KeycloakAdminClient;
-import com.devoteam.accesscontrolservice.domain.User;
+import com.devoteam.accesscontrolservice.domain.UserKeyCloak;
 import com.devoteam.accesscontrolservice.domain.UserPostRequest;
 import com.devoteam.accesscontrolservice.domain.UserResponse;
 import com.devoteam.accesscontrolservice.exception.BadRequest;
@@ -24,7 +24,7 @@ public class CreateUserController {
 
 
     @GetMapping
-    public ResponseEntity<List<User>> findAll(){
+    public ResponseEntity<List<UserKeyCloak>> findAll(){
         return ResponseEntity.ok(userService.findAll());
     }
 
@@ -36,14 +36,14 @@ public class CreateUserController {
 
         assertUuidIsNotNull(userUuid);
 
-        User user = User.builder()
+        UserKeyCloak userKeyCloak = UserKeyCloak.builder()
                 .uuid(userUuid)
                 .firstName(userPostRequest.getFirstName())
                 .lastName(userPostRequest.getLastName())
                 .email(userPostRequest.getEmail())
                 .build();
 
-        userService.save(user);
+        userService.save(userKeyCloak);
 
         UserResponse userResponse = UserResponse.builder().uuid(userUuid).build();
 
