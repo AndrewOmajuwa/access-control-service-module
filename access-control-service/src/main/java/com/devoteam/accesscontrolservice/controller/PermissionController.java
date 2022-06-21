@@ -1,0 +1,36 @@
+package com.devoteam.accesscontrolservice.controller;
+
+import com.devoteam.accesscontrolservice.domain.Permission;
+import com.devoteam.accesscontrolservice.domain.PermissionPostRequest;
+import com.devoteam.accesscontrolservice.domain.PermissionResponse;
+import com.devoteam.accesscontrolservice.service.PermissionService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
+
+@RequiredArgsConstructor
+@RestController
+@RequestMapping("api/v1/permissions")
+public class PermissionController {
+
+    private final PermissionService permissionService;
+
+    @PostMapping
+    ResponseEntity<PermissionResponse> save(@Valid @RequestBody PermissionPostRequest permissionPostRequest){
+
+        Permission permission = Permission.builder()
+                .name(permissionPostRequest.getName())
+                .build();
+
+        Permission savedPermission = permissionService.save(permission);
+
+        PermissionResponse permissionResponse = PermissionResponse.builder().id(savedPermission.getId()).build();
+
+        return ResponseEntity.ok(permissionResponse);
+    }
+}
