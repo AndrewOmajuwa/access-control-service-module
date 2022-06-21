@@ -20,8 +20,8 @@ import java.util.UUID;
 public class CreateUserController {
 
     private final UserService userService;
-    private final KeycloakAdminClient keycloakAdminClient;
 
+    private final KeycloakAdminClient keycloakAdminClient;
 
     @GetMapping
     public ResponseEntity<List<UserKeyCloak>> findAll(){
