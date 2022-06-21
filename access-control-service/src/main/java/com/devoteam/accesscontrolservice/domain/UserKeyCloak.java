@@ -14,7 +14,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class User {
+public class UserKeyCloak {
 
     @Id
     @Column(name = "uuid",columnDefinition = "BINARY(16)")

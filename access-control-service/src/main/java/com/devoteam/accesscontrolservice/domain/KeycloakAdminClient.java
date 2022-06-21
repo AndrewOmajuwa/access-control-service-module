@@ -11,6 +11,7 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.admin.client.resource.UsersResource;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
 
 import javax.ws.rs.core.Response;
@@ -28,8 +29,7 @@ public class KeycloakAdminClient {
     private final UserRepository userRepository;
     public UUID createUserUuid(String firstName, String lastName, String email){
 
-
-        String serverUrl = "http://localhost:8180/auth";
+        String serverUrl = "http://localhost:8180";
         String realm = "devoteam";
         String clientId = "idm-client";
         String clientSecret = password;
