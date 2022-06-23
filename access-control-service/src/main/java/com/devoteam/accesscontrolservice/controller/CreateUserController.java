@@ -6,6 +6,7 @@ import com.devoteam.accesscontrolservice.domain.UserPostRequest;
 import com.devoteam.accesscontrolservice.domain.UserResponse;
 import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.service.UserService;
+import com.devoteam.accesscontrolservice.util.UserKeycloakMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,7 +36,6 @@ public class CreateUserController {
         UUID userUuid = keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail());
 
         assertUuidIsNotNull(userUuid);
-
         UserKeyCloak userKeyCloak = UserKeyCloak.builder()
                 .uuid(userUuid)
                 .firstName(userPostRequest.getFirstName())
@@ -44,8 +44,7 @@ public class CreateUserController {
                 .build();
 
         userService.save(userKeyCloak);
-
-        UserResponse userResponse = UserResponse.builder().uuid(userUuid).build();
+        UserResponse userResponse = UserKeycloakMapper.INSTANCE.toUserResponse(userUuid);
 
         return ResponseEntity.ok(userResponse);
     }

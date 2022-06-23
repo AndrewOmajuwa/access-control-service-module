@@ -1,9 +1,8 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermission;
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermissionPostRequest;
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermissionResponse;
+import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.service.BusinessFunctionPermissionService;
+import com.devoteam.accesscontrolservice.util.BusinessFunctionPermissionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -22,12 +21,15 @@ public class BusinessFunctionPermissionController {
 
     @PostMapping
     ResponseEntity<BusinessFunctionPermissionResponse> save(@Valid @RequestBody BusinessFunctionPermissionPostRequest businessFunctionPermissionPostRequest){
+        Permission permission = Permission.builder().id(businessFunctionPermissionPostRequest.getPermissionId()).build();
 
-        BusinessFunctionPermission businessFunctionPermission = BusinessFunctionPermission.builder().permission(businessFunctionPermissionPostRequest.getPermission()).businessFunction(businessFunctionPermissionPostRequest.getBusinessFunction()).build();
+        BusinessFunction businessFunction = BusinessFunction.builder().id(businessFunctionPermissionPostRequest.getBusinessFunctionId()).build();
+
+        BusinessFunctionPermission businessFunctionPermission = BusinessFunctionPermission.builder().permission(permission).businessFunction(businessFunction).build();
 
         BusinessFunctionPermission savedBusinessFunctionPermission = businessFunctionPermissionService.save(businessFunctionPermission);
 
-        BusinessFunctionPermissionResponse businessFunctionPermissionResponse = BusinessFunctionPermissionResponse.builder().id(savedBusinessFunctionPermission.getId()).build();
+        BusinessFunctionPermissionResponse businessFunctionPermissionResponse = BusinessFunctionPermissionMapper.INSTANCE.toBusinessFunctionPermissionResponse(savedBusinessFunctionPermission);
 
         return ResponseEntity.ok(businessFunctionPermissionResponse);
     }

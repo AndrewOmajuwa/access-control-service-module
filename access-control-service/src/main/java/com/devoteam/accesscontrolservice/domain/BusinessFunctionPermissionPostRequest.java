@@ -14,9 +14,9 @@ import javax.validation.constraints.NotNull;
 public class BusinessFunctionPermissionPostRequest {
 
     @NotNull
-    private BusinessFunction businessFunction;
+    private Integer businessFunctionId;
 
     @NotNull
-    private Permission permission;
+    private Integer permissionId;
 
 }

@@ -4,6 +4,7 @@ import com.devoteam.accesscontrolservice.domain.BusinessFunctionPostRequest;
 import com.devoteam.accesscontrolservice.domain.BusinessFunction;
 import com.devoteam.accesscontrolservice.domain.BusinessFunctionResponse;
 import com.devoteam.accesscontrolservice.service.BusinessFunctionService;
+import com.devoteam.accesscontrolservice.util.BusinessFunctionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,14 +27,11 @@ public class BusinessFunctionController {
     @PostMapping
     ResponseEntity<BusinessFunctionResponse> save(@Valid @RequestBody BusinessFunctionPostRequest businessFunctionPostRequest){
 
-        BusinessFunction businessFunction = BusinessFunction.builder()
-                .functionName(businessFunctionPostRequest.getFunctionName())
-                .applicationName(businessFunctionPostRequest.getApplicationName())
-                .build();
+        BusinessFunction businessFunction = BusinessFunctionMapper.INSTANCE.toBusinessFunction(businessFunctionPostRequest);
 
         BusinessFunction savedBusinessFunction = businessFunctionService.save(businessFunction);
 
-        BusinessFunctionResponse businessFunctionResponse = BusinessFunctionResponse.builder().id(savedBusinessFunction.getId()).build();
+        BusinessFunctionResponse businessFunctionResponse = BusinessFunctionMapper.INSTANCE.toBusinessFunctionResponse(savedBusinessFunction);
 
         return ResponseEntity.ok(businessFunctionResponse);
     }

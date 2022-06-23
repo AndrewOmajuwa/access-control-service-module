@@ -3,6 +3,7 @@ package com.devoteam.accesscontrolservice.controller;
 import com.devoteam.accesscontrolservice.domain.KeycloakAdminClient;
 import com.devoteam.accesscontrolservice.domain.UserPostRequest;
 import com.devoteam.accesscontrolservice.domain.UserResponse;
+import com.devoteam.accesscontrolservice.util.Utility;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +26,7 @@ class CreateUserControllerTest {
         private TestRestTemplate testRestTemplate;
         @MockBean
         private KeycloakAdminClient keycloakAdminClient;
+        private Utility utility;
 
         @BeforeEach
         public void setUp(){
@@ -51,12 +53,7 @@ class CreateUserControllerTest {
         }
 
         private HttpEntity<UserPostRequest> createJsonHttpEntity(UserPostRequest userPostRequest){
-            return new HttpEntity<>(userPostRequest, createJsonHeader());
+            return new HttpEntity<>(userPostRequest, utility.createJsonHeader());
         }
 
-        private static HttpHeaders createJsonHeader(){
-            HttpHeaders httpHeaders = new HttpHeaders();
-            httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-            return httpHeaders;
-        }
 }

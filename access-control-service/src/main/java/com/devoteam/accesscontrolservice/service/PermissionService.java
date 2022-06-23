@@ -1,6 +1,7 @@
 package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.Permission;
+import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.PermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,5 +19,9 @@ public class PermissionService {
 
         return findByName.size() > 0 ? findByName.get(0) : permissionRepository.save(permission);
 
+    }
+
+    public Permission findById(Integer id){
+        return permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
     }
 }
