@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <keycloak.version>16.1.1</keycloak.version>
         <springdoc.version>1.6.8</springdoc.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
     </properties>
     <dependencyManagement>
@@ -103,12 +104,12 @@
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct</artifactId>
-            <version>1.4.2.Final</version>
+            <version>${mapstruct.version}</version>
         </dependency>
         <dependency>
             <groupId>org.mapstruct</groupId>
             <artifactId>mapstruct-processor</artifactId>
-            <version>1.4.2.Final</version>
+            <version>${mapstruct.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>

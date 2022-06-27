@@ -12,18 +12,24 @@ import java.util.List;
 public class BusinessFunctionPermissionService {
 
     private final BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
-
-    final private PermissionService permissionService;
-    final private BusinessFunctionService businessFunctionService;
+    private final PermissionService permissionService;
+    private final BusinessFunctionService businessFunctionService;
 
     public BusinessFunctionPermission save(BusinessFunctionPermission businessFunctionPermission) {
 
-        permissionService.findById(businessFunctionPermission.getPermission().getId());
+        assertPermissionExists(businessFunctionPermission.getPermission().getId());
 
-        businessFunctionService.findById(businessFunctionPermission.getBusinessFunction().getId());
+        assertBusinessFunctionExists(businessFunctionPermission.getBusinessFunction().getId());
 
-        List<BusinessFunctionPermission> ByPermissionAndBusinessFunctionName = businessFunctionPermissionRepository.findBusinessFunctionPermission(businessFunctionPermission.getBusinessFunction(), businessFunctionPermission.getPermission());
+        List<BusinessFunctionPermission> byPermissionAndBusinessFunctionName = businessFunctionPermissionRepository.findBusinessFunctionPermission(businessFunctionPermission.getBusinessFunction(), businessFunctionPermission.getPermission());
 
-        return ByPermissionAndBusinessFunctionName.size() > 0 ? ByPermissionAndBusinessFunctionName.get(0) : businessFunctionPermissionRepository.save(businessFunctionPermission);
+        return !byPermissionAndBusinessFunctionName.isEmpty() ? byPermissionAndBusinessFunctionName.get(0) : businessFunctionPermissionRepository.save(businessFunctionPermission);
+    }
+
+    public void assertPermissionExists(Integer id){
+        permissionService.findById(id);
+    }
+    public void assertBusinessFunctionExists(Integer id){
+        businessFunctionService.findById(id);
     }
 }

@@ -21,7 +21,7 @@ class BusinessFunctionPermissionControllerTest {
 
     @Test
     @DisplayName("Save creates Business Function Permission when successfull")
-    public void save_BusinessFunctionPermission_WhenSuccessfull() {
+    void save_BusinessFunctionPermission_WhenSuccessfull() {
 
         createBusinessFunction();
         createPermission();
@@ -33,16 +33,25 @@ class BusinessFunctionPermissionControllerTest {
     }
 
     @Test
-    @DisplayName("Save does not create Business Function Permission when Business Function or Permission does not exist")
-    public void saveDoesNot_SaveBusinessFunctionPermission_WhenBusinessFunctionDoesNotExist() {
-
-        BusinessFunctionPermissionResponse businessFunctionPermission = createTemplatePostBusinessFunctionPermission();
+    @DisplayName("Save does not create Business Function Permission when Business Function does not exist")
+    void saveDoesNot_SaveBusinessFunctionPermission_WhenBusinessFunctionDoesNotExist() {
+        BusinessFunctionPermissionResponse businessFunctionPermission = testRestTemplate
+                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, createJsonHttpEntityBusinessFucntionPermission(createBusinessFunctionPermissionNotToBeSaved1()), BusinessFunctionPermissionResponse.class)
+                .getBody();
+        Assertions.assertThat(businessFunctionPermission.getId()).isNull();
+    }
+    @Test
+    @DisplayName("Save does not create Business Function Permission when Permission does not exist")
+    void saveDoesNot_SaveBusinessFunctionPermission_WhenPermissionDoesNotExist() {
+        BusinessFunctionPermissionResponse businessFunctionPermission = testRestTemplate
+                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, createJsonHttpEntityBusinessFucntionPermission(createBusinessFunctionPermissionNotToBeSaved2()), BusinessFunctionPermissionResponse.class)
+                .getBody();
         Assertions.assertThat(businessFunctionPermission.getId()).isNull();
     }
 
     @Test
     @DisplayName("Save does not create Business Function Permission when already present")
-    public void doesNotSave_BusinessFunctionPermission_WhenAlreadyPresent() {
+    void doesNotSave_BusinessFunctionPermission_WhenAlreadyPresent() {
         createBusinessFunction();
         createPermission();
         BusinessFunctionPermissionResponse businessFunctionPermission1 = createTemplatePostBusinessFunctionPermission();
@@ -83,6 +92,14 @@ class BusinessFunctionPermissionControllerTest {
 
     public BusinessFunctionPermissionPostRequest createBusinessFunctionPermissionToBeSaved() {
         return BusinessFunctionPermissionPostRequest.builder().businessFunctionId(1).permissionId(1)
+                .build();
+    }
+    public BusinessFunctionPermissionPostRequest createBusinessFunctionPermissionNotToBeSaved1() {
+        return BusinessFunctionPermissionPostRequest.builder().businessFunctionId(0).permissionId(1)
+                .build();
+    }
+    public BusinessFunctionPermissionPostRequest createBusinessFunctionPermissionNotToBeSaved2() {
+        return BusinessFunctionPermissionPostRequest.builder().businessFunctionId(1).permissionId(0)
                 .build();
     }
 }

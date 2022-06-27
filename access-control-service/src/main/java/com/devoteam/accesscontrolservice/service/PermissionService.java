@@ -11,17 +11,17 @@ import java.util.List;
 @RequiredArgsConstructor
 @Repository
 public class PermissionService {
-    final private PermissionRepository permissionRepository;
+    private final PermissionRepository permissionRepository;
 
     public Permission save(Permission permission){
 
         List<Permission> findByName = permissionRepository.findByName(permission.getName());
 
-        return findByName.size() > 0 ? findByName.get(0) : permissionRepository.save(permission);
+        return !findByName.isEmpty() ? findByName.get(0) : permissionRepository.save(permission);
 
     }
 
-    public Permission findById(Integer id){
-        return permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
+    public void findById(Integer id){
+        permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
     }
 }
