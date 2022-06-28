@@ -17,6 +17,7 @@
         <java.version>17</java.version>
         <keycloak.version>16.1.1</keycloak.version>
         <springdoc.version>1.6.8</springdoc.version>
+        <mapstruct.version>1.4.2.Final</mapstruct.version>
         <spring-cloud.version>2021.0.3</spring-cloud.version>
     </properties>
     <dependencyManagement>
@@ -99,6 +100,16 @@
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct</artifactId>
+            <version>${mapstruct.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mapstruct</groupId>
+            <artifactId>mapstruct-processor</artifactId>
+            <version>${mapstruct.version}</version>
         </dependency>
         <dependency>
             <groupId>org.springdoc</groupId>

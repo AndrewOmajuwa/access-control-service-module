@@ -4,15 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import javax.validation.constraints.NotEmpty;
 
+import javax.validation.constraints.NotNull;
+
+@Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Builder
-public class PermissionPostRequest {
+public class BusinessFunctionPermissionPostRequest {
 
-        @NotEmpty
-        private String name;
+    @NotNull
+    private Integer businessFunctionId;
+
+    @NotNull
+    private Integer permissionId;
 
 }

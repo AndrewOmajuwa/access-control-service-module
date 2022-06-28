@@ -4,6 +4,7 @@ import com.devoteam.accesscontrolservice.domain.Permission;
 import com.devoteam.accesscontrolservice.domain.PermissionPostRequest;
 import com.devoteam.accesscontrolservice.domain.PermissionResponse;
 import com.devoteam.accesscontrolservice.service.PermissionService;
+import com.devoteam.accesscontrolservice.util.PermissionMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,13 +24,11 @@ public class PermissionController {
     @PostMapping
     ResponseEntity<PermissionResponse> save(@Valid @RequestBody PermissionPostRequest permissionPostRequest){
 
-        Permission permission = Permission.builder()
-                .name(permissionPostRequest.getName())
-                .build();
+        Permission permission = PermissionMapper.INSTANCE.toPermission(permissionPostRequest);
 
         Permission savedPermission = permissionService.save(permission);
 
-        PermissionResponse permissionResponse = PermissionResponse.builder().id(savedPermission.getId()).build();
+        PermissionResponse permissionResponse = PermissionMapper.INSTANCE.toPermissionResponse(savedPermission);
 
         return ResponseEntity.ok(permissionResponse);
     }

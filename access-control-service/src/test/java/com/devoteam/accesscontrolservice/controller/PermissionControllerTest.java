@@ -3,6 +3,7 @@ package com.devoteam.accesscontrolservice.controller;
 import com.devoteam.accesscontrolservice.domain.PermissionPostRequest;
 import com.devoteam.accesscontrolservice.domain.PermissionResponse;
 import com.devoteam.accesscontrolservice.repository.PermissionRepository;
+import com.devoteam.accesscontrolservice.util.Utility;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,8 @@ class PermissionControllerTest {
     private TestRestTemplate testRestTemplate;
     @Autowired
     private PermissionRepository permissionRepository;
+
+    private Utility utility;
 
     @Test
     @DisplayName("Save creates Permission when successfull")
@@ -72,13 +75,6 @@ class PermissionControllerTest {
     }
 
     private HttpEntity<PermissionPostRequest> createJsonHttpEntity(PermissionPostRequest permissionPostRequest){
-        return new HttpEntity<>(permissionPostRequest, createJsonHeader());
+        return new HttpEntity<>(permissionPostRequest, utility.createJsonHeader());
     }
-
-    private static HttpHeaders createJsonHeader(){
-        HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.setContentType(MediaType.APPLICATION_JSON);
-        return httpHeaders;
-    }
-
 }
