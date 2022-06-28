@@ -1,6 +1,7 @@
 package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunction;
+import com.devoteam.accesscontrolservice.domain.Permission;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,13 +22,12 @@ public class BusinessFunctionService {
         return !byApplicationNameAndFunctionName.isEmpty() ? byApplicationNameAndFunctionName.get(0) : businessFunctionRepository.save(businessFunction);
 
     }
-    public void findById(Integer id){
-        businessFunctionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));
-    }
-
 
     public List<BusinessFunction> listAll(){
         return businessFunctionRepository.findAll();
     }
 
+    public BusinessFunction findByIdOrThrowNotFound(Integer id){
+        return businessFunctionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));
+    }
 }

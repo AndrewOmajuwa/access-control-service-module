@@ -4,7 +4,6 @@ import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermission;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-
 import java.util.List;
 
 @Repository
@@ -26,10 +25,10 @@ public class BusinessFunctionPermissionService {
         return !byPermissionAndBusinessFunctionName.isEmpty() ? byPermissionAndBusinessFunctionName.get(0) : businessFunctionPermissionRepository.save(businessFunctionPermission);
     }
 
-    public void assertPermissionExists(Integer id){
-        permissionService.findById(id);
+    private void assertPermissionExists(Integer id){
+        permissionService.findByIdOrThrowNotFound(id);
     }
-    public void assertBusinessFunctionExists(Integer id){
-        businessFunctionService.findById(id);
+    private void assertBusinessFunctionExists(Integer id){
+        businessFunctionService.findByIdOrThrowNotFound(id);
     }
 }
