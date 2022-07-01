@@ -3,6 +3,7 @@ package com.devoteam.accesscontrolservice.controller;
 import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.service.BusinessFunctionPermissionService;
 import com.devoteam.accesscontrolservice.util.BusinessFunctionPermissionMapper;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "api/v1/business-functions-permissions")
 @RestController
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class BusinessFunctionPermissionController {
 
     private final BusinessFunctionPermissionService businessFunctionPermissionService;

@@ -7,6 +7,7 @@ import com.devoteam.accesscontrolservice.domain.UserResponse;
 import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.service.UserService;
 import com.devoteam.accesscontrolservice.util.UserKeycloakMapper;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
