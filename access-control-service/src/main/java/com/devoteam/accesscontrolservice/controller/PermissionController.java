@@ -24,7 +24,7 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @PostMapping
-    ResponseEntity<PermissionResponse> save(@Valid @RequestBody PermissionPostRequest permissionPostRequest){
+    public ResponseEntity<PermissionResponse> save(@Valid @RequestBody PermissionPostRequest permissionPostRequest){
 
         Permission permission = PermissionMapper.INSTANCE.toPermission(permissionPostRequest);
 

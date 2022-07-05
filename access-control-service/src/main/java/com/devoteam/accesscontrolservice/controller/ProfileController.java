@@ -24,7 +24,7 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @PostMapping
-    ResponseEntity<ProfileResponse> save(@Valid @RequestBody ProfilePostRequest profilePostRequest){
+    public ResponseEntity<ProfileResponse> save(@Valid @RequestBody ProfilePostRequest profilePostRequest){
 
         Profile profile = ProfileMapper.INSTANCE.toProfile(profilePostRequest);
 

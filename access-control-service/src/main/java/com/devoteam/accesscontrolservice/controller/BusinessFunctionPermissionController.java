@@ -22,7 +22,7 @@ public class BusinessFunctionPermissionController {
     private final BusinessFunctionPermissionService businessFunctionPermissionService;
 
     @PostMapping
-    ResponseEntity<BusinessFunctionPermissionResponse> save(@Valid @RequestBody BusinessFunctionPermissionPostRequest businessFunctionPermissionPostRequest){
+    public ResponseEntity<BusinessFunctionPermissionResponse> save(@Valid @RequestBody BusinessFunctionPermissionPostRequest businessFunctionPermissionPostRequest){
         Permission permission = Permission.builder().id(businessFunctionPermissionPostRequest.getPermissionId()).build();
 
         BusinessFunction businessFunction = BusinessFunction.builder().id(businessFunctionPermissionPostRequest.getBusinessFunctionId()).build();
