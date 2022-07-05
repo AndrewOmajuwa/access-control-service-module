@@ -8,3 +8,11 @@ spring:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
 user:
   password: ${IDM_PASSWORD}
+  token: ${TOKEN}
+
+keycloak:
+  realm: devoteam
+  resource: idm-client
+  auth-server-url: http://localhost:8180
+  ssl-required: external
+  public-client: false

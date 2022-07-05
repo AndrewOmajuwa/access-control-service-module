@@ -18,42 +18,16 @@ user:
   password: ${IDM_PASSWORD}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 eureka:
   client:
     register-with-eureka: true
     fetch-registry: true
     service-url:
       defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
-
+keycloak:
+  realm: devoteam
+  resource: idm-client
+  auth-server-url: http://localhost:8180
+  ssl-required: external
+  public-client: false
 

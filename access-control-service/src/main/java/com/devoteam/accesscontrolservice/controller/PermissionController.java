@@ -5,6 +5,7 @@ import com.devoteam.accesscontrolservice.domain.PermissionPostRequest;
 import com.devoteam.accesscontrolservice.domain.PermissionResponse;
 import com.devoteam.accesscontrolservice.service.PermissionService;
 import com.devoteam.accesscontrolservice.util.PermissionMapper;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/permissions")
+@SecurityRequirement(name = "bearerAuth")
 public class PermissionController {
 
     private final PermissionService permissionService;
