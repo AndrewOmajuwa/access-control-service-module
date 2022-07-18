@@ -70,12 +70,6 @@ class BusinessFunctionPermissionControllerTest {
         Assertions.assertThat(businessFunctionPermissionRepository.findById(2)).isEmpty();
     }
 
-    public BusinessFunctionPermissionResponse createTemplatePostBusinessFunctionPermission() {
-        return testRestTemplate
-                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, createJsonHttpEntityBusinessFucntionPermission(createBusinessFunctionPermissionToBeSaved()), BusinessFunctionPermissionResponse.class)
-                .getBody();
-    }
-
     private HttpEntity<BusinessFunctionPostRequest> createJsonHttpEntityBusinessFunction(BusinessFunctionPostRequest businessFunctionPostRequest) {
         return new HttpEntity<>(businessFunctionPostRequest, Utility.createJsonHeader());
     }
@@ -86,6 +80,12 @@ class BusinessFunctionPermissionControllerTest {
 
     private HttpEntity<BusinessFunctionPermissionPostRequest> createJsonHttpEntityBusinessFucntionPermission(BusinessFunctionPermissionPostRequest businessFunctionPermissionPostRequest) {
         return new HttpEntity<>(businessFunctionPermissionPostRequest, Utility.createJsonHeader());
+    }
+
+    public BusinessFunctionPermissionResponse createTemplatePostBusinessFunctionPermission() {
+        return testRestTemplate
+                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, createJsonHttpEntityBusinessFucntionPermission(createBusinessFunctionPermissionToBeSaved()), BusinessFunctionPermissionResponse.class)
+                .getBody();
     }
 
     private void createBusinessFunction() {

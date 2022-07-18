@@ -68,6 +68,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                 .antMatchers("/api/v1/permissions").authenticated()
                 .antMatchers("/api/v1/profiles").authenticated()
                 .antMatchers("/api/v1/business-functions-permissions").authenticated()
+                .antMatchers("/api/v1/profile-business-function-permissions").authenticated()
                 .antMatchers("/api/v1/business-functions").authenticated()
                 .antMatchers("/names").authenticated();
     }
