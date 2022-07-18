@@ -2,6 +2,8 @@ package com.devoteam.accesscontrolservice.util;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunctionPostRequest;
 import com.devoteam.accesscontrolservice.domain.PermissionPostRequest;
+import com.devoteam.accesscontrolservice.domain.ProfilePostRequest;
+import com.devoteam.accesscontrolservice.domain.UserPostRequest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 
@@ -15,6 +17,18 @@ public class Utility {
     public static PermissionPostRequest createPermissionToBeSaved(){
         return PermissionPostRequest.builder()
                 .name("View")
+                .build();
+    }
+    public static UserPostRequest createUserKeycloakToBeSaved(){
+        return UserPostRequest.builder()
+                .firstName("Stan")
+                .lastName("Marsh")
+                .email("StanMarsh@email")
+                .build();
+    }
+    public static ProfilePostRequest createProfileToBeSaved(){
+        return ProfilePostRequest.builder()
+                .name("Manager")
                 .build();
     }
 
