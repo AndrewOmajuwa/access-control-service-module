@@ -12,8 +12,6 @@ import org.springframework.http.MediaType;
 
 public class Utility {
 
-    private static TestRestTemplate testRestTemplate;
-
     public static HttpHeaders createJsonHeader(){
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_JSON);
@@ -23,6 +21,7 @@ public class Utility {
     public static <T> HttpEntity<T> createJsonHttpEntity(T t){
         return new HttpEntity<>(t, Utility.createJsonHeader());
     }
+
 
     public static PermissionPostRequest createPermissionToBeSaved(){
         return PermissionPostRequest.builder()
@@ -48,7 +47,7 @@ public class Utility {
                 .functionName("Doctor")
                 .build();
     }
-    public static ProfileBusinessFunctionPermissionPostRequest createProfileBusinessFunctionPermissionToBeSaved() {
+    public ProfileBusinessFunctionPermissionPostRequest createProfileBusinessFunctionPermissionToBeSaved() {
         return ProfileBusinessFunctionPermissionPostRequest.builder().businessFunctionPermissionId(1).profileId(1)
                 .build();
     }

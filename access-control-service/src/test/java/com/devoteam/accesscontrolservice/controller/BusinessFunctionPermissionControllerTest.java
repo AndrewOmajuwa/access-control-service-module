@@ -22,9 +22,7 @@ class BusinessFunctionPermissionControllerTest {
     private TestRestTemplate testRestTemplate;
     @Autowired
     private BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
-
-    private Utility utility;
-
+    
     @Test
     @DisplayName("Save creates Business Function Permission when successfull")
     void save_BusinessFunctionPermission_WhenSuccessfull() {
