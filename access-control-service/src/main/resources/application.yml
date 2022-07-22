@@ -16,7 +16,7 @@ server:
 
 user:
   passwordClient: ${IDM_PASSWORD}
-
+  clientId: ${CLIENT_ID}
 
 eureka:
   client:

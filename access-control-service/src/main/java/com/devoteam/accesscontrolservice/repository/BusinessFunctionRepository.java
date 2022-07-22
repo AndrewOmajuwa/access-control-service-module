@@ -9,5 +9,5 @@ import java.util.Optional;
 
 public interface BusinessFunctionRepository extends JpaRepository<BusinessFunction, Integer> {
 
-    List<BusinessFunction> findByApplicationNameAndFunctionName(String applicationName, String functionName);
+    Optional<BusinessFunction> findByApplicationNameAndFunctionName(String applicationName, String functionName);
 }

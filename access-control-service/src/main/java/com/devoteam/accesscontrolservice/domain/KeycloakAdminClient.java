@@ -27,13 +27,14 @@ public class KeycloakAdminClient {
 
     @Value("${user.passwordClient}")
     private String passwordClient;
-
+    @Value(("${CLIENT_ID}"))
+    private String client;
     private final UserRepository userRepository;
     public UUID createUserUuid(String firstName, String lastName, String email, String password){
 
         String serverUrl = "http://localhost:8180";
         String realm = "devoteam";
-        String clientId = "keycloak-client";
+        String clientId = client;
         String clientSecret = passwordClient;
 
         Keycloak keycloak = KeycloakBuilder.builder()

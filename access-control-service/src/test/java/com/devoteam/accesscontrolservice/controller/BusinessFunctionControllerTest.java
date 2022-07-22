@@ -21,15 +21,13 @@ import org.springframework.http.MediaType;
 class BusinessFunctionControllerTest {
 
     @Autowired
-    private TestRestTemplate testRestTemplate;
-    @Autowired
     private BusinessFunctionRepository businessFunctionRepository;
     @Autowired
     private Utility utility;
 
     @Test
     @DisplayName("Save creates Business Function when successfull")
-    public void save_BusinessFunction_WhenSuccessfull(){
+    void save_BusinessFunction_WhenSuccessfull(){
         Integer expectedId = 1;
         BusinessFunctionResponse businessFunctionResponse = utility.createBusinessFunction();
         Assertions.assertThat(businessFunctionResponse).isNotNull();
@@ -40,7 +38,7 @@ class BusinessFunctionControllerTest {
 
     @Test
     @DisplayName("Save does not create Business Function when already present")
-    public void doesNotSave_BusinessFunction_WhenAlreadyPresent(){
+    void doesNotSave_BusinessFunction_WhenAlreadyPresent(){
 
         BusinessFunctionResponse businessFunction1 = utility.createBusinessFunction();
         BusinessFunctionResponse businessFunction2 = utility.createBusinessFunction();

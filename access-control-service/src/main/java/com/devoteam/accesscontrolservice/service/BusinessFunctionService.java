@@ -18,9 +18,9 @@ public class BusinessFunctionService {
 
     public BusinessFunction save(BusinessFunction businessFunction){
 
-        List<BusinessFunction> byApplicationNameAndFunctionName = businessFunctionRepository.findByApplicationNameAndFunctionName(businessFunction.getApplicationName(), businessFunction.getFunctionName());
+        Optional<BusinessFunction> byApplicationNameAndFunctionName = businessFunctionRepository.findByApplicationNameAndFunctionName(businessFunction.getApplicationName(), businessFunction.getFunctionName());
 
-        return !byApplicationNameAndFunctionName.isEmpty() ? byApplicationNameAndFunctionName.get(0) : businessFunctionRepository.save(businessFunction);
+        return byApplicationNameAndFunctionName.orElseGet(() -> businessFunctionRepository.save(businessFunction));
 
     }
 
