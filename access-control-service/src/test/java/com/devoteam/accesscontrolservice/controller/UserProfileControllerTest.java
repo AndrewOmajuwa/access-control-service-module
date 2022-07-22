@@ -28,6 +28,7 @@ class UserProfileControllerTest {
     private UserProfileRepository userProfileRepository;
 
     private Utility utility;
+
     @MockBean
     private KeycloakAdminClient keycloakAdminClient;
     private static final java.util.UUID UUID = java.util.UUID.randomUUID();
@@ -35,7 +36,7 @@ class UserProfileControllerTest {
     @BeforeEach
     public void setUp(){
         UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
-        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail())).thenReturn(UUID);
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(UUID);
     }
 
     @Test

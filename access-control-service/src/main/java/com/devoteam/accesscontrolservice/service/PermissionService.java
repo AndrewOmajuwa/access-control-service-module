@@ -24,4 +24,7 @@ public class PermissionService {
     public Permission findByIdOrThrowNotFound(Integer id){
         return permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
     }
+    public Permission findByPermissionNameOrThrowNotFound(String permission){
+        return permissionRepository.findByPermissionName(permission).orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
+    }
 }

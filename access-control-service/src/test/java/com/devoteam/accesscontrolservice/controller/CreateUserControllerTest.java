@@ -26,12 +26,11 @@ class CreateUserControllerTest {
         private TestRestTemplate testRestTemplate;
         @MockBean
         private KeycloakAdminClient keycloakAdminClient;
-        private Utility utility;
 
         @BeforeEach
         public void setUp(){
             UserPostRequest userPostRequest = creatUserToBeSaved();
-            BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail())).thenReturn(UUID);
+            BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(UUID);
         }
 
         @Test
@@ -49,11 +48,12 @@ class CreateUserControllerTest {
                     .firstName("Eric")
                     .lastName("Cartman")
                     .email("eric.cartman@email.com")
+                    .password("password")
                     .build();
         }
 
         private HttpEntity<UserPostRequest> createJsonHttpEntity(UserPostRequest userPostRequest){
-            return new HttpEntity<>(userPostRequest, utility.createJsonHeader());
+            return new HttpEntity<>(userPostRequest, Utility.createJsonHeader());
         }
 
 }

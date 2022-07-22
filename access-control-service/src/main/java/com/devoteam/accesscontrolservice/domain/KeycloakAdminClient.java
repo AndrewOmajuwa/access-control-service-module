@@ -8,7 +8,9 @@ import org.keycloak.admin.client.CreatedResponseUtil;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.admin.client.resource.UserResource;
 import org.keycloak.admin.client.resource.UsersResource;
+import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -23,16 +25,16 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class KeycloakAdminClient {
 
-    @Value("${user.password}")
-    private String password;
+    @Value("${user.passwordClient}")
+    private String passwordClient;
 
     private final UserRepository userRepository;
-    public UUID createUserUuid(String firstName, String lastName, String email){
+    public UUID createUserUuid(String firstName, String lastName, String email, String password){
 
         String serverUrl = "http://localhost:8180";
         String realm = "devoteam";
         String clientId = "idm-client";
-        String clientSecret = password;
+        String clientSecret = passwordClient;
 
         Keycloak keycloak = KeycloakBuilder.builder()
                 .serverUrl(serverUrl).realm(realm)
@@ -53,9 +55,17 @@ public class KeycloakAdminClient {
         RealmResource realmResource = keycloak.realm(realm);
         UsersResource usersResource = realmResource.users();
 
-        // Create user (requires manage-users role)
         Response response = usersResource.create(user);
         String userId = CreatedResponseUtil.getCreatedId(response);
+
+        CredentialRepresentation passwordCred = new CredentialRepresentation();
+        passwordCred.setTemporary(false);
+        passwordCred.setType(CredentialRepresentation.PASSWORD);
+        passwordCred.setValue(password);
+
+        UserResource userResource = usersResource.get(userId);
+
+        userResource.resetPassword(passwordCred);
 
         return UUID.fromString(userId);
     }

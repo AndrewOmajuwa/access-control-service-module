@@ -9,6 +9,7 @@ spring:
 user:
   password: ${IDM_PASSWORD}
   token: ${TOKEN}
+  loggedInUserKeycloakUuid: ${LOGGEDINUSERKEYCLOAKUUID}
 
 keycloak:
   realm: devoteam

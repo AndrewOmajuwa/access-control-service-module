@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -30,4 +31,8 @@ public class BusinessFunctionService {
     public BusinessFunction findByIdOrThrowNotFound(Integer id){
         return businessFunctionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));
     }
+    public BusinessFunction findByNameOrThrowNotFound(String applicationName, String functionName){
+        return businessFunctionRepository.findByApplicationAndFunctionName(applicationName, functionName).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));
+    }
+
 }
