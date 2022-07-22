@@ -65,6 +65,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                 .authorizeRequests()
                 .antMatchers("/api/v1/users").permitAll()
                 .antMatchers("/swagger-ui/index.html").permitAll()
+                .antMatchers("/api/v1/validate-access").authenticated()
                 .antMatchers("/api/v1/permissions").authenticated()
                 .antMatchers("/api/v1/profiles").authenticated()
                 .antMatchers("/api/v1/business-functions-permissions").authenticated()
@@ -83,6 +84,7 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
                         new IgnoreKeycloakProcessingFilterRequestMatcher());
         return new KeycloakAuthenticationProcessingFilter(authenticationManagerBean(), requestMatcher);
     }
+
     private static class IgnoreKeycloakProcessingFilterRequestMatcher implements RequestMatcher {
 
         public boolean matches(HttpServletRequest request) {

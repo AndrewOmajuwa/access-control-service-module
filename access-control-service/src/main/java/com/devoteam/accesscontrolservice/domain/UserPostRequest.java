@@ -10,12 +10,12 @@ import javax.validation.constraints.NotNull;
 @Getter
 @Builder
 public class UserPostRequest {
-    @NotNull
     @NotEmpty
     private String firstName;
-    @NotNull
     @NotEmpty
     private String lastName;
     @Email
     private String email;
+    @NotEmpty
+    private String password;
 }

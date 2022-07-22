@@ -34,7 +34,7 @@ public class CreateUserController {
     @PostMapping
     public ResponseEntity<UserResponse> save(@Valid @RequestBody UserPostRequest userPostRequest){
 
-        UUID userUuid = keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail());
+        UUID userUuid = keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword());
 
         assertUuidIsNotNull(userUuid);
         UserKeyCloak userKeyCloak = UserKeyCloak.builder()

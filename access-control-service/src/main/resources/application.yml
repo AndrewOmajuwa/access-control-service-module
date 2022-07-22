@@ -15,8 +15,8 @@ server:
     include-stacktrace: always
 
 user:
-  password: ${IDM_PASSWORD}
-
+  passwordClient: ${IDM_PASSWORD}
+  clientId: ${CLIENT_ID}
 
 eureka:
   client:

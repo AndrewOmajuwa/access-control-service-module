@@ -7,8 +7,9 @@ spring:
   jpa:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
 user:
-  password: ${IDM_PASSWORD}
+  passwordClient: ${IDM_PASSWORD}
   token: ${TOKEN}
+  loggedInUserKeycloakUuid: ${LOGGED_IN_USER_KEYCLOAK_UUID}
 
 keycloak:
   realm: devoteam

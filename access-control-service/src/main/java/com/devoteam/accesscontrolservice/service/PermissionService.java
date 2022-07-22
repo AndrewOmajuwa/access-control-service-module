@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Repository
@@ -15,13 +16,16 @@ public class PermissionService {
 
     public Permission save(Permission permission){
 
-        List<Permission> findByName = permissionRepository.findByName(permission.getName());
+        Optional<Permission> findByName = permissionRepository.findByName(permission.getName());
 
-        return !findByName.isEmpty() ? findByName.get(0) : permissionRepository.save(permission);
+        return findByName.orElseGet(() -> permissionRepository.save(permission));
 
     }
 
     public Permission findByIdOrThrowNotFound(Integer id){
         return permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
+    }
+    public Permission findByPermissionNameOrThrowNotFound(String permission){
+        return permissionRepository.findByName(permission).stream().findAny().orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
     }
 }

@@ -20,18 +20,20 @@ class ProfileBusinessFunctionPermissionControllerTest {
     private TestRestTemplate testRestTemplate;
     @Autowired
     private ProfileBusinessFunctionPermissionRepository profileBusinessFunctionPermissionRepository;
+    @Autowired
+    Utility utility;
 
 
     @Test
     @DisplayName("Save creates Profile Business Function Permission when successfull")
     void save_BusinessFunctionPermission_WhenSuccessfull() {
 
-        createBusinessFunction();
-        createPermission();
-        createBusinessFunctionPermission();
-        createProfile();
+        utility.createBusinessFunction();
+        utility.createPermission();
+        utility.createBusinessFunctionPermission();
+        utility.createProfile();
         Integer expectedId = 1;
-        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission = createProfileBusinessFunctionPermission();
+        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission = utility.createProfileBusinessFunctionPermission();
         Assertions.assertThat(profileBusinessFunctionPermission).isNotNull();
         Assertions.assertThat(profileBusinessFunctionPermission.getId()).isNotNull();
         Assertions.assertThat(profileBusinessFunctionPermission.getId()).isEqualTo(expectedId);
@@ -61,43 +63,12 @@ class ProfileBusinessFunctionPermissionControllerTest {
     @DisplayName("Save does not create Profile Business Function Permission when already present")
     void doesNotSave_BusinessFunctionPermission_WhenAlreadyPresent() {
 
-        createBusinessFunctionPermission();
-        createProfile();
-        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission1 = createProfileBusinessFunctionPermission();
-        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission2 = createProfileBusinessFunctionPermission();
+        utility.createBusinessFunctionPermission();
+        utility.createProfile();
+        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission1 = utility.createProfileBusinessFunctionPermission();
+        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission2 = utility.createProfileBusinessFunctionPermission();
         Assertions.assertThat(profileBusinessFunctionPermission1.getId()).isEqualTo(profileBusinessFunctionPermission2.getId());
         Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(2)).isEmpty();
-    }
-
-    void createBusinessFunction() {
-        BusinessFunctionPostRequest businessFunction = Utility.createBusinessFunctionToBeSaved();
-        testRestTemplate
-                .exchange("/api/v1/business-functions", HttpMethod.POST, Utility.createJsonHttpEntity(businessFunction), BusinessFunctionResponse.class);
-    }
-
-    void createPermission() {
-        PermissionPostRequest permission = Utility.createPermissionToBeSaved();
-
-        testRestTemplate
-                .exchange("/api/v1/permissions", HttpMethod.POST, Utility.createJsonHttpEntity(permission), BusinessFunctionResponse.class);
-    }
-    void createProfile() {
-        ProfilePostRequest profile = Utility.createProfileToBeSaved();
-        testRestTemplate
-                .exchange("/api/v1/profiles", HttpMethod.POST, Utility.createJsonHttpEntity(profile), ProfileResponse.class);
-    }
-
-    void createBusinessFunctionPermission() {
-        BusinessFunctionPermissionPostRequest businessFunctionPermission = Utility.createBusinessFunctionPermissionToBeSaved();
-        testRestTemplate
-                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(businessFunctionPermission), BusinessFunctionPermissionResponse.class);
-    }
-
-
-    ProfileBusinessFunctionPermissionResponse createProfileBusinessFunctionPermission() {
-        return testRestTemplate
-                .exchange("/api/v1/profile-business-function-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(createProfileBusinessFunctionPermissionToBeSaved()), ProfileBusinessFunctionPermissionResponse.class)
-                .getBody();
     }
 
     ProfileBusinessFunctionPermissionPostRequest createProfileBusinessFunctionPermissionToBeSaved() {

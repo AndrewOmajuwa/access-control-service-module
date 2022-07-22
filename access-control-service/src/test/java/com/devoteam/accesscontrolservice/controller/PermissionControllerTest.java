@@ -23,7 +23,7 @@ class PermissionControllerTest {
     private TestRestTemplate testRestTemplate;
     @Autowired
     private PermissionRepository permissionRepository;
-
+    @Autowired
     private Utility utility;
 
     @Test
@@ -31,7 +31,7 @@ class PermissionControllerTest {
     public void save_Permission_WhenSuccessfull(){
 
         Integer expectedId = 1;
-        PermissionResponse permissionResponse = createTemplatePostPermissions();
+        PermissionResponse permissionResponse = utility.createPermission();
         Assertions.assertThat(permissionResponse).isNotNull();
         Assertions.assertThat(permissionResponse.getId()).isNotNull();
         Assertions.assertThat(permissionResponse.getId()).isEqualTo(expectedId);
@@ -41,7 +41,7 @@ class PermissionControllerTest {
     public void save_DoesNotCreatePermission_WhenInputIsBlank(){
 
         PermissionResponse permissionResponse = testRestTemplate
-                .exchange( "/api/v1/permissions", HttpMethod.POST, createJsonHttpEntity(createPermissionNotToBeSaved()), PermissionResponse.class)
+                .exchange( "/api/v1/permissions", HttpMethod.POST, Utility.createJsonHttpEntity(createPermissionNotToBeSaved()), PermissionResponse.class)
                 .getBody();
 
         Assertions.assertThat(permissionResponse.getId()).isNull();
@@ -51,22 +51,10 @@ class PermissionControllerTest {
     @DisplayName("Save does not create Permission when already present")
     public void doesNotSave_Permission_WhenAlreadyPresent(){
 
-        PermissionResponse permissionResponse1 = createTemplatePostPermissions();
-        PermissionResponse permissionResponse2 = createTemplatePostPermissions();
+        PermissionResponse permissionResponse1 = utility.createPermission();
+        PermissionResponse permissionResponse2 = utility.createPermission();
         Assertions.assertThat(permissionResponse1.getId()).isEqualTo(permissionResponse2.getId());
         Assertions.assertThat(permissionRepository.findById(2)).isEmpty();
-    }
-
-    public PermissionResponse createTemplatePostPermissions(){
-        return testRestTemplate
-                .exchange( "/api/v1/permissions", HttpMethod.POST, createJsonHttpEntity(createPermissionToBeSaved()), PermissionResponse.class)
-                .getBody();
-    }
-
-    public PermissionPostRequest createPermissionToBeSaved(){
-        return PermissionPostRequest.builder()
-                .name("View")
-                .build();
     }
     public PermissionPostRequest createPermissionNotToBeSaved(){
         return PermissionPostRequest.builder()
@@ -74,7 +62,4 @@ class PermissionControllerTest {
                 .build();
     }
 
-    private HttpEntity<PermissionPostRequest> createJsonHttpEntity(PermissionPostRequest permissionPostRequest){
-        return new HttpEntity<>(permissionPostRequest, utility.createJsonHeader());
-    }
 }

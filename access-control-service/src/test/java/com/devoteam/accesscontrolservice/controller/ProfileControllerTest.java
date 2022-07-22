@@ -19,7 +19,7 @@ class ProfileControllerTest {
     private TestRestTemplate testRestTemplate;
     @Autowired
     private ProfileRepository profileRepository;
-
+    @Autowired
     private Utility utility;
 
     @Test
@@ -27,7 +27,7 @@ class ProfileControllerTest {
     public void save_Profile_WhenSuccessfull(){
 
         Integer expectedId = 1;
-        ProfileResponse profileResponse = createTemplatePostProfiles();
+        ProfileResponse profileResponse = utility.createProfile();
         Assertions.assertThat(profileResponse).isNotNull();
         Assertions.assertThat(profileResponse.getId()).isNotNull();
         Assertions.assertThat(profileResponse.getId()).isEqualTo(expectedId);
@@ -37,7 +37,7 @@ class ProfileControllerTest {
     public void save_DoesNotCreateProfile_WhenInputIsBlank(){
 
         ProfileResponse profileResponse = testRestTemplate
-                .exchange( "/api/v1/profiles", HttpMethod.POST, createJsonHttpEntity(createProfileNotToBeSaved()), ProfileResponse.class)
+                .exchange( "/api/v1/profiles", HttpMethod.POST, Utility.createJsonHttpEntity(createProfileNotToBeSaved()), ProfileResponse.class)
                 .getBody();
 
         Assertions.assertThat(profileResponse.getId()).isNull();
@@ -47,22 +47,10 @@ class ProfileControllerTest {
     @DisplayName("Save does not create Profile when already present")
     public void doesNotSave_Profile_WhenAlreadyPresent(){
 
-        ProfileResponse profileResponse1 = createTemplatePostProfiles();
-        ProfileResponse profileResponse2 = createTemplatePostProfiles();
+        ProfileResponse profileResponse1 = utility.createProfile();
+        ProfileResponse profileResponse2 = utility.createProfile();
         Assertions.assertThat(profileResponse1.getId()).isEqualTo(profileResponse2.getId());
         Assertions.assertThat(profileRepository.findById(2)).isEmpty();
-    }
-
-    public ProfileResponse createTemplatePostProfiles(){
-        return testRestTemplate
-                .exchange( "/api/v1/profiles", HttpMethod.POST, createJsonHttpEntity(createProfileToBeSaved()), ProfileResponse.class)
-                .getBody();
-    }
-
-    public ProfilePostRequest createProfileToBeSaved(){
-        return ProfilePostRequest.builder()
-                .name("View")
-                .build();
     }
     public ProfilePostRequest createProfileNotToBeSaved(){
         return ProfilePostRequest.builder()
@@ -70,7 +58,4 @@ class ProfileControllerTest {
                 .build();
     }
 
-    private HttpEntity<ProfilePostRequest> createJsonHttpEntity(ProfilePostRequest profilePostRequest){
-        return new HttpEntity<>(profilePostRequest, utility.createJsonHeader());
-    }
 }
