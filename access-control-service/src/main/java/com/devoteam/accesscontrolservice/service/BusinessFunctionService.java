@@ -31,8 +31,8 @@ public class BusinessFunctionService {
     public BusinessFunction findByIdOrThrowNotFound(Integer id){
         return businessFunctionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));
     }
-    public BusinessFunction findByNameOrThrowNotFound(String applicationName, String functionName){
-        return businessFunctionRepository.findByApplicationAndFunctionName(applicationName, functionName).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));
+    public BusinessFunction findByApplicationAndFunctionNamesOrThrowNotFound(String applicationName, String functionName){
+        return businessFunctionRepository.findByApplicationNameAndFunctionName(applicationName, functionName).stream().findAny().orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));
     }
 
 }

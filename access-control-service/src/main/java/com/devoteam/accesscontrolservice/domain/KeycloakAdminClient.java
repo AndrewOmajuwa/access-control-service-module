@@ -33,7 +33,7 @@ public class KeycloakAdminClient {
 
         String serverUrl = "http://localhost:8180";
         String realm = "devoteam";
-        String clientId = "idm-client";
+        String clientId = "keycloak-client";
         String clientSecret = passwordClient;
 
         Keycloak keycloak = KeycloakBuilder.builder()

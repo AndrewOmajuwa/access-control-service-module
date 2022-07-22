@@ -13,8 +13,8 @@ public interface UserRepository extends JpaRepository<UserKeyCloak, Integer> {
 
     List<UserKeyCloak> searchByEmail(String email);
 
-    @Query(value = "SELECT u FROM UserKeyCloak u WHERE u.uuid = ?1")
-    Optional<UserKeyCloak> findByUUID(UUID uuid);
+//    @Query(value = "SELECT u FROM UserKeyCloak u WHERE u.uuid = ?1")
+    Optional<UserKeyCloak> findByUuid(UUID uuid);
 
 
 }

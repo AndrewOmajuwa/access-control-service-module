@@ -22,15 +22,17 @@ class BusinessFunctionPermissionControllerTest {
     private TestRestTemplate testRestTemplate;
     @Autowired
     private BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
+    @Autowired
+    private Utility utility;
     
     @Test
     @DisplayName("Save creates Business Function Permission when successfull")
     void save_BusinessFunctionPermission_WhenSuccessfull() {
 
-        createBusinessFunction();
-        createPermission();
+        utility.createBusinessFunction();
+        utility.createPermission();
         Integer expectedId = 1;
-        BusinessFunctionPermissionResponse businessFunctionPermission = createTemplatePostBusinessFunctionPermission();
+        BusinessFunctionPermissionResponse businessFunctionPermission = utility.createBusinessFunctionPermission();
         Assertions.assertThat(businessFunctionPermission).isNotNull();
         Assertions.assertThat(businessFunctionPermission.getId()).isNotNull();
         Assertions.assertThat(businessFunctionPermission.getId()).isEqualTo(expectedId);
@@ -41,7 +43,7 @@ class BusinessFunctionPermissionControllerTest {
     void saveDoesNot_SaveBusinessFunctionPermission_WhenBusinessFunctionDoesNotExist() {
 
         ResponseEntity<BusinessFunctionPermissionResponse> businessFunctionPermission = testRestTemplate
-                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, createJsonHttpEntityBusinessFucntionPermission(createBusinessFunctionPermissionNotToBeSaved1()), BusinessFunctionPermissionResponse.class);
+                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(createBusinessFunctionPermissionNotToBeSaved1()), BusinessFunctionPermissionResponse.class);
 
         Assertions.assertThat(businessFunctionPermission.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -51,7 +53,7 @@ class BusinessFunctionPermissionControllerTest {
     void saveDoesNot_SaveBusinessFunctionPermission_WhenPermissionDoesNotExist() {
 
         ResponseEntity<BusinessFunctionPermissionResponse> businessFunctionPermission = testRestTemplate
-                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, createJsonHttpEntityBusinessFucntionPermission(createBusinessFunctionPermissionNotToBeSaved2()), BusinessFunctionPermissionResponse.class);
+                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(createBusinessFunctionPermissionNotToBeSaved2()), BusinessFunctionPermissionResponse.class);
 
         Assertions.assertThat(businessFunctionPermission.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -60,48 +62,15 @@ class BusinessFunctionPermissionControllerTest {
     @DisplayName("Save does not create Business Function Permission when already present")
     void doesNotSave_BusinessFunctionPermission_WhenAlreadyPresent() {
 
-        createBusinessFunction();
-        createPermission();
-        BusinessFunctionPermissionResponse businessFunctionPermission1 = createTemplatePostBusinessFunctionPermission();
-        BusinessFunctionPermissionResponse businessFunctionPermission2 = createTemplatePostBusinessFunctionPermission();
+        utility.createBusinessFunction();
+        utility.createPermission();
+        BusinessFunctionPermissionResponse businessFunctionPermission1 = utility.createBusinessFunctionPermission();
+        BusinessFunctionPermissionResponse businessFunctionPermission2 = utility.createBusinessFunctionPermission();
         Assertions.assertThat(businessFunctionPermission1.getId()).isEqualTo(businessFunctionPermission2.getId());
         Assertions.assertThat(businessFunctionPermissionRepository.findById(2)).isEmpty();
     }
 
-    private HttpEntity<BusinessFunctionPostRequest> createJsonHttpEntityBusinessFunction(BusinessFunctionPostRequest businessFunctionPostRequest) {
-        return new HttpEntity<>(businessFunctionPostRequest, Utility.createJsonHeader());
-    }
 
-    private HttpEntity<PermissionPostRequest> createJsonHttpEntityPermission(PermissionPostRequest permissionPostRequest) {
-        return new HttpEntity<>(permissionPostRequest, Utility.createJsonHeader());
-    }
-
-    private HttpEntity<BusinessFunctionPermissionPostRequest> createJsonHttpEntityBusinessFucntionPermission(BusinessFunctionPermissionPostRequest businessFunctionPermissionPostRequest) {
-        return new HttpEntity<>(businessFunctionPermissionPostRequest, Utility.createJsonHeader());
-    }
-
-    public BusinessFunctionPermissionResponse createTemplatePostBusinessFunctionPermission() {
-        return testRestTemplate
-                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, createJsonHttpEntityBusinessFucntionPermission(createBusinessFunctionPermissionToBeSaved()), BusinessFunctionPermissionResponse.class)
-                .getBody();
-    }
-
-    private void createBusinessFunction() {
-        BusinessFunctionPostRequest businessFunction = Utility.createBusinessFunctionToBeSaved();
-        testRestTemplate
-                .exchange("/api/v1/business-functions", HttpMethod.POST, createJsonHttpEntityBusinessFunction(businessFunction), BusinessFunctionResponse.class);
-    }
-
-    private void createPermission() {
-        PermissionPostRequest permission = Utility.createPermissionToBeSaved();
-        testRestTemplate
-                .exchange("/api/v1/permissions", HttpMethod.POST, createJsonHttpEntityPermission(permission), BusinessFunctionResponse.class);
-    }
-
-    public BusinessFunctionPermissionPostRequest createBusinessFunctionPermissionToBeSaved() {
-        return BusinessFunctionPermissionPostRequest.builder().businessFunctionId(1).permissionId(1)
-                .build();
-    }
     public BusinessFunctionPermissionPostRequest createBusinessFunctionPermissionNotToBeSaved1() {
         return BusinessFunctionPermissionPostRequest.builder().businessFunctionId(0).permissionId(1)
                 .build();

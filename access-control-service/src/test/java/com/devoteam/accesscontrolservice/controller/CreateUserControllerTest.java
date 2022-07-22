@@ -29,31 +29,18 @@ class CreateUserControllerTest {
 
         @BeforeEach
         public void setUp(){
-            UserPostRequest userPostRequest = creatUserToBeSaved();
+            UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
             BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(UUID);
         }
 
         @Test
         @DisplayName("Save creates user when successfull")
         public void save_User_WhenSuccessfull(){
-            UserPostRequest userToBeSaved = creatUserToBeSaved();
 
-            UserResponse userResponse = testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, createJsonHttpEntity(userToBeSaved), UserResponse.class).getBody();
+            UserResponse userResponse = testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createUserKeycloakToBeSaved()), UserResponse.class).getBody();
             Assertions.assertThat(userResponse).isNotNull();
             Assertions.assertThat(userResponse.getUuid()).isNotNull();
         }
 
-        public UserPostRequest creatUserToBeSaved(){
-            return UserPostRequest.builder()
-                    .firstName("Eric")
-                    .lastName("Cartman")
-                    .email("eric.cartman@email.com")
-                    .password("password")
-                    .build();
-        }
-
-        private HttpEntity<UserPostRequest> createJsonHttpEntity(UserPostRequest userPostRequest){
-            return new HttpEntity<>(userPostRequest, Utility.createJsonHeader());
-        }
 
 }

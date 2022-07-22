@@ -12,6 +12,6 @@ public interface ProfileBusinessFunctionPermissionRepository extends JpaReposito
     List<ProfileBusinessFunctionPermission> findProfileBusinessFunctionPermission(BusinessFunctionPermission businessFunctionPermission, Profile profile);
 
     @Query(value = "SELECT COUNT(u.uuid) > 0 FROM UserKeyCloak u join UserProfile up On u.uuid=up.userKeyCloak join ProfileBusinessFunctionPermission pbfp on up.profile = pbfp.profile join BusinessFunctionPermission bfp on bfp.id = pbfp.businessFunctionPermission.id join BusinessFunction bf on bf.id = bfp.businessFunction.id join Permission p on bfp.permission.id = p.id where u.uuid=?1 and bf.applicationName=?2 and bf.functionName=?3 and p.name=?4")
-    Boolean assertUserhasCredentials(UUID uuid, String applicationName, String functionName, String permission);
+    boolean isAccessAllowed(UUID uuid, String applicationName, String functionName, String permission);
 
 }

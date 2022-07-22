@@ -3,6 +3,7 @@ package com.devoteam.accesscontrolservice.controller;
 import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.util.Utility;
+import lombok.RequiredArgsConstructor;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +28,9 @@ class ValidateAccessControllerTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
+    @Autowired
+    private Utility utility;
+
     @MockBean
     private KeycloakAdminClient keycloakAdminClient;
 
@@ -40,12 +44,12 @@ class ValidateAccessControllerTest {
     @DisplayName("Validate access endpoint returns http status 200 when user has valid credentials")
     void validateAccessEndpoint_returnsHttpStatus200_whenUserHasValidCredentials() {
 
-        createProfile();
-        createUserProfile(loggedInUserKeycloakUuid);
-        createBusinessFunction();
-        createPermission();
-        createBusinessFunctionPermission();
-        createProfileBusinessFunctionPermission();
+        utility.createProfile();
+        utility.createUserProfile(loggedInUserKeycloakUuid);
+        utility.createBusinessFunction();
+        utility.createPermission();
+        utility.createBusinessFunctionPermission();
+        utility.createProfileBusinessFunctionPermission();
         ValidateAccessPostRequest validateAccessPostRequest = ValidateAccessPostRequest.builder().applicationName("Doctor-Service").functionName("Doctor").permission("View").build();
 
         ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/validate-access", HttpMethod.POST, Utility.createJsonHttpEntity(validateAccessPostRequest), Void.class);
@@ -59,14 +63,14 @@ class ValidateAccessControllerTest {
     @DisplayName("Validate access endpoint returns http status 403 when user has invalid credentials")
     void validateAccessEndpoint_returnsHttpStatus200_whenUserHasInvalidCredentials() {
 
-        UserResponse user = createUser();
-        createBusinessFunction();
-        createPermission();
+        UserResponse user = utility.createUser();
+        utility.createBusinessFunction();
+        utility.createPermission();
         testRestTemplate.exchange("/api/v1/permissions", HttpMethod.POST, Utility.createJsonHttpEntity(Permission.builder().name("delete").build()), BusinessFunctionResponse.class);
-        createBusinessFunctionPermission();
-        createProfile();
-        createProfileBusinessFunctionPermission();
-        createUserProfile(user.getUuid());
+        utility.createBusinessFunctionPermission();
+        utility.createProfile();
+        utility.createProfileBusinessFunctionPermission();
+        utility.createUserProfile(loggedInUserKeycloakUuid);
         ValidateAccessPostRequest validateAccessPostRequest = ValidateAccessPostRequest.builder().applicationName("Doctor-Service").functionName("Doctor").permission("delete").build();
 
         ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/validate-access", HttpMethod.POST, Utility.createJsonHttpEntity(validateAccessPostRequest), Void.class);
@@ -87,48 +91,4 @@ class ValidateAccessControllerTest {
         Assertions.assertThat(status.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
 
-    UserResponse createUser() {
-        UserPostRequest user = Utility.createUserKeycloakToBeSaved();
-        return testRestTemplate
-                .exchange("/api/v1/users", HttpMethod.POST, Utility.createUserJsonHttpEntity(user), UserResponse.class).getBody();
-    }
-    public static UserProfilePostRequest createUserProfileToBeSaved(UUID uuid) {
-        return UserProfilePostRequest.builder().userKeyCloakId(uuid).profileId(1)
-                .build();
-    }
-
-    void createBusinessFunction() {
-        BusinessFunctionPostRequest businessFunction = Utility.createBusinessFunctionToBeSaved();
-        testRestTemplate
-                .exchange("/api/v1/business-functions", HttpMethod.POST, Utility.createJsonHttpEntity(businessFunction), BusinessFunctionResponse.class);
-    }
-
-    void createPermission() {
-        PermissionPostRequest permission = Utility.createPermissionToBeSaved();
-
-        testRestTemplate
-                .exchange("/api/v1/permissions", HttpMethod.POST, Utility.createJsonHttpEntity(permission), PermissionResponse.class);
-    }
-    void createBusinessFunctionPermission() {
-        BusinessFunctionPermissionPostRequest businessFunctionPermission = Utility.createBusinessFunctionPermissionToBeSaved();
-        testRestTemplate
-                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(businessFunctionPermission), BusinessFunctionPermissionResponse.class);
-    }
-
-    void createProfile() {
-        ProfilePostRequest profile = Utility.createProfileToBeSaved();
-        testRestTemplate
-                .exchange("/api/v1/profiles", HttpMethod.POST, Utility.createJsonHttpEntity(profile), ProfileResponse.class).getBody();
-    }
-
-
-    void createProfileBusinessFunctionPermission() {
-        testRestTemplate
-                .exchange("/api/v1/profile-business-function-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createProfileBusinessFunctionPermissionToBeSaved()), ProfileBusinessFunctionPermissionResponse.class);
-    }
-
-    void createUserProfile(UUID uuid) {
-         testRestTemplate
-                .exchange("/api/v1/user-profiles", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createUserProfileToBeSaved(uuid)), UserProfileResponse.class);
-    }
 }

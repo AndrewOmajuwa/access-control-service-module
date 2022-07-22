@@ -31,12 +31,12 @@ public class ValidateAccessController {
 
         UUID uuid = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
 
-        businessFunctionService.findByNameOrThrowNotFound(validateAccessPostRequest.getApplicationName(), validateAccessPostRequest.getFunctionName());
+        businessFunctionService.findByApplicationAndFunctionNamesOrThrowNotFound(validateAccessPostRequest.getApplicationName(), validateAccessPostRequest.getFunctionName());
 
         permissionService.findByPermissionNameOrThrowNotFound(validateAccessPostRequest.getPermission());
 
-        Boolean assertUserHasCredentials = profileBusinessFunctionPermissionRepository.assertUserhasCredentials(uuid, validateAccessPostRequest.getApplicationName(), validateAccessPostRequest.getFunctionName(), validateAccessPostRequest.getPermission());
+        boolean isAccessAllowed = profileBusinessFunctionPermissionRepository.isAccessAllowed(uuid, validateAccessPostRequest.getApplicationName(), validateAccessPostRequest.getFunctionName(), validateAccessPostRequest.getPermission());
 
-        return Boolean.TRUE.equals(assertUserHasCredentials) ? ResponseEntity.ok(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        return isAccessAllowed ? ResponseEntity.ok(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 }

@@ -10,6 +10,4 @@ import java.util.Optional;
 public interface PermissionRepository extends JpaRepository<Permission, Integer> {
 
     List<Permission> findByName(String name);
-    @Query(value = "select p from Permission p where p.name = ?1")
-    Optional<Permission> findByPermissionName(String name);
 }
