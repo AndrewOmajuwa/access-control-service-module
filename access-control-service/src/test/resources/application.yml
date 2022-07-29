@@ -6,14 +6,17 @@ spring:
     driverClassName: org.h2.Driver
   jpa:
     spring.jpa.database-platform: org.hibernate.dialect.H2Dialect
+    hibernate:
+      ddl-auto: create-drop
 user:
   passwordClient: ${IDM_PASSWORD}
+  clientId: ${CLIENT_ID}
   token: ${TOKEN}
   loggedInUserKeycloakUuid: ${LOGGED_IN_USER_KEYCLOAK_UUID}
 
 keycloak:
   realm: devoteam
-  resource: idm-client
+  resource: access-control-client
   auth-server-url: http://localhost:8180
   ssl-required: external
   public-client: false

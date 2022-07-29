@@ -37,7 +37,7 @@ class ValidateAccessControllerTest {
     @BeforeEach
     public void setUp(){
         UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
-        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(loggedInUserKeycloakUuid);
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(loggedInUserKeycloakUuid.toString());
     }
 
     @Test
@@ -45,12 +45,12 @@ class ValidateAccessControllerTest {
     void validateAccessEndpoint_returnsHttpStatus200_whenUserHasValidCredentials() {
 
         utility.createProfile();
-        utility.createUserProfile(loggedInUserKeycloakUuid);
+        utility.createUserProfile(loggedInUserKeycloakUuid.toString());
         utility.createBusinessFunction();
         utility.createPermission();
         utility.createBusinessFunctionPermission();
         utility.createProfileBusinessFunctionPermission();
-        ValidateAccessPostRequest validateAccessPostRequest = ValidateAccessPostRequest.builder().applicationName("Doctor-Service").functionName("Doctor").permission("View").build();
+        ValidateAccessPostRequest validateAccessPostRequest = ValidateAccessPostRequest.builder().applicationName("access-control-service").functionName("permission").permission("create").build();
 
         ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/validate-access", HttpMethod.POST, Utility.createJsonHttpEntity(validateAccessPostRequest), Void.class);
 
@@ -70,7 +70,7 @@ class ValidateAccessControllerTest {
         utility.createBusinessFunctionPermission();
         utility.createProfile();
         utility.createProfileBusinessFunctionPermission();
-        utility.createUserProfile(loggedInUserKeycloakUuid);
+        utility.createUserProfile(loggedInUserKeycloakUuid.toString());
         ValidateAccessPostRequest validateAccessPostRequest = ValidateAccessPostRequest.builder().applicationName("Doctor-Service").functionName("Doctor").permission("delete").build();
 
         ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/validate-access", HttpMethod.POST, Utility.createJsonHttpEntity(validateAccessPostRequest), Void.class);

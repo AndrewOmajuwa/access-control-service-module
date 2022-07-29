@@ -27,10 +27,10 @@ public class KeycloakAdminClient {
 
     @Value("${user.passwordClient}")
     private String passwordClient;
-    @Value(("${CLIENT_ID}"))
+    @Value(("${user.clientId}"))
     private String client;
     private final UserRepository userRepository;
-    public UUID createUserUuid(String firstName, String lastName, String email, String password){
+    public String createUserUuid(String firstName, String lastName, String email, String password){
 
         String serverUrl = "http://localhost:8180";
         String realm = "devoteam";
@@ -68,7 +68,7 @@ public class KeycloakAdminClient {
 
         userResource.resetPassword(passwordCred);
 
-        return UUID.fromString(userId);
+        return userId;
     }
 
     public void checkIfEmailAlreadyExists(String email){

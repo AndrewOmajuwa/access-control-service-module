@@ -8,6 +8,7 @@ import com.devoteam.accesscontrolservice.util.ProfileMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @PostMapping
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
     public ResponseEntity<ProfileResponse> save(@Valid @RequestBody ProfilePostRequest profilePostRequest){
 
         Profile profile = ProfileMapper.INSTANCE.toProfile(profilePostRequest);

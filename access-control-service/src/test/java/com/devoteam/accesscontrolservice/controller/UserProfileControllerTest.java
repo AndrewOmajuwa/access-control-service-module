@@ -36,7 +36,7 @@ class UserProfileControllerTest {
     @BeforeEach
     public void setUp(){
         UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
-        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(UUID);
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(UUID.toString());
     }
 
     @Test
@@ -79,7 +79,7 @@ class UserProfileControllerTest {
     }
     
     public UserProfilePostRequest createUserProfileNotToBeSaved1() {
-        return UserProfilePostRequest.builder().userKeyCloakId(UUID.fromString("0b00000f-ea0a-0b00-0000-00dff0000cb0")).profileId(1)
+        return UserProfilePostRequest.builder().userKeyCloakId("0b00000f-ea0a-0b00-0000-00dff0000cb0").profileId(1)
                 .build();
     }
     public UserProfilePostRequest createUserProfileNotToBeSaved2() {

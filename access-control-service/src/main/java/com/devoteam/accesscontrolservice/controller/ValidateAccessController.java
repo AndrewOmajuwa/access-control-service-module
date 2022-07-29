@@ -4,6 +4,7 @@ import com.devoteam.accesscontrolservice.domain.ValidateAccessPostRequest;
 import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.service.BusinessFunctionService;
 import com.devoteam.accesscontrolservice.service.PermissionService;
+import com.devoteam.accesscontrolservice.service.ValidateAccessService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,23 +21,12 @@ import java.util.UUID;
 @SecurityRequirement(name = "bearerAuth")
 public class ValidateAccessController {
 
-    private final ProfileBusinessFunctionPermissionRepository profileBusinessFunctionPermissionRepository;
-
-    private final BusinessFunctionService businessFunctionService;
-
-    private final PermissionService permissionService;
+    private final ValidateAccessService validateAccessService;
 
     @PostMapping
-    public ResponseEntity<HttpStatus> validateAccess(@Valid @RequestBody ValidateAccessPostRequest validateAccessPostRequest){
+    public HttpStatus validateAccess(@Valid @RequestBody ValidateAccessPostRequest validateAccessPostRequest){
 
-        UUID uuid = UUID.fromString(SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString());
+        return validateAccessService.validateAccessService(validateAccessPostRequest);
 
-        businessFunctionService.findByApplicationAndFunctionNamesOrThrowNotFound(validateAccessPostRequest.getApplicationName(), validateAccessPostRequest.getFunctionName());
-
-        permissionService.findByPermissionNameOrThrowNotFound(validateAccessPostRequest.getPermission());
-
-        boolean isAccessAllowed = profileBusinessFunctionPermissionRepository.isAccessAllowed(uuid, validateAccessPostRequest.getApplicationName(), validateAccessPostRequest.getFunctionName(), validateAccessPostRequest.getPermission());
-
-        return isAccessAllowed ? ResponseEntity.ok(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.FORBIDDEN);
     }
 }

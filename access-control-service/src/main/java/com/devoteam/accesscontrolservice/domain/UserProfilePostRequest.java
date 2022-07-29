@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.UUID;
 
@@ -14,10 +15,10 @@ import java.util.UUID;
 @Getter
 public class UserProfilePostRequest {
 
-    @NotNull
-    private UUID userKeyCloakId;
+    @NotEmpty
+    private String userKeyCloakId;
 
-    @NotNull
+    @NotEmpty
     private Integer profileId;
 
 }

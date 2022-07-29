@@ -11,5 +11,5 @@ public interface UserKeycloakMapper {
 
     UserKeycloakMapper INSTANCE = Mappers.getMapper (UserKeycloakMapper.class);
 
-    UserResponse toUserResponse(UUID uuid);
+    UserResponse toUserResponse(String uuid);
 }

@@ -32,7 +32,7 @@ public class Utility {
 
     public static PermissionPostRequest createPermissionToBeSaved(){
         return PermissionPostRequest.builder()
-                .name("View")
+                .name("create2")
                 .build();
     }
     public static UserPostRequest createUserKeycloakToBeSaved(){
@@ -45,14 +45,14 @@ public class Utility {
     }
     public static ProfilePostRequest createProfileToBeSaved(){
         return ProfilePostRequest.builder()
-                .name("View")
+                .name("view")
                 .build();
     }
 
     public static BusinessFunctionPostRequest createBusinessFunctionToBeSaved(){
         return BusinessFunctionPostRequest.builder()
-                .applicationName("Doctor-Service")
-                .functionName("Doctor")
+                .applicationName("access-control-service")
+                .functionName("admin")
                 .build();
     }
     public static BusinessFunctionPermissionPostRequest createBusinessFunctionPermissionToBeSaved(){
@@ -66,7 +66,7 @@ public class Utility {
         return ProfileBusinessFunctionPermissionPostRequest.builder().businessFunctionPermissionId(1).profileId(1)
                 .build();
     }
-    public static UserProfilePostRequest createUserProfileToBeSaved(UUID uuid) {
+    public static UserProfilePostRequest createUserProfileToBeSaved(String uuid) {
 
         return UserProfilePostRequest.builder().userKeyCloakId(uuid).profileId(1)
                 .build();
@@ -110,7 +110,7 @@ public class Utility {
                 .exchange("/api/v1/profile-business-function-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createProfileBusinessFunctionPermissionToBeSaved()), ProfileBusinessFunctionPermissionResponse.class).getBody();
     }
 
-    public UserProfileResponse createUserProfile(UUID uuid) {
+    public UserProfileResponse createUserProfile(String uuid) {
         return testRestTemplate
                 .exchange("/api/v1/user-profiles", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createUserProfileToBeSaved(uuid)), UserProfileResponse.class).getBody();
     }

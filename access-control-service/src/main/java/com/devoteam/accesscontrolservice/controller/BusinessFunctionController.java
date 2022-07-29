@@ -8,6 +8,7 @@ import com.devoteam.accesscontrolservice.util.BusinessFunctionMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,11 +23,13 @@ public class BusinessFunctionController {
     private final BusinessFunctionService businessFunctionService;
 
     @GetMapping
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
     public List<BusinessFunction> findAllBusinessFunctions(){
         return businessFunctionService.listAll();
     }
 
     @PostMapping
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
     public ResponseEntity<BusinessFunctionResponse> save(@Valid @RequestBody BusinessFunctionPostRequest businessFunctionPostRequest){
 
         BusinessFunction businessFunction = BusinessFunctionMapper.INSTANCE.toBusinessFunction(businessFunctionPostRequest);

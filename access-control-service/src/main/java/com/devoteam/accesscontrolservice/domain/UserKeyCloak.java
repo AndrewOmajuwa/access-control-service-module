@@ -17,15 +17,12 @@ import java.util.UUID;
 public class UserKeyCloak {
 
     @Id
-    @Column(name = "uuid",columnDefinition = "BINARY(16)")
-    private UUID uuid;
-    @NotNull
+    @Column(name = "uuid",columnDefinition = "varchar(36)")
+    private String uuid;
     @NotEmpty
     private String email;
-    @NotNull
     @NotEmpty
     private String firstName;
-    @NotNull
     @NotEmpty
     private String lastName;
 
