@@ -23,7 +23,7 @@ public class BusinessFunctionController {
     private final BusinessFunctionService businessFunctionService;
 
     @GetMapping
-    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'business-function', 'create')")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'business-function', 'view')")
     public List<BusinessFunction> findAllBusinessFunctions(){
         return businessFunctionService.listAll();
     }
