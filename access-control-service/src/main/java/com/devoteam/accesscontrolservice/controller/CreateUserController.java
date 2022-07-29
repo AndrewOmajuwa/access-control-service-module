@@ -26,7 +26,6 @@ public class CreateUserController {
     private final KeycloakAdminClient keycloakAdminClient;
 
     @GetMapping
-    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
     public ResponseEntity<List<UserKeyCloak>> findAll(){
         return ResponseEntity.ok(userService.findAll());
     }

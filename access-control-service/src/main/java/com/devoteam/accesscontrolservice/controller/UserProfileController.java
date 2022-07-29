@@ -25,7 +25,7 @@ public class UserProfileController {
     private final UserProfileService userProfileService;
 
     @PostMapping
-    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'user-profiles', 'create')")
     public ResponseEntity<UserProfileResponse> save(@Valid @RequestBody UserProfilePostRequest userProfilePostRequest){
         Profile profile = Profile.builder().id(userProfilePostRequest.getProfileId()).build();
 

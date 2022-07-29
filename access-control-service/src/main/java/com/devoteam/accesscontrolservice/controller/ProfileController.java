@@ -25,7 +25,7 @@ public class ProfileController {
     private final ProfileService profileService;
 
     @PostMapping
-    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile', 'create')")
     public ResponseEntity<ProfileResponse> save(@Valid @RequestBody ProfilePostRequest profilePostRequest){
 
         Profile profile = ProfileMapper.INSTANCE.toProfile(profilePostRequest);

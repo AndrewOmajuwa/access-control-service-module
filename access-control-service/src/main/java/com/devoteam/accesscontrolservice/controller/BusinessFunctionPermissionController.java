@@ -23,7 +23,7 @@ public class BusinessFunctionPermissionController {
     private final BusinessFunctionPermissionService businessFunctionPermissionService;
 
     @PostMapping
-    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'business-function-permissions', 'create')")
     public ResponseEntity<BusinessFunctionPermissionResponse> save(@Valid @RequestBody BusinessFunctionPermissionPostRequest businessFunctionPermissionPostRequest){
         Permission permission = Permission.builder().id(businessFunctionPermissionPostRequest.getPermissionId()).build();
 

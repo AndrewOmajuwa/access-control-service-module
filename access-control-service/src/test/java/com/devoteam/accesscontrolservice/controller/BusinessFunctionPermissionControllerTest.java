@@ -14,8 +14,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = "/create_admin_user_mysql.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class BusinessFunctionPermissionControllerTest {
 
     @Autowired
@@ -29,8 +33,6 @@ class BusinessFunctionPermissionControllerTest {
     @DisplayName("Save creates Business Function Permission when successfull")
     void save_BusinessFunctionPermission_WhenSuccessfull() {
 
-        utility.createBusinessFunction();
-        utility.createPermission();
         Integer expectedId = 1;
         BusinessFunctionPermissionResponse businessFunctionPermission = utility.createBusinessFunctionPermission();
         Assertions.assertThat(businessFunctionPermission).isNotNull();
@@ -62,12 +64,10 @@ class BusinessFunctionPermissionControllerTest {
     @DisplayName("Save does not create Business Function Permission when already present")
     void doesNotSave_BusinessFunctionPermission_WhenAlreadyPresent() {
 
-        utility.createBusinessFunction();
-        utility.createPermission();
         BusinessFunctionPermissionResponse businessFunctionPermission1 = utility.createBusinessFunctionPermission();
         BusinessFunctionPermissionResponse businessFunctionPermission2 = utility.createBusinessFunctionPermission();
         Assertions.assertThat(businessFunctionPermission1.getId()).isEqualTo(businessFunctionPermission2.getId());
-        Assertions.assertThat(businessFunctionPermissionRepository.findById(2)).isEmpty();
+        Assertions.assertThat(businessFunctionPermissionRepository.findById(7)).isEmpty();
     }
 
 

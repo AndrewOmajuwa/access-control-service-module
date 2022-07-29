@@ -25,7 +25,7 @@ public class PermissionController {
     private final PermissionService permissionService;
 
     @PostMapping
-    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'permission', 'create')")
     public ResponseEntity<PermissionResponse> save(@Valid @RequestBody PermissionPostRequest permissionPostRequest){
 
         Permission permission = PermissionMapper.INSTANCE.toPermission(permissionPostRequest);

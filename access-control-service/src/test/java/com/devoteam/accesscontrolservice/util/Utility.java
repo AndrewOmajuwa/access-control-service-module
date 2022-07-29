@@ -32,7 +32,7 @@ public class Utility {
 
     public static PermissionPostRequest createPermissionToBeSaved(){
         return PermissionPostRequest.builder()
-                .name("create2")
+                .name("create")
                 .build();
     }
     public static UserPostRequest createUserKeycloakToBeSaved(){

@@ -25,7 +25,7 @@ public class ProfileBusinessFunctionPermissionController {
     private final ProfileBusinessFunctionPermissionService profileBusinessFunctionPermissionService;
 
     @PostMapping
-    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile-business-function-permissions', 'create')")
     public ResponseEntity<ProfileBusinessFunctionPermissionResponse> save(@Valid @RequestBody ProfileBusinessFunctionPermissionPostRequest profileBusinessFunctionPermissionPostRequest){
         Profile profile = Profile.builder().id(profileBusinessFunctionPermissionPostRequest.getProfileId()).build();
 

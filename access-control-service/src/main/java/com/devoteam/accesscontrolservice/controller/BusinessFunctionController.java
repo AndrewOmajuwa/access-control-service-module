@@ -23,13 +23,13 @@ public class BusinessFunctionController {
     private final BusinessFunctionService businessFunctionService;
 
     @GetMapping
-    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'business-function', 'create')")
     public List<BusinessFunction> findAllBusinessFunctions(){
         return businessFunctionService.listAll();
     }
 
     @PostMapping
-    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'admin', 'create')")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'business-function', 'create')")
     public ResponseEntity<BusinessFunctionResponse> save(@Valid @RequestBody BusinessFunctionPostRequest businessFunctionPostRequest){
 
         BusinessFunction businessFunction = BusinessFunctionMapper.INSTANCE.toBusinessFunction(businessFunctionPostRequest);

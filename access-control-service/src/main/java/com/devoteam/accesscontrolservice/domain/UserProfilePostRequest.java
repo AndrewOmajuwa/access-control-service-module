@@ -15,10 +15,10 @@ import java.util.UUID;
 @Getter
 public class UserProfilePostRequest {
 
-    @NotEmpty
+    @NotNull
     private String userKeyCloakId;
 
-    @NotEmpty
+    @NotNull
     private Integer profileId;
 
 }
