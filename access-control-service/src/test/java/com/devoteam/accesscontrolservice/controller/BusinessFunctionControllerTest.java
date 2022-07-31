@@ -16,8 +16,12 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = "/create_admin_user_mysql.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class BusinessFunctionControllerTest {
 
     @Autowired
@@ -28,11 +32,10 @@ class BusinessFunctionControllerTest {
     @Test
     @DisplayName("Save creates Business Function when successfull")
     void save_BusinessFunction_WhenSuccessfull(){
-        Integer expectedId = 1;
         BusinessFunctionResponse businessFunctionResponse = utility.createBusinessFunction();
         Assertions.assertThat(businessFunctionResponse).isNotNull();
         Assertions.assertThat(businessFunctionResponse.getId()).isNotNull();
-        Assertions.assertThat(businessFunctionResponse.getId()).isEqualTo(expectedId);
+        Assertions.assertThat(businessFunctionResponse.getId()).isEqualTo(7);
 
     }
 
@@ -43,7 +46,7 @@ class BusinessFunctionControllerTest {
         BusinessFunctionResponse businessFunction1 = utility.createBusinessFunction();
         BusinessFunctionResponse businessFunction2 = utility.createBusinessFunction();
         Assertions.assertThat(businessFunction1.getId()).isEqualTo(businessFunction2.getId());
-        Assertions.assertThat(businessFunctionRepository.findById(2)).isEmpty();
+        Assertions.assertThat(businessFunctionRepository.findById(8)).isEmpty();
     }
 
 }

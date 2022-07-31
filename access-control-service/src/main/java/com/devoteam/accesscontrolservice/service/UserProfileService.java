@@ -33,7 +33,7 @@ public class UserProfileService {
     private void assertProfileExists(Integer id){
         profileService.findByIdOrThrowNotFound(id);
     }
-    private void assertUserExists(UUID id){
-        userService.findByIdOrThrowNotFound(id);
+    private void assertUserExists(String uuid){
+        userService.findByIdOrThrowNotFound(uuid);
     }
 }

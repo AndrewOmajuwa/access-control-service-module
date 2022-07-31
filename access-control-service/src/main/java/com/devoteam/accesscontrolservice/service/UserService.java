@@ -23,7 +23,7 @@ public class UserService {
         return userRepository.save(userKeyCloak);
     }
 
-    public UserKeyCloak findByIdOrThrowNotFound(UUID id){
-        return userRepository.findByUuid(id).orElseThrow(() -> new ResourceNotFoundException("User was not found"));
+    public UserKeyCloak findByIdOrThrowNotFound(String uuid){
+        return userRepository.findByUuid(uuid).orElseThrow(() -> new ResourceNotFoundException("User was not found"));
     }
 }

@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class UserResponse {
-    private UUID uuid;
+    private String uuid;
 }

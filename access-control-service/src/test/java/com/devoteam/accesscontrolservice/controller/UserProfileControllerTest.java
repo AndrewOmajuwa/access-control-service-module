@@ -16,10 +16,14 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = "/create_admin_user_mysql.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class UserProfileControllerTest {
 
     @Autowired
@@ -36,7 +40,7 @@ class UserProfileControllerTest {
     @BeforeEach
     public void setUp(){
         UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
-        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(UUID);
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(UUID.toString());
     }
 
     @Test
@@ -47,7 +51,7 @@ class UserProfileControllerTest {
         UserProfileResponse userProfileResponse = utility.createUserProfile(user.getUuid());
         Assertions.assertThat(userProfileResponse).isNotNull();
         Assertions.assertThat(userProfileResponse.getId()).isNotNull();
-        Assertions.assertThat(userProfileResponse.getId()).isEqualTo(1);
+        Assertions.assertThat(userProfileResponse.getId()).isEqualTo(2);
     }
 
     @Test
@@ -75,11 +79,11 @@ class UserProfileControllerTest {
         UserProfileResponse userProfileResponse1 = utility.createUserProfile(user.getUuid());
         UserProfileResponse userProfileResponse2 = utility.createUserProfile(user.getUuid());
         Assertions.assertThat(userProfileResponse1.getId()).isEqualTo(userProfileResponse2.getId());
-        Assertions.assertThat(userProfileRepository.findById(2)).isEmpty();
+        Assertions.assertThat(userProfileRepository.findById(3)).isEmpty();
     }
     
     public UserProfilePostRequest createUserProfileNotToBeSaved1() {
-        return UserProfilePostRequest.builder().userKeyCloakId(UUID.fromString("0b00000f-ea0a-0b00-0000-00dff0000cb0")).profileId(1)
+        return UserProfilePostRequest.builder().userKeyCloakId("0b00000f-ea0a-0b00-0000-00dff0000cb0").profileId(1)
                 .build();
     }
     public UserProfilePostRequest createUserProfileNotToBeSaved2() {

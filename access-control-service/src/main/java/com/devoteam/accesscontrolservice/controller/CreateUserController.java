@@ -1,15 +1,15 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.accesscontrolservice.domain.KeycloakAdminClient;
-import com.devoteam.accesscontrolservice.domain.UserKeyCloak;
-import com.devoteam.accesscontrolservice.domain.UserPostRequest;
-import com.devoteam.accesscontrolservice.domain.UserResponse;
+import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.exception.BadRequest;
+import com.devoteam.accesscontrolservice.service.CheckPermissionService;
 import com.devoteam.accesscontrolservice.service.UserService;
 import com.devoteam.accesscontrolservice.util.UserKeycloakMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -34,7 +34,7 @@ public class CreateUserController {
     @PostMapping
     public ResponseEntity<UserResponse> save(@Valid @RequestBody UserPostRequest userPostRequest){
 
-        UUID userUuid = keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword());
+        String userUuid = keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword());
 
         assertUuidIsNotNull(userUuid);
         UserKeyCloak userKeyCloak = UserKeyCloak.builder()
@@ -50,7 +50,7 @@ public class CreateUserController {
         return ResponseEntity.ok(userResponse);
     }
 
-    public void assertUuidIsNotNull(UUID uuid){
+    public void assertUuidIsNotNull(String uuid){
         if(uuid == null){
             throw new BadRequest("User was not created in Keycloak");
         }

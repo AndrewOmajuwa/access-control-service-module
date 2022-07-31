@@ -8,6 +8,7 @@ import com.devoteam.accesscontrolservice.util.UserProfileMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,6 +25,7 @@ public class UserProfileController {
     private final UserProfileService userProfileService;
 
     @PostMapping
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'user-profiles', 'create')")
     public ResponseEntity<UserProfileResponse> save(@Valid @RequestBody UserProfilePostRequest userProfilePostRequest){
         Profile profile = Profile.builder().id(userProfilePostRequest.getProfileId()).build();
 

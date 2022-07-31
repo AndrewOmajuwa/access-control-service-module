@@ -10,6 +10,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -21,7 +22,8 @@ import org.springframework.http.MediaType;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CreateUserControllerTest {
 
-        private static final java.util.UUID UUID = java.util.UUID.randomUUID();
+    @Value("${user.loggedInUserKeycloakUuid}")
+    private String loggedInUserKeycloakUuid;
         @Autowired
         private TestRestTemplate testRestTemplate;
         @MockBean
@@ -30,7 +32,7 @@ class CreateUserControllerTest {
         @BeforeEach
         public void setUp(){
             UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
-            BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(UUID);
+            BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(loggedInUserKeycloakUuid);
         }
 
         @Test

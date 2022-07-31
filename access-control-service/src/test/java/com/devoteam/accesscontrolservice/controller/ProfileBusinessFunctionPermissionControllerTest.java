@@ -12,8 +12,12 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = "/create_admin_user_mysql.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ProfileBusinessFunctionPermissionControllerTest {
 
     @Autowired
@@ -28,10 +32,6 @@ class ProfileBusinessFunctionPermissionControllerTest {
     @DisplayName("Save creates Profile Business Function Permission when successfull")
     void save_BusinessFunctionPermission_WhenSuccessfull() {
 
-        utility.createBusinessFunction();
-        utility.createPermission();
-        utility.createBusinessFunctionPermission();
-        utility.createProfile();
         Integer expectedId = 1;
         ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission = utility.createProfileBusinessFunctionPermission();
         Assertions.assertThat(profileBusinessFunctionPermission).isNotNull();
@@ -63,17 +63,10 @@ class ProfileBusinessFunctionPermissionControllerTest {
     @DisplayName("Save does not create Profile Business Function Permission when already present")
     void doesNotSave_BusinessFunctionPermission_WhenAlreadyPresent() {
 
-        utility.createBusinessFunctionPermission();
-        utility.createProfile();
         ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission1 = utility.createProfileBusinessFunctionPermission();
         ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission2 = utility.createProfileBusinessFunctionPermission();
         Assertions.assertThat(profileBusinessFunctionPermission1.getId()).isEqualTo(profileBusinessFunctionPermission2.getId());
-        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(2)).isEmpty();
-    }
-
-    ProfileBusinessFunctionPermissionPostRequest createProfileBusinessFunctionPermissionToBeSaved() {
-        return ProfileBusinessFunctionPermissionPostRequest.builder().businessFunctionPermissionId(1).profileId(1)
-                .build();
+        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(7)).isEmpty();
     }
     ProfileBusinessFunctionPermissionPostRequest createBusinessFunctionPermissionNotToBeSaved1() {
         return ProfileBusinessFunctionPermissionPostRequest.builder().businessFunctionPermissionId(0).profileId(1)

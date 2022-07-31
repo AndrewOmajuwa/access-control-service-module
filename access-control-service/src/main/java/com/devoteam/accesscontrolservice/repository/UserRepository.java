@@ -13,7 +13,7 @@ public interface UserRepository extends JpaRepository<UserKeyCloak, Integer> {
 
     List<UserKeyCloak> searchByEmail(String email);
 
-    Optional<UserKeyCloak> findByUuid(UUID uuid);
+    Optional<UserKeyCloak> findByUuid(String uuid);
 
 
 }
