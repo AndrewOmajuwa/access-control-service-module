@@ -1,4 +1,4 @@
-package com.devoteam.library.service;
+package com.devoteam;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

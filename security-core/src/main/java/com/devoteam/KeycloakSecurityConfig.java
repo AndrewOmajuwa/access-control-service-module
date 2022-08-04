@@ -1,4 +1,4 @@
-package com.devoteam.library.service;
+package com.devoteam;
 
 import org.keycloak.OAuth2Constants;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;

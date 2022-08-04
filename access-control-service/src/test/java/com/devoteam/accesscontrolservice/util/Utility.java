@@ -25,7 +25,6 @@ public class Utility {
         return new HttpEntity<>(t, Utility.createJsonHeader());
     }
 
-
     public static PermissionPostRequest createPermissionToBeSaved(){
         return PermissionPostRequest.builder()
                 .name("create")

@@ -2,6 +2,7 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.ValidateAccessPostRequest;
 import com.devoteam.accesscontrolservice.service.ValidateAccessService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("api/v1/validate-access")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class ValidateAccessController {
 
     private final ValidateAccessService validateAccessService;
