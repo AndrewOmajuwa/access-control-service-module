@@ -66,6 +66,7 @@ public class Utility {
         return UserProfilePostRequest.builder().userKeyCloakId(uuid).profileId(1)
                 .build();
     }
+
     public static HttpEntity<UserPostRequest> createUserJsonHttpEntity(UserPostRequest userPostRequest){
         return new HttpEntity<>(userPostRequest, Utility.createJsonHeader());
     }
