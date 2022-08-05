@@ -1,4 +1,4 @@
-package com.devoteam.accesscontrolservice.config;
+package com.devoteam;
 
 import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
 import org.springframework.context.annotation.Bean;

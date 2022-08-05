@@ -39,7 +39,11 @@
         </dependencies>
     </dependencyManagement>
     <dependencies>
-
+        <dependency>
+            <groupId>com.devoteam</groupId>
+            <artifactId>security-core</artifactId>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -68,11 +72,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>${springdoc.version}</version>
         </dependency>
 
         <dependency>
@@ -115,6 +114,11 @@
         <dependency>
             <groupId>org.springdoc</groupId>
             <artifactId>springdoc-openapi-security</artifactId>
+            <version>${springdoc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
             <version>${springdoc.version}</version>
         </dependency>
         <dependency>

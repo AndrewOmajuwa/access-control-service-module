@@ -1,17 +1,13 @@
 package com.devoteam.accesscontrolservice.util;
 
 import com.devoteam.accesscontrolservice.domain.*;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.*;
-
-import java.util.UUID;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 
 @Configuration
 public class Utility {
@@ -28,7 +24,6 @@ public class Utility {
     public static <T> HttpEntity<T> createJsonHttpEntity(T t){
         return new HttpEntity<>(t, Utility.createJsonHeader());
     }
-
 
     public static PermissionPostRequest createPermissionToBeSaved(){
         return PermissionPostRequest.builder()

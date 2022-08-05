@@ -2,33 +2,28 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.repository.PermissionRepository;
-import com.devoteam.accesscontrolservice.service.CheckPermissionService;
 import com.devoteam.accesscontrolservice.util.Utility;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
-import java.util.UUID;
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/create_admin_user_mysql.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class PermissionControllerTest {
+
     @Autowired
     private TestRestTemplate testRestTemplate;
     @Autowired
     private PermissionRepository permissionRepository;
     @Autowired
     private Utility utility;
-    @Autowired
-    CheckPermissionService checkPermissionService;
 
 
     @Test

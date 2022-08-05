@@ -1,8 +1,5 @@
-package com.devoteam.accesscontrolservice.config;
+package com.devoteam;
 
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeIn;
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import org.keycloak.OAuth2Constants;
 import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
 import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
@@ -13,10 +10,11 @@ import org.keycloak.adapters.springsecurity.management.HttpSessionManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
@@ -27,13 +25,9 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.servlet.http.HttpServletRequest;
 
+@Configuration
 @KeycloakConfiguration
-@SecurityScheme(
-        name = "bearerAuth",
-        type = SecuritySchemeType.HTTP,
-        bearerFormat = "JWT",
-        scheme = "bearer"
-)
+@EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter {
 
@@ -65,16 +59,9 @@ public class KeycloakSecurityConfig extends KeycloakWebSecurityConfigurerAdapter
         super.configure(http);
         http.csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/v1/users").permitAll()
-                .antMatchers("/swagger-ui/index.html").permitAll()
-                .antMatchers("/api/v1/validate-access").authenticated()
-                .antMatchers("/api/v1/permissions").authenticated()
-                .antMatchers("/api/v1/profiles").authenticated()
-                .antMatchers("/api/v1/business-functions-permissions").authenticated()
-                .antMatchers("/api/v1/profile-business-function-permissions").authenticated()
-                .antMatchers("/api/v1/business-functions").authenticated()
-                .antMatchers("/names").authenticated();
+                .anyRequest().permitAll();
     }
+
 
     @Bean
     @Override

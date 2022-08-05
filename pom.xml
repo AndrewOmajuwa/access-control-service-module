@@ -9,6 +9,7 @@
   <packaging>pom</packaging>
 
   <modules>
+    <module>security-core</module>
     <module>gateway-service</module>
     <module>eureka-server</module>
     <module>access-control-service</module>
