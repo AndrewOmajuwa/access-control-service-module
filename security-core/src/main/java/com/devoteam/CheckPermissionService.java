@@ -11,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 
 @Configuration
 @Component
@@ -44,7 +45,11 @@ public class CheckPermissionService {
         KeycloakAuthenticationToken keycloakAuthenticationToken = (KeycloakAuthenticationToken) SecurityContextHolder.getContext().getAuthentication();
         var token = keycloakAuthenticationToken.getAccount().getKeycloakSecurityContext().getTokenString();
 
-        return token == null ? "Token not found please authenticate" : token;
+        if(token == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Token not found");
+        }
+
+        return token;
 
     }
 }
