@@ -1,14 +1,10 @@
 package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.exception.BadRequest;
-import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
-import com.devoteam.accesscontrolservice.repository.*;
+import com.devoteam.accesscontrolservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.keycloak.authorization.client.util.Http;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -17,33 +13,46 @@ import java.util.Optional;
 public class SetUpService {
 
     private final UserRepository userRepository;
-    private final BusinessFunctionRepository businessFunctionRepository;
-    private final PermissionRepository permissionRepository;
-    private final BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
-    private final ProfileRepository profileRepository;
-    private final ProfileBusinessFunctionPermissionRepository profileBusinessFunctionPermissionRepository;
-    private final UserProfileRepository userProfileRepository;
+    private final BusinessFunctionService businessFunctionService;
+    private final PermissionService permissionService;
+    private final BusinessFunctionPermissionService businessFunctionPermissionService;
+    private final ProfileService profileService;
+    private final ProfileBusinessFunctionPermissionService profileBusinessFunctionPermissionService;
+    private final UserProfileService userProfileService;
 
     public HttpStatus save(SetUpPostRequest setUpPostRequest){
 
-        Optional<UserKeyCloak> userKeyCloak = userRepository.searchByEmail(setUpPostRequest.getEmail());
+        Optional<UserKeyCloak> userKeyCloak = getUserKeyCloak(setUpPostRequest);
 
-        if(userKeyCloak.isEmpty()){
-          return HttpStatus.BAD_REQUEST;
-        }
+        if (userKeyCloak.isEmpty()) return HttpStatus.BAD_REQUEST;
 
-        BusinessFunction businessFunction = businessFunctionRepository.findByApplicationNameAndFunctionName(setUpPostRequest.getApplicationName(), setUpPostRequest.getFunctionName()).isEmpty() ? businessFunctionRepository.save(BusinessFunction.builder().applicationName(setUpPostRequest.getApplicationName()).functionName(setUpPostRequest.getFunctionName()).build()) : businessFunctionRepository.findByApplicationNameAndFunctionName(setUpPostRequest.getApplicationName(), setUpPostRequest.getFunctionName()).get();
+        ProfileBusinessFunctionPermission profileBusinessFunctionPermission = getProfileBusinessFunctionPermission(setUpPostRequest);
 
-        Permission permission = permissionRepository.findByName(setUpPostRequest.getPermission()).isEmpty() ? permissionRepository.save(Permission.builder().name(setUpPostRequest.getPermission()).build()) : permissionRepository.findByName(setUpPostRequest.getPermission()).get();
+        UserProfile userProfile = userProfileService.save(UserProfile.builder().profile(profileBusinessFunctionPermission.getProfile()).userKeyCloak(userKeyCloak.get()).build());
 
-        BusinessFunctionPermission businessFunctionPermission = businessFunctionPermissionRepository.findBusinessFunctionPermission(businessFunction, permission).isEmpty() ? businessFunctionPermissionRepository.save(BusinessFunctionPermission.builder().businessFunction(businessFunction).permission(permission).build()) : businessFunctionPermissionRepository.findBusinessFunctionPermission(businessFunction, permission).get(0);
+        return userProfile == null ? HttpStatus.BAD_REQUEST : HttpStatus.OK;
+    }
 
-        Profile profile = profileRepository.findByName(setUpPostRequest.getProfileName()).isEmpty() ? profileRepository.save(Profile.builder().name(setUpPostRequest.getProfileName()).build()) : profileRepository.findByName(setUpPostRequest.getProfileName()).get(0);
+    private Optional<UserKeyCloak> getUserKeyCloak(SetUpPostRequest setUpPostRequest) {
 
-        ProfileBusinessFunctionPermission profileBusinessFunctionPermission = profileBusinessFunctionPermissionRepository.findProfileBusinessFunctionPermission(businessFunctionPermission, profile).isEmpty() ? profileBusinessFunctionPermissionRepository.save(ProfileBusinessFunctionPermission.builder().businessFunctionPermission(businessFunctionPermission).profile(profile).build()) : profileBusinessFunctionPermissionRepository.findProfileBusinessFunctionPermission(businessFunctionPermission, profile).get(0);
+        return userRepository.searchByEmail(setUpPostRequest.getEmail());
+    }
 
-        UserProfile userProfile = userProfileRepository.findUserProfile(userKeyCloak.get(), profile).isEmpty() ? userProfileRepository.save(UserProfile.builder().userKeyCloak(userKeyCloak.get()).profile(profile).build()) : userProfileRepository.findUserProfile(userKeyCloak.get(), profile).get(0);
+    private BusinessFunctionPermission getBusinessFunctionPermission(SetUpPostRequest setUpPostRequest) {
 
-        return profileBusinessFunctionPermission == null || userProfile == null ? HttpStatus.BAD_REQUEST : HttpStatus.OK;
+        BusinessFunction businessFunction = businessFunctionService.save(BusinessFunction.builder().applicationName(setUpPostRequest.getApplicationName()).functionName(setUpPostRequest.getFunctionName()).build());
+
+        Permission permission = permissionService.save(Permission.builder().name(setUpPostRequest.getPermission()).build());
+
+        return businessFunctionPermissionService.save(BusinessFunctionPermission.builder().businessFunction(businessFunction).permission(permission).build());
+    }
+
+    private ProfileBusinessFunctionPermission getProfileBusinessFunctionPermission(SetUpPostRequest setUpPostRequest) {
+
+        BusinessFunctionPermission businessFunctionPermission = getBusinessFunctionPermission(setUpPostRequest);
+
+        Profile profile = profileService.save(Profile.builder().name(setUpPostRequest.getProfileName()).build());
+
+        return profileBusinessFunctionPermissionService.save(ProfileBusinessFunctionPermission.builder().profile(profile).businessFunctionPermission(businessFunctionPermission).build());
     }
 }

@@ -27,18 +27,23 @@ public class KeycloakAdminClient {
 
     @Value("${user.passwordClient}")
     private String passwordClient;
+
     @Value(("${user.clientId}"))
     private String client;
+
+    @Value(("${REALM}"))
+    private String realm;
+
     private final UserRepository userRepository;
     public String createUserUuid(String firstName, String lastName, String email, String password){
 
         String serverUrl = "http://localhost:8180";
-        String realm = "devoteam";
+        String realmName = realm;
         String clientId = client;
         String clientSecret = passwordClient;
 
         Keycloak keycloak = KeycloakBuilder.builder()
-                .serverUrl(serverUrl).realm(realm)
+                .serverUrl(serverUrl).realm(realmName)
                 .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .clientId(clientId)
                 .clientSecret(clientSecret).build();
@@ -53,7 +58,7 @@ public class KeycloakAdminClient {
 
         checkIfEmailAlreadyExists(email);
 
-        RealmResource realmResource = keycloak.realm(realm);
+        RealmResource realmResource = keycloak.realm(realmName);
         UsersResource usersResource = realmResource.users();
 
         Response response = usersResource.create(user);
