@@ -1,9 +1,9 @@
 package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.*;
+import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -20,17 +20,16 @@ public class SetUpService {
     private final ProfileBusinessFunctionPermissionService profileBusinessFunctionPermissionService;
     private final UserProfileService userProfileService;
 
-    public HttpStatus save(SetUpPostRequest setUpPostRequest){
+    public void save(SetUpPostRequest setUpPostRequest){
 
         Optional<UserKeyCloak> userKeyCloak = getUserKeyCloak(setUpPostRequest);
 
-        if (userKeyCloak.isEmpty()) return HttpStatus.BAD_REQUEST;
+        if (userKeyCloak.isEmpty()) throw new BadRequest("The given email address does not exist, Please input a valid email address.");
 
         ProfileBusinessFunctionPermission profileBusinessFunctionPermission = getProfileBusinessFunctionPermission(setUpPostRequest);
 
-        UserProfile userProfile = userProfileService.save(UserProfile.builder().profile(profileBusinessFunctionPermission.getProfile()).userKeyCloak(userKeyCloak.get()).build());
+        userProfileService.save(UserProfile.builder().profile(profileBusinessFunctionPermission.getProfile()).userKeyCloak(userKeyCloak.get()).build());
 
-        return userProfile == null ? HttpStatus.BAD_REQUEST : HttpStatus.OK;
     }
 
     private Optional<UserKeyCloak> getUserKeyCloak(SetUpPostRequest setUpPostRequest) {
