@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public interface UserRepository extends JpaRepository<UserKeyCloak, Integer> {
 
-    List<UserKeyCloak> searchByEmail(String email);
+    Optional<UserKeyCloak> searchByEmail(String email);
 
     Optional<UserKeyCloak> findByUuid(String uuid);
 
