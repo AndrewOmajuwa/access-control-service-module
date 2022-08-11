@@ -84,26 +84,26 @@ class SetUpControllerTest {
 
         utility.createUser();
 
-        SetUpPostRequest setUpPostRequest = SetUpPostRequest.builder().applicationName("access-control-service").functionName("business-function").profileName("view").permission("view").email("admin@user").build();
+        SetUpPostRequest setUpPostRequest = Utility.createSetUpToBeSaved();
 
-        ResponseEntity<HttpStatus> responseEntity = testRestTemplate.exchange("/api/v1/setup-users", HttpMethod.POST, Utility.createJsonHttpEntity(setUpPostRequest), HttpStatus.class);
+        ResponseEntity<Void> responseEntity = utility.createSetUpTestRestTemplate(setUpPostRequest);
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
 
     }
+
     @Test
     @DisplayName("Set up returns http status Bad Request when email doesnt exist")
     void setUp_returnsBadRequest_whenEmailDoesntExist(){
 
         utility.createUser();
 
-        SetUpPostRequest setUpPostRequest = SetUpPostRequest.builder().applicationName("access-control-service").functionName("business-function").profileName("view").permission("view").email("eric.cartman@emaillll.com").build();
+        SetUpPostRequest setUpPostRequest = Utility.createSetUpNotToBeSaved();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/setup-users", HttpMethod.POST, Utility.createJsonHttpEntity(setUpPostRequest), Void.class);
+        ResponseEntity<Void> responseEntity = utility.createSetUpTestRestTemplate(setUpPostRequest);
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
     }
-
 
     @Test
     @DisplayName("Set up rollsback transaction when exception is thrown")
@@ -112,11 +112,11 @@ class SetUpControllerTest {
 
         utility.createUser();
 
-        SetUpPostRequest setUpPostRequest = SetUpPostRequest.builder().applicationName("access-control-service").functionName("business-function").profileName("view").permission("create").email("admin@user").build();
+        SetUpPostRequest setUpPostRequest = Utility.createSetUpToBeSaved();
 
         BDDMockito.doThrow(new RuntimeException("Exception message")).when(profileService).save(ArgumentMatchers.any());
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/setup-users", HttpMethod.POST, Utility.createJsonHttpEntity(setUpPostRequest), Void.class);
+        ResponseEntity<Void> responseEntity = utility.createSetUpTestRestTemplate(setUpPostRequest);
 
         Assertions.assertThat(businessFunctionRepository.findAll()).hasSize(6);
 
@@ -138,9 +138,9 @@ class SetUpControllerTest {
 
         BDDMockito.when(checkPermissionServiceMock.validateAccess(Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(false);
 
-        SetUpPostRequest setUpPostRequest = SetUpPostRequest.builder().applicationName("access-control-service").functionName("business-function").profileName("view").permission("view").email("admin@user").build();
+        SetUpPostRequest setUpPostRequest = Utility.createSetUpToBeSaved();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/setup-users", HttpMethod.POST, Utility.createJsonHttpEntity(setUpPostRequest), Void.class);
+        ResponseEntity<Void> responseEntity = utility.createSetUpTestRestTemplate(setUpPostRequest);
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }

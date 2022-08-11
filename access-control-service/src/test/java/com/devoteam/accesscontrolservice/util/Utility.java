@@ -4,10 +4,7 @@ import com.devoteam.accesscontrolservice.domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.*;
 
 @Configuration
 public class Utility {
@@ -109,6 +106,22 @@ public class Utility {
     public UserProfileResponse createUserProfile(String uuid) {
         return testRestTemplate
                 .exchange("/api/v1/user-profiles", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createUserProfileToBeSaved(uuid)), UserProfileResponse.class).getBody();
+    }
+
+    public static SetUpPostRequest createSetUpToBeSaved() {
+
+        return SetUpPostRequest.builder().applicationName("access-control-service").functionName("business-function").profileName("view").permission("view").email("admin@user").build();
+
+    }
+
+    public ResponseEntity<Void> createSetUpTestRestTemplate(SetUpPostRequest setUpPostRequest) {
+
+        return testRestTemplate.exchange("/api/v1/setup-users", HttpMethod.POST, Utility.createJsonHttpEntity(setUpPostRequest), Void.class);
+    }
+
+
+    public static SetUpPostRequest createSetUpNotToBeSaved() {
+        return SetUpPostRequest.builder().applicationName("access-control-service").functionName("business-function").profileName("view").permission("view").email("eric.cartman@emaillll.com").build();
     }
 
 }
