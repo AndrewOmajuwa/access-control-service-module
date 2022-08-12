@@ -67,11 +67,40 @@ class PermissionControllerTest {
         PageableResponse<Permission> permissions = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.GET, null, new ParameterizedTypeReference<PageableResponse<Permission>>() {
         }).getBody();
 
-        System.out.println(permissions);
-
         Assertions.assertThat(permissions).isNotNull();
 
         Assertions.assertThat(permissions).isNotEmpty();
+
+        Assertions.assertThat(permissions.toList().get(0).getId()).isEqualTo(1);
+
+    }
+
+
+    @Test
+    @DisplayName("findById returns a Permission when successfull")
+    public void findById_ReturnsPermission_WhenSuccessfull(){
+
+        ResponseEntity<Permission> permission = testRestTemplate.exchange("/api/v1/permissions/1", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        });
+
+        Assertions.assertThat(permission).isNotNull();
+
+        Assertions.assertThat(permission.getBody().getId()).isNotNull();
+
+        Assertions.assertThat(permission.getBody().getId()).isEqualTo(1);
+
+    }
+
+    @Test
+    @DisplayName("findById returns 404 Not Found when id doesnt exist")
+    public void findById_Returns404NotFound_WhenIdDoesntExist(){
+
+        ResponseEntity<Permission> permission = testRestTemplate.exchange("/api/v1/permissions/2", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        });
+
+        Assertions.assertThat(permission.getBody().getId()).isNull();
+
+        Assertions.assertThat(permission.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 

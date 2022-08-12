@@ -5,6 +5,9 @@ import com.devoteam.accesscontrolservice.domain.PermissionPostRequest;
 import com.devoteam.accesscontrolservice.domain.PermissionResponse;
 import com.devoteam.accesscontrolservice.service.PermissionService;
 import com.devoteam.accesscontrolservice.util.PermissionMapper;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -41,6 +44,12 @@ public class PermissionController {
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'permission', 'view')")
     public ResponseEntity<Page<Permission>> getPermissions(Pageable pageable){
         return ResponseEntity.ok(permissionService.listAll(pageable));
+    }
+
+    @GetMapping(path = "/{id}")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'permission', 'view')")
+    public ResponseEntity<Permission> findById(@PathVariable int id) {
+        return ResponseEntity.ok(permissionService.findById(id));
     }
 
 }

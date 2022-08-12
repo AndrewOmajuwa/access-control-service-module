@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -28,6 +27,11 @@ public class PermissionService {
     public Page<Permission> listAll(Pageable pageable){
         return permissionRepository.findAll(pageable);
     }
+
+    public Permission findById(int id){
+        return findByIdOrThrowNotFound(id);
+    }
+
 
     public Permission findByIdOrThrowNotFound(Integer id){
         return permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
