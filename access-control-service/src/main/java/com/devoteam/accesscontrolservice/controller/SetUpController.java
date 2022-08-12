@@ -3,6 +3,7 @@ package com.devoteam.accesscontrolservice.controller;
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.SetUpPostRequest;
 import com.devoteam.accesscontrolservice.service.SetUpService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping(value = "api/v1/setup-users")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class SetUpController {
 
     private final SetUpService setUpService;
