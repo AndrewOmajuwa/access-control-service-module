@@ -3,12 +3,15 @@ package com.devoteam.accesscontrolservice.controller;
 import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.repository.PermissionRepository;
 import com.devoteam.accesscontrolservice.util.Utility;
+import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
@@ -24,7 +27,6 @@ class PermissionControllerTest {
     private PermissionRepository permissionRepository;
     @Autowired
     private Utility utility;
-
 
     @Test
     @DisplayName("Save creates Permission when successfull")
@@ -57,6 +59,23 @@ class PermissionControllerTest {
         Assertions.assertThat(permissionRepository.findById(3)).isEmpty();
 
     }
+
+    @Test
+    @DisplayName("findAll returns a pageable list of permissions when called successfully")
+    void findAll_returnsListOfPermission_WhenCalledSuccessfully(){
+
+        PageableResponse<Permission> permissions = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.GET, null, new ParameterizedTypeReference<PageableResponse<Permission>>() {
+        }).getBody();
+
+        System.out.println(permissions);
+
+        Assertions.assertThat(permissions).isNotNull();
+
+        Assertions.assertThat(permissions).isNotEmpty();
+
+    }
+
+
     public PermissionPostRequest createPermissionNotToBeSaved(){
         return PermissionPostRequest.builder()
                 .name("")
