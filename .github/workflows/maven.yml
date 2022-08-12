@@ -28,4 +28,6 @@ jobs:
           java-version: '17'
           distribution: 'adopt'
       - name: Run tests
+        env:
+          TOKEN: ${{ secrets.TOKEN }}
         run: mvn test --file pom.xml
