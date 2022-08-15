@@ -1,10 +1,14 @@
 package com.devoteam.accesscontrolservice.service;
 
+import com.devoteam.accesscontrolservice.domain.BusinessFunction;
 import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermission;
 import com.devoteam.accesscontrolservice.domain.Profile;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 
@@ -29,6 +33,12 @@ public class BusinessFunctionPermissionService {
 
     public BusinessFunctionPermission findByIdOrThrowNotFound(Integer id){
         return businessFunctionPermissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function Permission was not found"));
+    }
+
+    public Page<BusinessFunctionPermission> listAll(Pageable pageable, String applicationName){
+
+        return businessFunctionPermissionRepository.findBusinessFunctionPermissionByApplicationName(applicationName, pageable);
+
     }
 
     private void assertPermissionExists(Integer id){

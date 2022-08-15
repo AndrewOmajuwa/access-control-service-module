@@ -1,15 +1,21 @@
 package com.devoteam.accesscontrolservice.controller;
 
+import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.util.Utility;
+import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -28,6 +34,15 @@ class BusinessFunctionPermissionControllerTest {
     private BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
     @Autowired
     private Utility utility;
+    @MockBean
+    private CheckPermissionService checkPermissionServiceMock;
+
+    @BeforeEach
+    public void setUp(){
+
+        BDDMockito.when(checkPermissionServiceMock.validateAccess(Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(true);
+
+    }
     
     @Test
     @DisplayName("Save creates Business Function Permission when successfull")
@@ -68,6 +83,22 @@ class BusinessFunctionPermissionControllerTest {
         BusinessFunctionPermissionResponse businessFunctionPermission2 = utility.createBusinessFunctionPermission();
         Assertions.assertThat(businessFunctionPermission1.getId()).isEqualTo(businessFunctionPermission2.getId());
         Assertions.assertThat(businessFunctionPermissionRepository.findById(7)).isEmpty();
+    }
+
+
+    @Test
+    @DisplayName("findAll returns a paginated list of business-function-permissions when called successfully")
+    void findAll_ReturnsListOfPaginatedBusinessFunctionPermissions_WhenCalledSuccessfully(){
+
+        PageableResponse<BusinessFunctionPermission> businessFunctionPermissions = testRestTemplate.exchange("/api/v1/business-functions-permissions?applicationName={applicationName}", HttpMethod.GET, null, new ParameterizedTypeReference<PageableResponse<BusinessFunctionPermission>>() {
+        }, "access-control-service").getBody();
+
+        Assertions.assertThat(businessFunctionPermissions).isNotNull();
+
+        Assertions.assertThat(businessFunctionPermissions).isNotEmpty();
+
+        Assertions.assertThat(businessFunctionPermissions.stream().count()).isEqualTo(6);
+
     }
 
 

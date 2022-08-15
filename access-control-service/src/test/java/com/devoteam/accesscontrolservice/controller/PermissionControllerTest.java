@@ -76,7 +76,7 @@ class PermissionControllerTest {
     }
 
     @Test
-    @DisplayName("findAll returns a pageable list of permissions when called successfully")
+    @DisplayName("findAll returns a paginated list of permissions when called successfully")
     void findAll_ReturnsListOfPermission_WhenCalledSuccessfully(){
 
         PageableResponse<Permission> permissions = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.GET, null, new ParameterizedTypeReference<PageableResponse<Permission>>() {
