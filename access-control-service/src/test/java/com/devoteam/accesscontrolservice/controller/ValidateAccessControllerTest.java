@@ -18,41 +18,23 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.context.jdbc.Sql;
 
 import java.util.UUID;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@Sql(scripts = "/create_admin_user_mysql.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
 class ValidateAccessControllerTest {
-    @Value("${user.loggedInUserKeycloakUuid}")
-    private UUID loggedInUserKeycloakUuid;
 
     @Autowired
     private TestRestTemplate testRestTemplate;
-
-    @Autowired
-    private Utility utility;
-
-    @MockBean
-    private KeycloakAdminClient keycloakAdminClient;
-
-    @BeforeEach
-    public void setUp(){
-        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
-        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(loggedInUserKeycloakUuid.toString());
-    }
 
     @Test
     @DisplayName("Validate access endpoint returns http status 200 when user has valid credentials")
     void validateAccessEndpoint_returnsHttpStatus200_whenUserHasValidCredentials() {
 
-        utility.createProfile();
-        utility.createUserProfile(loggedInUserKeycloakUuid.toString());
-        utility.createBusinessFunction();
-        utility.createPermission();
-        utility.createBusinessFunctionPermission();
-        utility.createProfileBusinessFunctionPermission();
-        ValidateAccessPostRequest validateAccessPostRequest = ValidateAccessPostRequest.builder().applicationName("access-control-service").functionName("permission").permission("create").build();
-
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/validate-access", HttpMethod.POST, Utility.createJsonHttpEntity(validateAccessPostRequest), Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/validate-access?applicationName=access-control-service&functionName=permission&permission=create", HttpMethod.GET, null, Void.class);
 
         Assertions.assertThat(responseEntity).isNotNull();
 
@@ -61,19 +43,9 @@ class ValidateAccessControllerTest {
     }
     @Test
     @DisplayName("Validate access endpoint returns http status 403 when user has invalid credentials")
-    void validateAccessEndpoint_returnsHttpStatus200_whenUserHasInvalidCredentials() {
+    void validateAccessEndpoint_returnsHttpStatus403_whenUserHasInvalidCredentials() {
 
-        UserResponse user = utility.createUser();
-        utility.createBusinessFunction();
-        utility.createPermission();
-        testRestTemplate.exchange("/api/v1/permissions", HttpMethod.POST, Utility.createJsonHttpEntity(Permission.builder().name("delete").build()), BusinessFunctionResponse.class);
-        utility.createBusinessFunctionPermission();
-        utility.createProfile();
-        utility.createProfileBusinessFunctionPermission();
-        utility.createUserProfile(loggedInUserKeycloakUuid.toString());
-        ValidateAccessPostRequest validateAccessPostRequest = ValidateAccessPostRequest.builder().applicationName("Doctor-Service").functionName("Doctor").permission("delete").build();
-
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/validate-access", HttpMethod.POST, Utility.createJsonHttpEntity(validateAccessPostRequest), Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/validate-access?applicationName=access-control-service&functionName=profile&permission=delete", HttpMethod.GET, null, Void.class);
 
         Assertions.assertThat(responseEntity).isNotNull();
 
@@ -84,9 +56,7 @@ class ValidateAccessControllerTest {
     @DisplayName("Validate access endpoint returns http status 404 when permission or business function does not exist")
     void validateAccessEndpoint_returnsHttpStatus404_whenUserHasInvalidCredentials() {
 
-        ValidateAccessPostRequest validateAccessPostRequest = ValidateAccessPostRequest.builder().applicationName("Doctor-").functionName("Doctor").permission("delete").build();
-
-        ResponseEntity<Void> status = testRestTemplate.exchange("/api/v1/validate-access", HttpMethod.POST, Utility.createJsonHttpEntity(validateAccessPostRequest), Void.class);
+        ResponseEntity<Void> status = testRestTemplate.exchange("/api/v1/validate-access?applicationName=doctor-service&functionName=userProfile&permission=update", HttpMethod.GET, null, Void.class);
 
         Assertions.assertThat(status.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }

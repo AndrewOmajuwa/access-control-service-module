@@ -5,6 +5,7 @@ import com.devoteam.accesscontrolservice.service.ValidateAccessService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -18,7 +19,7 @@ public class ValidateAccessController {
     private final ValidateAccessService validateAccessService;
 
     @GetMapping
-    public HttpStatus validateAccess(@Valid @RequestParam String applicationName, String functionName, String permission){
+    public ResponseEntity<Void> validateAccess(@Valid @RequestParam String applicationName, String functionName, String permission){
 
         ValidateAccessPostRequest validateAccessPostRequest = ValidateAccessPostRequest.builder().applicationName(applicationName).functionName(functionName).permission(permission).build();
 

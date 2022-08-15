@@ -109,7 +109,7 @@ class PermissionControllerTest {
     @DisplayName("findById returns 404 Not Found when id doesnt exist")
     void findById_Returns404NotFound_WhenIdDoesntExist(){
 
-        ResponseEntity<Permission> permission = testRestTemplate.exchange("/api/v1/permissions/2", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        ResponseEntity<Permission> permission = testRestTemplate.exchange("/api/v1/permissions/3", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });
 
         Assertions.assertThat(permission.getBody().getId()).isNull();

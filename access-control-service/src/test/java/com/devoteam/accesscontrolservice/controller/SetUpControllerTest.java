@@ -120,7 +120,7 @@ class SetUpControllerTest {
 
         Assertions.assertThat(businessFunctionRepository.findAll()).hasSize(6);
 
-        Assertions.assertThat(permissionRepository.findAll()).hasSize(1);
+        Assertions.assertThat(permissionRepository.findAll()).hasSize(2);
 
         Assertions.assertThat(businessFunctionPermissionRepository.findAll()).hasSize(6);
 

@@ -1,13 +1,18 @@
 package com.devoteam.accesscontrolservice.controller;
 
+import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.util.Utility;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -26,6 +31,16 @@ class ProfileBusinessFunctionPermissionControllerTest {
     private ProfileBusinessFunctionPermissionRepository profileBusinessFunctionPermissionRepository;
     @Autowired
     Utility utility;
+    @Autowired
+    @MockBean
+    private CheckPermissionService checkPermissionServiceMock;
+
+    @BeforeEach
+    public void setUp(){
+
+        BDDMockito.when(checkPermissionServiceMock.validateAccess(Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(true);
+
+    }
 
 
     @Test
