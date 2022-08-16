@@ -25,7 +25,7 @@ public class CheckPermissionService {
 
         HttpEntity<String> httpEntity = new HttpEntity<>(createJsonHeader());
 
-        HttpStatus httpStatus = restTemplate.exchange("http://access-control-service/api/v1/validate-access?applicationName={applicationName}&functionName={functionName}&permission={permission}", HttpMethod.GET, httpEntity, HttpStatus.class, applicationName, functionName, permission).getBody();
+        HttpStatus httpStatus = restTemplate.exchange("http://access-control-service/api/v1/validate-access?applicationName={applicationName}&functionName={functionName}&permission={permission}", HttpMethod.GET, httpEntity, HttpStatus.class, applicationName, functionName, permission).getStatusCode();
 
         return httpStatus == HttpStatus.OK;
 

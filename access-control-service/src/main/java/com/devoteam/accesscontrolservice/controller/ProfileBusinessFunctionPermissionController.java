@@ -7,14 +7,14 @@ import com.devoteam.accesscontrolservice.util.BusinessFunctionPermissionMapper;
 import com.devoteam.accesscontrolservice.util.ProfileBusinessFunctionPermissionMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 @RequestMapping(value = "api/v1/profile-business-function-permissions")
 @RestController
@@ -38,5 +38,13 @@ public class ProfileBusinessFunctionPermissionController {
         ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermissionResponse = ProfileBusinessFunctionPermissionMapper.INSTANCE.toProfileBusinessFunctionPermissionResponse(savedBusinessFunctionPermission);
 
         return ResponseEntity.ok(profileBusinessFunctionPermissionResponse);
+    }
+
+    @GetMapping
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile-business-function-permissions', 'view')")
+    public ResponseEntity<Page<ProfileBusinessFunctionPermission>> getProfileBusinessFunctionPermissions(Pageable pageable, @NotBlank @RequestParam String profileName){
+
+        return ResponseEntity.ok(profileBusinessFunctionPermissionService.listAll(pageable, profileName));
+
     }
 }
