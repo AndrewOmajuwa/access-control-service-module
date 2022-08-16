@@ -4,6 +4,7 @@ import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.repository.UserProfileRepository;
 import com.devoteam.accesscontrolservice.util.Utility;
+import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,14 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.UUID;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/create_admin_user_mysql.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -86,6 +86,22 @@ class UserProfileControllerTest {
         UserProfileResponse userProfileResponse2 = utility.createUserProfile(user.getUuid());
         Assertions.assertThat(userProfileResponse1.getId()).isEqualTo(userProfileResponse2.getId());
         Assertions.assertThat(userProfileRepository.findById(3)).isEmpty();
+    }
+
+
+    @Test
+    @DisplayName("findAll returns a paginated list of user-profiles when called successfully")
+    void findAll_ReturnsListOfUserProfiles_WhenCalledSuccessfully(){
+
+        PageableResponse<UserProfile> userProfiles = testRestTemplate.exchange("/api/v1/user-profiles", HttpMethod.GET, null, new ParameterizedTypeReference<PageableResponse<UserProfile>>() {
+        }).getBody();
+
+        Assertions.assertThat(userProfiles).isNotNull();
+
+        Assertions.assertThat(userProfiles).isNotEmpty();
+
+        Assertions.assertThat(userProfiles.toList().get(0).getId()).isEqualTo(1);
+
     }
     
     public UserProfilePostRequest createUserProfileNotToBeSaved1() {

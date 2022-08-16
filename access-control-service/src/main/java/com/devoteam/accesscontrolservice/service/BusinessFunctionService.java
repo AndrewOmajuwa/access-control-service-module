@@ -5,6 +5,8 @@ import com.devoteam.accesscontrolservice.domain.Permission;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,6 +29,15 @@ public class BusinessFunctionService {
     public List<BusinessFunction> listAll(){
         return businessFunctionRepository.findAll();
     }
+
+    public Page<BusinessFunction> listAll(Pageable pageable){
+        return businessFunctionRepository.findAll(pageable);
+    }
+
+    public BusinessFunction findById(int id){
+        return findByIdOrThrowNotFound(id);
+    }
+
 
     public BusinessFunction findByIdOrThrowNotFound(Integer id){
         return businessFunctionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));

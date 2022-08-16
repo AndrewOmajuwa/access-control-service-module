@@ -7,14 +7,14 @@ import com.devoteam.accesscontrolservice.util.BusinessFunctionPermissionMapper;
 import com.devoteam.accesscontrolservice.util.UserProfileMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 @RequestMapping(value = "api/v1/user-profiles")
 @RestController
@@ -38,5 +38,13 @@ public class UserProfileController {
         UserProfileResponse userProfileResponse = UserProfileMapper.INSTANCE.toUserProfileResponse(savedUserProfile);
 
         return ResponseEntity.ok(userProfileResponse);
+    }
+
+    @GetMapping
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'user-profiles', 'view')")
+    public ResponseEntity<Page<UserProfile>> getUserProfiles(Pageable pageable){
+
+        return ResponseEntity.ok(userProfileService.listAll(pageable));
+
     }
 }
