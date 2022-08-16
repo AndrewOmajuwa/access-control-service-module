@@ -9,15 +9,12 @@ spring:
     hibernate:
       ddl-auto: create-drop
 user:
-  passwordClient: ${IDM_PASSWORD}
-  clientId: ${CLIENT_ID}
-  token: ${TOKEN}
-  loggedInUserKeycloakUuid: ${LOGGED_IN_USER_KEYCLOAK_UUID}
+  token: ${TOKEN:}
 
 keycloak:
   realm: devoteam
   resource: access-control-client
-  auth-server-url: http://localhost:8180
+  auth-server-url: https://valhalla-keycloak.azurewebsites.net/auth/
   ssl-required: external
   public-client: false
 

@@ -31,7 +31,7 @@ public class Utility {
         return UserPostRequest.builder()
                 .firstName("Eric")
                 .lastName("Cartman")
-                .email("eric.cartman@email.com")
+                .email("admin@user")
                 .password("password")
                 .build();
     }

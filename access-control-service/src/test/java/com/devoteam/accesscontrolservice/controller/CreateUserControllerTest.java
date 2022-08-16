@@ -22,8 +22,6 @@ import org.springframework.http.MediaType;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class CreateUserControllerTest {
 
-    @Value("${user.loggedInUserKeycloakUuid}")
-    private String loggedInUserKeycloakUuid;
         @Autowired
         private TestRestTemplate testRestTemplate;
         @MockBean
@@ -32,7 +30,8 @@ class CreateUserControllerTest {
         @BeforeEach
         public void setUp(){
             UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
-            BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(loggedInUserKeycloakUuid);
+
+            BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
         }
 
         @Test
@@ -40,6 +39,7 @@ class CreateUserControllerTest {
         public void save_User_WhenSuccessfull(){
 
             UserResponse userResponse = testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createUserKeycloakToBeSaved()), UserResponse.class).getBody();
+            System.out.println(testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createUserKeycloakToBeSaved()), UserResponse.class));
             Assertions.assertThat(userResponse).isNotNull();
             Assertions.assertThat(userResponse.getUuid()).isNotNull();
         }

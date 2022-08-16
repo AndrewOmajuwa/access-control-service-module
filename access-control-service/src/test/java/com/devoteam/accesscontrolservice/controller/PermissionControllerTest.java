@@ -32,12 +32,16 @@ class PermissionControllerTest {
     private PermissionRepository permissionRepository;
     @Autowired
     private Utility utility;
-    @Autowired
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
+    @MockBean
+    private KeycloakAdminClient keycloakAdminClient;
 
     @BeforeEach
     public void setUp(){
+        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
+
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
         BDDMockito.when(checkPermissionServiceMock.validateAccess(Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(true);
 
@@ -76,7 +80,7 @@ class PermissionControllerTest {
     }
 
     @Test
-    @DisplayName("findAll returns a pageable list of permissions when called successfully")
+    @DisplayName("findAll returns a paginated list of permissions when called successfully")
     void findAll_ReturnsListOfPermission_WhenCalledSuccessfully(){
 
         PageableResponse<Permission> permissions = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.GET, null, new ParameterizedTypeReference<PageableResponse<Permission>>() {
@@ -109,7 +113,7 @@ class PermissionControllerTest {
     @DisplayName("findById returns 404 Not Found when id doesnt exist")
     void findById_Returns404NotFound_WhenIdDoesntExist(){
 
-        ResponseEntity<Permission> permission = testRestTemplate.exchange("/api/v1/permissions/2", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        ResponseEntity<Permission> permission = testRestTemplate.exchange("/api/v1/permissions/3", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });
 
         Assertions.assertThat(permission.getBody().getId()).isNull();
