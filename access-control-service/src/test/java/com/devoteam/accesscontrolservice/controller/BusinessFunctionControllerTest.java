@@ -1,9 +1,7 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
-import com.devoteam.accesscontrolservice.domain.BusinessFunction;
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionPostRequest;
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionResponse;
+import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import com.devoteam.accesscontrolservice.util.BusinessFunctionMapper;
 import com.devoteam.accesscontrolservice.util.Utility;
@@ -33,12 +31,16 @@ class BusinessFunctionControllerTest {
     private BusinessFunctionRepository businessFunctionRepository;
     @Autowired
     private Utility utility;
-    @Autowired
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
+    @MockBean
+    private KeycloakAdminClient keycloakAdminClient;
 
     @BeforeEach
     public void setUp(){
+        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
+
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
         BDDMockito.when(checkPermissionServiceMock.validateAccess(Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(true);
 

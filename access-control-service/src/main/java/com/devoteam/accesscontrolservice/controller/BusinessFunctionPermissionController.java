@@ -12,6 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 @RequestMapping(value = "api/v1/business-functions-permissions")
 @RestController
@@ -39,7 +40,7 @@ public class BusinessFunctionPermissionController {
 
     @GetMapping
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'business-function-permissions', 'view')")
-    public ResponseEntity<Page<BusinessFunctionPermission>> getPermissions(Pageable pageable, @Valid @RequestParam String applicationName){
+    public ResponseEntity<Page<BusinessFunctionPermission>> getBusinessFunctionPermissions(Pageable pageable, @NotBlank @RequestParam String applicationName){
 
         return ResponseEntity.ok(businessFunctionPermissionService.listAll(pageable, applicationName));
 

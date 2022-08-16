@@ -34,18 +34,17 @@ class UserProfileControllerTest {
     private UserProfileRepository userProfileRepository;
     @Autowired
     private Utility utility;
-    @Autowired
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
-
     @MockBean
     private KeycloakAdminClient keycloakAdminClient;
-    private static final java.util.UUID UUID = java.util.UUID.randomUUID();
 
     @BeforeEach
     public void setUp(){
         UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
-        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(UUID.toString());
+
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
+
         BDDMockito.when(checkPermissionServiceMock.validateAccess(Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(true);
 
     }
@@ -58,7 +57,7 @@ class UserProfileControllerTest {
         UserProfileResponse userProfileResponse = utility.createUserProfile(user.getUuid());
         Assertions.assertThat(userProfileResponse).isNotNull();
         Assertions.assertThat(userProfileResponse.getId()).isNotNull();
-        Assertions.assertThat(userProfileResponse.getId()).isEqualTo(2);
+        Assertions.assertThat(userProfileResponse.getId()).isEqualTo(1);
     }
 
     @Test

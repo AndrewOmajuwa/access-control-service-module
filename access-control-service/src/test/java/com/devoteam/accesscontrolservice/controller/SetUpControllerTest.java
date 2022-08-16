@@ -44,7 +44,6 @@ class SetUpControllerTest {
     @SpyBean
     private ProfileService profileService;
 
-    @Autowired
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
 
@@ -58,13 +57,7 @@ class SetUpControllerTest {
     private PermissionRepository permissionRepository;
 
     @Autowired
-    private TestRestTemplate testRestTemplate;
-
-    @Autowired
     private Utility utility;
-
-    @Value("${user.loggedInUserKeycloakUuid}")
-    private String loggedInUserKeycloakUuid;
 
     @MockBean
     private KeycloakAdminClient keycloakAdminClient;
@@ -73,7 +66,7 @@ class SetUpControllerTest {
     public void setUp(){
         UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
 
-        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn(loggedInUserKeycloakUuid);
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
         BDDMockito.when(checkPermissionServiceMock.validateAccess(Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(true);
     }

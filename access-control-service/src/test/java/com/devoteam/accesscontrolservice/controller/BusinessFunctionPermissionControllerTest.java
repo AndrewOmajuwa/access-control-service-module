@@ -36,9 +36,14 @@ class BusinessFunctionPermissionControllerTest {
     private Utility utility;
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
+    @MockBean
+    private KeycloakAdminClient keycloakAdminClient;
 
     @BeforeEach
     public void setUp(){
+        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
+
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
         BDDMockito.when(checkPermissionServiceMock.validateAccess(Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(true);
 
@@ -98,6 +103,19 @@ class BusinessFunctionPermissionControllerTest {
         Assertions.assertThat(businessFunctionPermissions).isNotEmpty();
 
         Assertions.assertThat(businessFunctionPermissions.stream().count()).isEqualTo(6);
+
+    }
+
+    @Test
+    @DisplayName("findAll does not return a paginated list of business-function-permissions when called without parameter")
+    void findAll_DoesNotReturnAListOfPaginatedBusinessFunctionPermissions_WhenCalledWithoutParameter(){
+
+        PageableResponse<BusinessFunctionPermission> businessFunctionPermissions = testRestTemplate.exchange("/api/v1/business-functions-permissions?applicationName={applicationName}", HttpMethod.GET, null, new ParameterizedTypeReference<PageableResponse<BusinessFunctionPermission>>() {
+        }, "").getBody();
+
+        Assertions.assertThat(businessFunctionPermissions.getNumberOfElements()).isZero();
+
+        Assertions.assertThat(businessFunctionPermissions).isEmpty();
 
     }
 

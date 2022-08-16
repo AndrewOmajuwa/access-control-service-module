@@ -1,9 +1,7 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
-import com.devoteam.accesscontrolservice.domain.Profile;
-import com.devoteam.accesscontrolservice.domain.ProfilePostRequest;
-import com.devoteam.accesscontrolservice.domain.ProfileResponse;
+import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.repository.ProfileRepository;
 import com.devoteam.accesscontrolservice.util.Utility;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
@@ -35,12 +33,16 @@ class ProfileControllerTest {
     private ProfileRepository profileRepository;
     @Autowired
     private Utility utility;
-    @Autowired
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
+    @MockBean
+    private KeycloakAdminClient keycloakAdminClient;
 
     @BeforeEach
     public void setUp(){
+        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
+
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
         BDDMockito.when(checkPermissionServiceMock.validateAccess(Mockito.anyString(),Mockito.anyString(),Mockito.anyString())).thenReturn(true);
 
@@ -48,7 +50,7 @@ class ProfileControllerTest {
 
     @Test
     @DisplayName("Save creates Profile when successfull")
-    public void save_Profile_WhenSuccessfull(){
+    void save_Profile_WhenSuccessfull(){
 
         ProfileResponse profileResponse = utility.createProfile();
         Assertions.assertThat(profileResponse).isNotNull();

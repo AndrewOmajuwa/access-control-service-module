@@ -39,7 +39,7 @@ public class ProfileController {
 
     @GetMapping
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile', 'view')")
-    public ResponseEntity<Page<Profile>> getPermissions(Pageable pageable){
+    public ResponseEntity<Page<Profile>> getProfile(Pageable pageable){
         return ResponseEntity.ok(profileService.listAll(pageable));
     }
 

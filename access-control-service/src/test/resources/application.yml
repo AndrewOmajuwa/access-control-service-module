@@ -9,10 +9,7 @@ spring:
     hibernate:
       ddl-auto: create-drop
 user:
-  passwordClient: ${IDM_PASSWORD:}
-  clientId: ${CLIENT_ID:}
   token: ${TOKEN:}
-  loggedInUserKeycloakUuid: ${LOGGED_IN_USER_KEYCLOAK_UUID:}
 
 keycloak:
   realm: devoteam

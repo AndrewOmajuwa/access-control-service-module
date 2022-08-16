@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.BDDMockito;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -29,6 +30,17 @@ class ValidateAccessControllerTest {
 
     @Autowired
     private TestRestTemplate testRestTemplate;
+
+    @MockBean
+    private KeycloakAdminClient keycloakAdminClient;
+
+    @BeforeEach
+    public void setUp(){
+        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
+
+        BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
+
+    }
 
     @Test
     @DisplayName("Validate access endpoint returns http status 200 when user has valid credentials")
