@@ -7,6 +7,8 @@ import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -38,6 +40,21 @@ public class BusinessFunctionService {
         return findByIdOrThrowNotFound(id);
     }
 
+    public void update(Integer id, String applicationName, String functionName){
+
+        findByIdOrThrowNotFound(id);
+
+        assertApplicationNameAndFunctionNameIsNotNull(applicationName, functionName);
+
+        businessFunctionRepository.update(id, applicationName, functionName);
+
+    }
+
+    private static void assertApplicationNameAndFunctionNameIsNotNull(String applicationName, String functionName) {
+        if(applicationName == null || functionName == null){
+            new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        }
+    }
 
     public BusinessFunction findByIdOrThrowNotFound(Integer id){
         return businessFunctionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));

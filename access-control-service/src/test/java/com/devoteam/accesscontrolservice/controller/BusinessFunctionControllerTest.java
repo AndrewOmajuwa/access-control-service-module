@@ -114,4 +114,69 @@ class BusinessFunctionControllerTest {
 
     }
 
+
+    @Test
+    @DisplayName("updated business function replaces existing business function when successfully executed")
+    void updatedBusinessFunction_ReplacesExistingBusinessFunction_WhenSuccessfullyExecuted(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions?id={id}&applicationName={name}&functionName={functionName}", HttpMethod.PUT, null, Void.class, "1", "newName", "newName");
+
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(businessFunctionRepository.findById(1).get().getApplicationName()).isEqualTo("newName");
+
+        Assertions.assertThat(businessFunctionRepository.findById(1).get().getFunctionName()).isEqualTo("newName");
+
+    }
+
+    @Test
+    @DisplayName("update business function returns 400 BadRequest when business function application name is null or blank")
+    void updatedBusinessFunction_Returns400BadRequest_WhenBusinessFunctionApplicationNameIsNullOrBlank(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions?id={id}", HttpMethod.PUT, null, Void.class, "1" , null, "newName");
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("update business function returns 400 BadRequest when business function function name is null or blank")
+    void updatedBusinessFunction_Returns400BadRequest_WhenBusinessFunctionFunctionNameIsNullOrBlank(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions?id={id}", HttpMethod.PUT, null, Void.class, "1" , "newName, null");
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("update business function returns 404 ResourceNotfound when business function id does not exist")
+    void updatedBusinessFunction_Returns400BadRequest_WhenBusinessFunctionIdDoesNotExist(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions?id={id}&applicationName={name}&functionName={functionName}", HttpMethod.PUT, null, Void.class, "100", "newName", "newName" );
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+    @Test
+    @DisplayName("business-function does not get updated when business-function name is not unique")
+    void BusinessFunction_DoesNotGetUpdated_WhenBusinessFunctionNameIsNotUnique(){
+
+        testRestTemplate.exchange("/api/v1/business-functions?id={id}&applicationName={name}&functionName={functionName}", HttpMethod.PUT, null, Void.class, "1", "newName" , "newName");
+
+        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/business-functions?id={id}&applicationName={name}&functionName={functionName}", HttpMethod.PUT, null, Void.class, "2", "newName", "newName" );
+
+        Assertions.assertThat(responseEntity2.getStatusCode()).isNotEqualTo(HttpStatus.NO_CONTENT);
+
+    }
+
+
 }
