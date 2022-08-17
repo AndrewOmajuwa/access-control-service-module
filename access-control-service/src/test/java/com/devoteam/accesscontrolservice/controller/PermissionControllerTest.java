@@ -96,7 +96,7 @@ class PermissionControllerTest {
 
     @Test
     @DisplayName("findById returns a Permission when successfull")
-    public void findById_ReturnsPermission_WhenSuccessfull(){
+    void findById_ReturnsPermission_WhenSuccessfull(){
 
         ResponseEntity<Permission> permission = testRestTemplate.exchange("/api/v1/permissions/1", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });

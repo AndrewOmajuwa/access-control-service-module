@@ -10,11 +10,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 @RequiredArgsConstructor
 @RestController
@@ -47,5 +49,14 @@ public class ProfileController {
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile', 'view')")
     public ResponseEntity<Profile> findById(@PathVariable int id) {
         return ResponseEntity.ok(profileService.findById(id));
+    }
+
+    @PutMapping
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile', 'update')")
+    public ResponseEntity<Void> update(@RequestParam @NotBlank Integer id, @RequestParam String name) {
+
+        profileService.update(id, name);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
