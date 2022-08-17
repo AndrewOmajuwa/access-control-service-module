@@ -6,6 +6,8 @@ import com.devoteam.accesscontrolservice.repository.PermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
@@ -39,4 +41,21 @@ public class PermissionService {
     public Permission findByPermissionNameOrThrowNotFound(String permission){
         return permissionRepository.findByName(permission).stream().findAny().orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
     }
+
+    public void update(Integer id, String name){
+
+        findByIdOrThrowNotFound(id);
+
+        assertNameIsNotNull(name);
+
+        permissionRepository.update(id, name);
+
+    }
+
+    private static void assertNameIsNotNull(String name) {
+        if(name == null){
+            new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }

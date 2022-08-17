@@ -12,11 +12,13 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -52,4 +54,12 @@ public class PermissionController {
         return ResponseEntity.ok(permissionService.findById(id));
     }
 
+    @PutMapping
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'permission', 'update')")
+    public ResponseEntity<Void> update(@RequestParam @NotBlank Integer id, @RequestParam String name) {
+
+        permissionService.update(id, name);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }
