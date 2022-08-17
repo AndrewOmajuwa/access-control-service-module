@@ -1,14 +1,17 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.accesscontrolservice.domain.KeycloakAdminClient;
-import com.devoteam.accesscontrolservice.domain.UserKeyCloak;
-import com.devoteam.accesscontrolservice.domain.UserPostRequest;
-import com.devoteam.accesscontrolservice.domain.UserResponse;
+import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.service.UserService;
 import com.devoteam.accesscontrolservice.util.UserKeycloakMapper;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -17,6 +20,7 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/v1/users")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class CreateUserController {
 
     private final UserService userService;
@@ -24,10 +28,13 @@ public class CreateUserController {
     private final KeycloakAdminClient keycloakAdminClient;
 
     @GetMapping
-    public ResponseEntity<List<UserKeyCloak>> findAll(){
-        return ResponseEntity.ok(userService.findAll());
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'userKeyCloak', 'view')")
+    public ResponseEntity<Page<UserKeyCloak>> getUsers( @RequestParam(value = "email", required = false) String email,
+                                                        @RequestParam(value = "firstName", required = false) String firstName,
+                                                        @RequestParam(value = "lastName", required = false) String lastName,
+                                                        Pageable pageable){
+        return ResponseEntity.ok(userService.listAll(email, firstName, lastName, pageable));
     }
-
 
     @PostMapping
     public ResponseEntity<UserResponse> save(@Valid @RequestBody UserPostRequest userPostRequest){

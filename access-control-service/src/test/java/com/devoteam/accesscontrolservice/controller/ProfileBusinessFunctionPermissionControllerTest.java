@@ -4,6 +4,7 @@ import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.util.Utility;
+import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -14,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -94,5 +96,34 @@ class ProfileBusinessFunctionPermissionControllerTest {
     ProfileBusinessFunctionPermissionPostRequest createProfileBusinessFunctionPermissionNotToBeSaved2() {
         return ProfileBusinessFunctionPermissionPostRequest.builder().businessFunctionPermissionId(1).profileId(0)
                 .build();
+    }
+
+
+    @Test
+    @DisplayName("findAll returns a paginated list of profile-business-function-permissions when called successfully")
+    void findAll_ReturnsListOfPaginatedProfileBusinessFunctionPermissions_WhenCalledSuccessfully(){
+
+        PageableResponse<ProfileBusinessFunctionPermission> profileBusinessFunctionPermissions = testRestTemplate.exchange("/api/v1/profile-business-function-permissions?profileName={profileName}", HttpMethod.GET, null, new ParameterizedTypeReference<PageableResponse<ProfileBusinessFunctionPermission>>() {
+        }, "admin").getBody();
+
+        Assertions.assertThat(profileBusinessFunctionPermissions).isNotNull();
+
+        Assertions.assertThat(profileBusinessFunctionPermissions).isNotEmpty();
+
+        Assertions.assertThat(profileBusinessFunctionPermissions.stream().count()).isEqualTo(6);
+
+    }
+
+    @Test
+    @DisplayName("findAll does not return a paginated list of profile-business-function-permissions when called without parameter")
+    void findAll_DoesNotReturnAListOfPaginatedProfileBusinessFunctionPermissions_WhenCalledWithoutParameter(){
+
+        PageableResponse<ProfileBusinessFunctionPermission> profileBusinessFunctionPermissions = testRestTemplate.exchange("/api/v1/profile-business-function-permissions?profileName={profileName}", HttpMethod.GET, null, new ParameterizedTypeReference<PageableResponse<ProfileBusinessFunctionPermission>>() {
+        }, "").getBody();
+
+        Assertions.assertThat(profileBusinessFunctionPermissions.getNumberOfElements()).isZero();
+
+        Assertions.assertThat(profileBusinessFunctionPermissions).isEmpty();
+
     }
 }

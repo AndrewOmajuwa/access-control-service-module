@@ -6,6 +6,8 @@ import com.devoteam.accesscontrolservice.domain.UserProfile;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -28,6 +30,10 @@ public class UserProfileService {
         List<UserProfile> byUserAndProfileName = userProfileRepository.findUserProfile(userProfile.getUserKeyCloak(), userProfile.getProfile());
 
         return !byUserAndProfileName.isEmpty() ? byUserAndProfileName.get(0) : userProfileRepository.save(userProfile);
+    }
+
+    public Page<UserProfile> listAll(Pageable pageable){
+        return userProfileRepository.findAll(pageable);
     }
 
     private void assertProfileExists(Integer id){

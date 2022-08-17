@@ -1,10 +1,13 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
-import com.devoteam.accesscontrolservice.domain.*;
+import com.devoteam.accesscontrolservice.domain.BusinessFunction;
+import com.devoteam.accesscontrolservice.domain.BusinessFunctionResponse;
+import com.devoteam.accesscontrolservice.domain.KeycloakAdminClient;
+import com.devoteam.accesscontrolservice.domain.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
-import com.devoteam.accesscontrolservice.util.BusinessFunctionMapper;
 import com.devoteam.accesscontrolservice.util.Utility;
+import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -15,10 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
 
@@ -29,6 +32,8 @@ class BusinessFunctionControllerTest {
 
     @Autowired
     private BusinessFunctionRepository businessFunctionRepository;
+    @Autowired
+    private TestRestTemplate testRestTemplate;
     @Autowired
     private Utility utility;
     @MockBean
@@ -64,6 +69,49 @@ class BusinessFunctionControllerTest {
         BusinessFunctionResponse businessFunction2 = utility.createBusinessFunction();
         Assertions.assertThat(businessFunction1.getId()).isEqualTo(businessFunction2.getId());
         Assertions.assertThat(businessFunctionRepository.findById(8)).isEmpty();
+    }
+
+    @Test
+    @DisplayName("findAll returns a paginated list of business-functions when called successfully")
+    void findAll_ReturnsListOfBusinessFunctions_WhenCalledSuccessfully(){
+
+        PageableResponse<BusinessFunction> businessFunctions = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.GET, null, new ParameterizedTypeReference<PageableResponse<BusinessFunction>>() {
+        }).getBody();
+
+        Assertions.assertThat(businessFunctions).isNotNull();
+
+        Assertions.assertThat(businessFunctions).isNotEmpty();
+
+        Assertions.assertThat(businessFunctions.toList().get(0).getId()).isEqualTo(2);
+
+    }
+
+    @Test
+    @DisplayName("findById returns a business-function when successfull")
+    public void findById_ReturnsBusinessFunction_WhenSuccessfull(){
+
+        ResponseEntity<BusinessFunction> businessFunction = testRestTemplate.exchange("/api/v1/business-functions/1", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        });
+
+        Assertions.assertThat(businessFunction).isNotNull();
+
+        Assertions.assertThat(businessFunction.getBody().getId()).isNotNull();
+
+        Assertions.assertThat(businessFunction.getBody().getId()).isEqualTo(1);
+
+    }
+
+    @Test
+    @DisplayName("findById returns 404 Not Found when id doesnt exist")
+    void findById_Returns404NotFound_WhenIdDoesntExist(){
+
+        ResponseEntity<BusinessFunction> businessFunction = testRestTemplate.exchange("/api/v1/business-functions/8", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        });
+
+        Assertions.assertThat(businessFunction.getBody().getId()).isNull();
+
+        Assertions.assertThat(businessFunction.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
     }
 
 }
