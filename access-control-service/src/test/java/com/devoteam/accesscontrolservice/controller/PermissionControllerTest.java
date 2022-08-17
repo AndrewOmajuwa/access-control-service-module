@@ -125,15 +125,17 @@ class PermissionControllerTest {
 
     @Test
     @DisplayName("updated permission replaces existing permission when successfully executed")
-    void updatedPermission_ReplacesExistingPermission_WhenSuccessfullyExecuted(){
+    void updatedPermissiono_ReplacesExistingPermission_WhenSuccessfullyExecuted(){
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions?id={id}&name={name}", HttpMethod.PUT, null, Void.class, "1", "newName");
+        Permission updatedPermission = Permission.builder().id(1).name("Updated-Name").build();
 
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission), Void.class);
+        
         Assertions.assertThat(responseEntity).isNotNull();
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        Assertions.assertThat(permissionRepository.findById(1).get().getName()).isEqualTo("newName");
+        Assertions.assertThat(permissionRepository.findById(1).get().getName()).isEqualTo("Updated-Name");
 
     }
 
@@ -141,18 +143,23 @@ class PermissionControllerTest {
     @DisplayName("update permission returns 400 BadRequest when permission name is null or blank")
     void updatedPermission_Returns400BadRequest_WhenPermissionNameIsNullOrBlank(){
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions?id={id}", HttpMethod.PUT, null, Void.class, "1" );
+        Permission updatedPermission = Permission.builder().id(1).name(null).build();
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission), Void.class);
 
         Assertions.assertThat(responseEntity.getBody()).isNull();
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
+
     @Test
     @DisplayName("update permission returns 404 ResourceNotfound when permission id does not exist")
     void updatedPermission_Returns400BadRequest_WhenPermissionIdDoesNotExist(){
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions?id={id}&name={name}", HttpMethod.PUT, null, Void.class, "100", "newName" );
+        Permission updatedPermission = Permission.builder().id(100).name("Updated-Name").build();
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission), Void.class);
 
         Assertions.assertThat(responseEntity.getBody()).isNull();
 
@@ -160,16 +167,20 @@ class PermissionControllerTest {
 
     }
     @Test
-    @DisplayName("permission does not get updated when Permission name is not unique")
-    void permission_DoesNotGetUpdated_WhenPermissionNameIsNotUnique(){
+    @DisplayName("permission does not get updated when permission name is not unique")
+    void Permission_DoesNotGetUpdated_WhenPermissionNameIsNotUnique(){
 
-        testRestTemplate.exchange("/api/v1/permissions?id={id}&name={name}", HttpMethod.PUT, null, Void.class, "1", "newName" );
-        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/permissions?id={id}&name={name}", HttpMethod.PUT, null, Void.class, "2", "newName" );
+        Permission updatedPermission1 = Permission.builder().id(1).name("Updated-Name").build();
+
+        Permission updatedPermission2 = Permission.builder().id(2).name("Updated-Name").build();
+
+        testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission1), Void.class);
+
+        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission2), Void.class);
 
         Assertions.assertThat(responseEntity2.getStatusCode()).isNotEqualTo(HttpStatus.NO_CONTENT);
 
     }
-
 
     public PermissionPostRequest createPermissionNotToBeSaved(){
         return PermissionPostRequest.builder()

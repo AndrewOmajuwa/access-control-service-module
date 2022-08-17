@@ -1,9 +1,6 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.accesscontrolservice.domain.Permission;
-import com.devoteam.accesscontrolservice.domain.Profile;
-import com.devoteam.accesscontrolservice.domain.ProfilePostRequest;
-import com.devoteam.accesscontrolservice.domain.ProfileResponse;
+import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.service.ProfileService;
 import com.devoteam.accesscontrolservice.util.ProfileMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -53,9 +50,9 @@ public class ProfileController {
 
     @PutMapping
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile', 'update')")
-    public ResponseEntity<Void> update(@RequestParam @NotBlank Integer id, @RequestParam String name) {
+    public ResponseEntity<Void> update(@RequestBody @NotBlank(message = "Please insert a valid profile name") Profile profile) {
 
-        profileService.update(id, name);
+        profileService.update(profile);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

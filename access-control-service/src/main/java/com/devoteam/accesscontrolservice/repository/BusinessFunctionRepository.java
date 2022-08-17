@@ -14,8 +14,4 @@ public interface BusinessFunctionRepository extends JpaRepository<BusinessFuncti
 
     Optional<BusinessFunction> findByApplicationNameAndFunctionName(String applicationName, String functionName);
 
-    @Transactional
-    @Modifying
-    @Query("UPDATE BusinessFunction bf SET bf.applicationName = ?2, bf.functionName = ?3 WHERE bf.id =?1")
-    void update(@Param("id") Integer id, @Param("applicationName") String applicationName, @Param("functionName") String functionName);
 }

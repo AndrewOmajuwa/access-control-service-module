@@ -13,9 +13,4 @@ import java.util.List;
 public interface ProfileRepository extends JpaRepository<Profile, Integer> {
 
     List<Profile> findByName(String name);
-
-    @Transactional
-    @Modifying
-    @Query("UPDATE Profile p SET p.name = ?2 WHERE p.id =?1")
-    void update(@Param("id") Integer id, @Param("name") String name);
 }

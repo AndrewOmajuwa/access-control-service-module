@@ -40,20 +40,12 @@ public class BusinessFunctionService {
         return findByIdOrThrowNotFound(id);
     }
 
-    public void update(Integer id, String applicationName, String functionName){
+    public void update(BusinessFunction businessFunction){
 
-        findByIdOrThrowNotFound(id);
+        findByIdOrThrowNotFound(businessFunction.getId());
 
-        assertApplicationNameAndFunctionNameIsNotNull(applicationName, functionName);
+        businessFunctionRepository.save(businessFunction);
 
-        businessFunctionRepository.update(id, applicationName, functionName);
-
-    }
-
-    private static void assertApplicationNameAndFunctionNameIsNotNull(String applicationName, String functionName) {
-        if(applicationName == null || functionName == null){
-            new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-        }
     }
 
     public BusinessFunction findByIdOrThrowNotFound(Integer id){
