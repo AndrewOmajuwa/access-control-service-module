@@ -111,7 +111,7 @@ class SetUpControllerTest {
 
         ResponseEntity<Void> responseEntity = utility.createSetUpTestRestTemplate(setUpPostRequest);
 
-        Assertions.assertThat(businessFunctionRepository.findAll()).hasSize(6);
+        Assertions.assertThat(businessFunctionRepository.findAll()).hasSize(7);
 
         Assertions.assertThat(permissionRepository.findAll()).hasSize(2);
 
