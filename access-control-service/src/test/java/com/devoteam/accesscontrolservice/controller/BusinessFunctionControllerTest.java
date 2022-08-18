@@ -179,4 +179,19 @@ class BusinessFunctionControllerTest {
     }
 
 
+    @Test
+    @DisplayName("delete removes a business function when successfull")
+    void delete_RemovesABusinessFunction_WhenSuccessfull(){
+
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions/7", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(businessFunctionRepository.findById(7)).isNull();
+
+    }
+
 }

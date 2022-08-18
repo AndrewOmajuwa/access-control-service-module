@@ -16,4 +16,8 @@ public interface BusinessFunctionPermissionRepository extends JpaRepository<Busi
 
     @Query("SELECT bfp FROM BusinessFunctionPermission bfp WHERE bfp.businessFunction.applicationName = ?1")
     Page<BusinessFunctionPermission> findBusinessFunctionPermissionByApplicationName(String applicationName, Pageable pageable);
+
+    @Query("SELECT bfp FROM BusinessFunctionPermission bfp WHERE bfp.businessFunction = ?1")
+    List<BusinessFunctionPermission> findBusinessFunctionPermissionByBusinessFunction(BusinessFunction businessFunction);
+
 }

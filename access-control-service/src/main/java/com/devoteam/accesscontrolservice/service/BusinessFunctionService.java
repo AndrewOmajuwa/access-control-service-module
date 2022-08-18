@@ -2,7 +2,9 @@ package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunction;
 import com.devoteam.accesscontrolservice.domain.Permission;
+import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
+import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,8 @@ import java.util.Optional;
 public class BusinessFunctionService {
 
     private final BusinessFunctionRepository businessFunctionRepository;
+
+    private final BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
 
     public BusinessFunction save(BusinessFunction businessFunction){
 
@@ -48,6 +52,21 @@ public class BusinessFunctionService {
 
         businessFunctionRepository.update(id, applicationName, functionName);
 
+    }
+
+    public void delete(Integer id){
+
+        BusinessFunction businessFunction = findByIdOrThrowNotFound(id);
+
+        assertBusinessFunctionIsNotAssociatedWithPermission(businessFunction);
+
+        businessFunctionRepository.delete(businessFunction);
+    }
+
+    private void assertBusinessFunctionIsNotAssociatedWithPermission(BusinessFunction businessFunction) {
+        if(!businessFunctionPermissionRepository.findBusinessFunctionPermissionByBusinessFunction(businessFunction).isEmpty()){
+            throw new BadRequest("Cannot delete Business Functions associated with Permissions");
+        }
     }
 
     private static void assertApplicationNameAndFunctionNameIsNotNull(String applicationName, String functionName) {

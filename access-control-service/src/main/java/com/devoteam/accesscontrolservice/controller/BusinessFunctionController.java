@@ -61,4 +61,12 @@ public class BusinessFunctionController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
+    @DeleteMapping(path = "{id}")
+    public ResponseEntity<Void> delete(@PathVariable @NotBlank int id) {
+
+        businessFunctionService.delete(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 }
