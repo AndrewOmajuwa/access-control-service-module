@@ -11,6 +11,8 @@ public interface PermissionMapper {
 
     Permission toPermission(PermissionPostRequest permissionPostRequest);
 
+    Permission toPermission(PermissionPutRequest permissionPutRequest);
+
     PermissionResponse toPermissionResponse(Permission permission);
 
 }

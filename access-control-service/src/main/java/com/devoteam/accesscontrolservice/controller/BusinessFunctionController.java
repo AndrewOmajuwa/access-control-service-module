@@ -1,9 +1,6 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionPostRequest;
-import com.devoteam.accesscontrolservice.domain.BusinessFunction;
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionResponse;
-import com.devoteam.accesscontrolservice.domain.Permission;
+import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.service.BusinessFunctionService;
 import com.devoteam.accesscontrolservice.util.BusinessFunctionMapper;
@@ -55,7 +52,9 @@ public class BusinessFunctionController {
 
     @PutMapping
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'business-function', 'update')")
-    public ResponseEntity<Void> update(@RequestBody @NotBlank(message = "Please insert a valid application and function name") BusinessFunction businessFunction) {
+    public ResponseEntity<Void> update(@RequestBody BusinessFunctionPutRequest businessFunctionPutRequest) {
+
+        BusinessFunction businessFunction = BusinessFunctionMapper.INSTANCE.toBusinessFunction(businessFunctionPutRequest);
 
         businessFunctionService.update(businessFunction);
 

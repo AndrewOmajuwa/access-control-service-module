@@ -15,6 +15,6 @@ public class ExceptionRestControllerAdvice {
     @ResponseStatus(value = HttpStatus.BAD_REQUEST)
     public void constraintViolationException(HttpServletResponse response) throws IOException {
 
-        response.sendError(HttpStatus.BAD_REQUEST.value(), "Please insert a valid name");
+        response.sendError(HttpStatus.BAD_REQUEST.value(), "Please input valid values");
     }
 }

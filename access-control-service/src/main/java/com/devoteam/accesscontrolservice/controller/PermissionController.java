@@ -1,9 +1,6 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.accesscontrolservice.domain.BusinessFunction;
-import com.devoteam.accesscontrolservice.domain.Permission;
-import com.devoteam.accesscontrolservice.domain.PermissionPostRequest;
-import com.devoteam.accesscontrolservice.domain.PermissionResponse;
+import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.service.PermissionService;
 import com.devoteam.accesscontrolservice.util.PermissionMapper;
 import io.swagger.v3.oas.annotations.Operation;
@@ -57,7 +54,9 @@ public class PermissionController {
 
     @PutMapping
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'permission', 'update')")
-    public ResponseEntity<Void> update(@RequestBody @NotBlank(message = "Please insert a valid permission name") Permission permission) {
+    public ResponseEntity<Void> update(@RequestBody PermissionPutRequest permissionPutRequest) {
+
+        Permission permission = PermissionMapper.INSTANCE.toPermission(permissionPutRequest);
 
         permissionService.update(permission);
 

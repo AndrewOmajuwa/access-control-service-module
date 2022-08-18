@@ -50,7 +50,9 @@ public class ProfileController {
 
     @PutMapping
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile', 'update')")
-    public ResponseEntity<Void> update(@RequestBody @NotBlank(message = "Please insert a valid profile name") Profile profile) {
+    public ResponseEntity<Void> update(@RequestBody ProfilePutRequest profilePutRequest) {
+
+        Profile profile = ProfileMapper.INSTANCE.toProfile(profilePutRequest);
 
         profileService.update(profile);
 
