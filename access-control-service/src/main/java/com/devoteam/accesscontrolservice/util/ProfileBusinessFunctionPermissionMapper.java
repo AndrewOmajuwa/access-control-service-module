@@ -1,9 +1,7 @@
 package com.devoteam.accesscontrolservice.util;
 
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermission;
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermissionResponse;
 import com.devoteam.accesscontrolservice.domain.ProfileBusinessFunctionPermission;
-import com.devoteam.accesscontrolservice.domain.ProfileBusinessFunctionPermissionResponse;
+import com.devoteam.accesscontrolservice.response.ProfileBusinessFunctionPermissionResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

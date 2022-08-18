@@ -1,7 +1,7 @@
 package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunction;
-import com.devoteam.accesscontrolservice.domain.Permission;
+import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +38,41 @@ public class BusinessFunctionService {
         return findByIdOrThrowNotFound(id);
     }
 
+    public void update(BusinessFunction businessFunction){
+
+        findByIdOrThrowNotFound(businessFunction.getId());
+
+        businessFunctionRepository.save(businessFunction);
+
+    }
+
+    public void delete(Integer id){
+
+        BusinessFunction businessFunction = findByIdOrThrowNotFound(id);
+
+        assertBusinessFunctionIsNotAssociatedWithPermission(businessFunction);
+
+        businessFunctionRepository.delete(businessFunction);
+    }
+
+    public void cascadeDelete(Integer id){
+
+        BusinessFunction businessFunction = findByIdOrThrowNotFound(id);
+
+//        cascadeDeleteBusinessFunction(businessFunction);
+
+        businessFunctionRepository.delete(businessFunction);
+
+    }
+
+    private void assertBusinessFunctionIsNotAssociatedWithPermission(BusinessFunction businessFunction) {
+
+        if(!businessFunctionRepository.findBusinessFunctionPermissionByBusinessFunction(businessFunction).isEmpty()){
+
+            throw new BadRequest("Cannot delete Business Functions associated with Permissions");
+
+        }
+    }
 
     public BusinessFunction findByIdOrThrowNotFound(Integer id){
         return businessFunctionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));

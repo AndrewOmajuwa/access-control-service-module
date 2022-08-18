@@ -1,20 +1,18 @@
-package com.devoteam.accesscontrolservice.domain;
+package com.devoteam.accesscontrolservice.post_request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.NotEmpty;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Builder
-public class BusinessFunctionPostRequest {
+public class PermissionPostRequest {
 
-    @NotEmpty
-    private String applicationName;
-    @NotEmpty
-    private String functionName;
+        @NotEmpty
+        private String name;
+
 }

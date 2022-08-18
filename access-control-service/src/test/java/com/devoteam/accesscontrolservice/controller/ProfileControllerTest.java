@@ -2,7 +2,10 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
+import com.devoteam.accesscontrolservice.post_request.ProfilePostRequest;
+import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.ProfileRepository;
+import com.devoteam.accesscontrolservice.response.ProfileResponse;
 import com.devoteam.accesscontrolservice.util.Utility;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
@@ -16,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -120,7 +122,68 @@ class ProfileControllerTest {
         Assertions.assertThat(profile.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
-    
+
+
+    @Test
+    @DisplayName("updated profile replaces existing profile when successfully executed")
+    void updatedProfileo_ReplacesExistingProfile_WhenSuccessfullyExecuted(){
+
+        Profile updatedProfile = Profile.builder().id(1).name("Updated-Name").build();
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile), Void.class);
+
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(profileRepository.findById(1).get().getName()).isEqualTo("Updated-Name");
+
+    }
+
+    @Test
+    @DisplayName("update profile returns 400 BadRequest when profile name is null or blank")
+    void updatedProfile_Returns400BadRequest_WhenProfileNameIsNullOrBlank(){
+
+        Profile updatedProfile = Profile.builder().id(1).name(null).build();
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile), Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("update profile returns 404 ResourceNotfound when profile id does not exist")
+    void updatedProfile_Returns400BadRequest_WhenProfileIdDoesNotExist(){
+
+        Profile updatedProfile = Profile.builder().id(100).name("Updated-Name").build();
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile), Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+    @Test
+    @DisplayName("profile does not get updated when profile name is not unique")
+    void Profile_DoesNotGetUpdated_WhenProfileNameIsNotUnique(){
+
+        Profile updatedProfile1 = Profile.builder().id(1).name("Updated-Name").build();
+
+        Profile updatedProfile2 = Profile.builder().id(2).name("Updated-Name").build();
+
+        testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile1), Void.class);
+
+        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile2), Void.class);
+
+        Assertions.assertThat(responseEntity2.getStatusCode()).isNotEqualTo(HttpStatus.NO_CONTENT);
+
+    }
+
+
     public ProfilePostRequest createProfileNotToBeSaved(){
         return ProfilePostRequest.builder()
                 .name("")

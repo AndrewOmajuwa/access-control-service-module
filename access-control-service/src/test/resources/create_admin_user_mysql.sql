@@ -47,5 +47,8 @@ values (6, 1);
 insert into profile_business_function_permission (business_function_permission_id, profile_id)
 values (6, 1);
 
+insert into business_function (application_name, function_name)
+values ('access-control-service', 'delete');
+
 insert into permission (name)
 values ('delete');

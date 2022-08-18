@@ -2,38 +2,29 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
+import com.devoteam.accesscontrolservice.post_request.SetUpPostRequest;
+import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import com.devoteam.accesscontrolservice.repository.PermissionRepository;
 import com.devoteam.accesscontrolservice.service.ProfileService;
-import com.devoteam.accesscontrolservice.service.SetUpService;
 import com.devoteam.accesscontrolservice.util.Utility;
 import lombok.NoArgsConstructor;
 import org.assertj.core.api.Assertions;
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
-import org.mockito.Spy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
-import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
-
-import java.util.List;
-
-import static org.mockito.Mockito.doAnswer;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/create_admin_user_mysql.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
@@ -111,7 +102,7 @@ class SetUpControllerTest {
 
         ResponseEntity<Void> responseEntity = utility.createSetUpTestRestTemplate(setUpPostRequest);
 
-        Assertions.assertThat(businessFunctionRepository.findAll()).hasSize(6);
+        Assertions.assertThat(businessFunctionRepository.findAll()).hasSize(7);
 
         Assertions.assertThat(permissionRepository.findAll()).hasSize(2);
 

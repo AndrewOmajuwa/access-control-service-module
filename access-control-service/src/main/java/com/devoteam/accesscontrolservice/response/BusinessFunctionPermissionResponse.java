@@ -1,4 +1,4 @@
-package com.devoteam.accesscontrolservice.domain;
+package com.devoteam.accesscontrolservice.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Getter
 @Builder
-public class ProfileBusinessFunctionPermissionResponse {
+public class BusinessFunctionPermissionResponse {
     private Integer id;
 }

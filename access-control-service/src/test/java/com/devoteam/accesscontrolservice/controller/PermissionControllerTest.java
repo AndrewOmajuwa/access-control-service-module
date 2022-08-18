@@ -2,7 +2,10 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
+import com.devoteam.accesscontrolservice.post_request.PermissionPostRequest;
+import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.PermissionRepository;
+import com.devoteam.accesscontrolservice.response.PermissionResponse;
 import com.devoteam.accesscontrolservice.util.Utility;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
@@ -16,7 +19,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.data.domain.Page;
 import org.springframework.http.*;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.jdbc.Sql;
@@ -96,7 +98,7 @@ class PermissionControllerTest {
 
     @Test
     @DisplayName("findById returns a Permission when successfull")
-    public void findById_ReturnsPermission_WhenSuccessfull(){
+    void findById_ReturnsPermission_WhenSuccessfull(){
 
         ResponseEntity<Permission> permission = testRestTemplate.exchange("/api/v1/permissions/1", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });
@@ -122,6 +124,65 @@ class PermissionControllerTest {
 
     }
 
+
+    @Test
+    @DisplayName("updated permission replaces existing permission when successfully executed")
+    void updatedPermissiono_ReplacesExistingPermission_WhenSuccessfullyExecuted(){
+
+        Permission updatedPermission = Permission.builder().id(1).name("Updated-Name").build();
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission), Void.class);
+        
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(permissionRepository.findById(1).get().getName()).isEqualTo("Updated-Name");
+
+    }
+
+    @Test
+    @DisplayName("update permission returns 400 BadRequest when permission name is null or blank")
+    void updatedPermission_Returns400BadRequest_WhenPermissionNameIsNullOrBlank(){
+
+        Permission updatedPermission = Permission.builder().id(1).name(null).build();
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission), Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("update permission returns 404 ResourceNotfound when permission id does not exist")
+    void updatedPermission_Returns400BadRequest_WhenPermissionIdDoesNotExist(){
+
+        Permission updatedPermission = Permission.builder().id(100).name("Updated-Name").build();
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission), Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+    @Test
+    @DisplayName("permission does not get updated when permission name is not unique")
+    void Permission_DoesNotGetUpdated_WhenPermissionNameIsNotUnique(){
+
+        Permission updatedPermission1 = Permission.builder().id(1).name("Updated-Name").build();
+
+        Permission updatedPermission2 = Permission.builder().id(2).name("Updated-Name").build();
+
+        testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission1), Void.class);
+
+        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission2), Void.class);
+
+        Assertions.assertThat(responseEntity2.getStatusCode()).isNotEqualTo(HttpStatus.NO_CONTENT);
+
+    }
 
     public PermissionPostRequest createPermissionNotToBeSaved(){
         return PermissionPostRequest.builder()

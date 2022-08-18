@@ -1,11 +1,9 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.CheckPermissionService;
-import com.devoteam.accesscontrolservice.domain.SetUpPostRequest;
+import com.devoteam.accesscontrolservice.post_request.SetUpPostRequest;
 import com.devoteam.accesscontrolservice.service.SetUpService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;

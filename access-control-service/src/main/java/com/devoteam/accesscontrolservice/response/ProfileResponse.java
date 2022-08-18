@@ -1,4 +1,4 @@
-package com.devoteam.accesscontrolservice.domain;
+package com.devoteam.accesscontrolservice.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -7,6 +7,8 @@ import com.devoteam.accesscontrolservice.repository.ProfileRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -33,6 +35,13 @@ public class ProfileService {
         return findByIdOrThrowNotFound(id);
     }
 
+    public void update(Profile profile){
+
+        findByIdOrThrowNotFound(profile.getId());
+
+        profileRepository.save(profile);
+
+    }
 
     public Profile findByIdOrThrowNotFound(Integer id){
         return profileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Profile was not found"));
