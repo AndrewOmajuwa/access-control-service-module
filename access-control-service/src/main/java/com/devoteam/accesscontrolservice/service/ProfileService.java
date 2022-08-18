@@ -35,20 +35,12 @@ public class ProfileService {
         return findByIdOrThrowNotFound(id);
     }
 
-    public void update(Integer id, String name){
+    public void update(Profile profile){
 
-        findByIdOrThrowNotFound(id);
+        findByIdOrThrowNotFound(profile.getId());
 
-        assertNameIsNotNull(name);
+        profileRepository.save(profile);
 
-        profileRepository.update(id, name);
-
-    }
-
-    private static void assertNameIsNotNull(String name) {
-        if(name == null){
-            new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-        }
     }
 
     public Profile findByIdOrThrowNotFound(Integer id){

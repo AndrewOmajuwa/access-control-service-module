@@ -1,5 +1,6 @@
 package com.devoteam.accesscontrolservice.controller;
 
+import com.devoteam.accesscontrolservice.domain.BusinessFunction;
 import com.devoteam.accesscontrolservice.domain.Permission;
 import com.devoteam.accesscontrolservice.domain.PermissionPostRequest;
 import com.devoteam.accesscontrolservice.domain.PermissionResponse;
@@ -56,9 +57,9 @@ public class PermissionController {
 
     @PutMapping
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'permission', 'update')")
-    public ResponseEntity<Void> update(@RequestParam @NotBlank Integer id, @RequestParam String name) {
+    public ResponseEntity<Void> update(@RequestBody @NotBlank(message = "Please insert a valid permission name") Permission permission) {
 
-        permissionService.update(id, name);
+        permissionService.update(permission);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

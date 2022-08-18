@@ -42,20 +42,12 @@ public class PermissionService {
         return permissionRepository.findByName(permission).stream().findAny().orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
     }
 
-    public void update(Integer id, String name){
+    public void update(Permission permission){
 
-        findByIdOrThrowNotFound(id);
+        findByIdOrThrowNotFound(permission.getId());
 
-        assertNameIsNotNull(name);
+        permissionRepository.save(permission);
 
-        permissionRepository.update(id, name);
-
-    }
-
-    private static void assertNameIsNotNull(String name) {
-        if(name == null){
-            new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
-        }
     }
 
 }

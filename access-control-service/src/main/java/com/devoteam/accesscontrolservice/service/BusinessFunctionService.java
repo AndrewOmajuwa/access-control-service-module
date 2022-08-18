@@ -44,13 +44,11 @@ public class BusinessFunctionService {
         return findByIdOrThrowNotFound(id);
     }
 
-    public void update(Integer id, String applicationName, String functionName){
+    public void update(BusinessFunction businessFunction){
 
-        findByIdOrThrowNotFound(id);
+        findByIdOrThrowNotFound(businessFunction.getId());
 
-        assertApplicationNameAndFunctionNameIsNotNull(applicationName, functionName);
-
-        businessFunctionRepository.update(id, applicationName, functionName);
+        businessFunctionRepository.save(businessFunction);
 
     }
 
