@@ -1,16 +1,12 @@
 package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunction;
-import com.devoteam.accesscontrolservice.domain.Permission;
 import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
-import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -21,8 +17,6 @@ import java.util.Optional;
 public class BusinessFunctionService {
 
     private final BusinessFunctionRepository businessFunctionRepository;
-
-    private final BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
 
     public BusinessFunction save(BusinessFunction businessFunction){
 
@@ -61,15 +55,22 @@ public class BusinessFunctionService {
         businessFunctionRepository.delete(businessFunction);
     }
 
-    private void assertBusinessFunctionIsNotAssociatedWithPermission(BusinessFunction businessFunction) {
-        if(!businessFunctionPermissionRepository.findBusinessFunctionPermissionByBusinessFunction(businessFunction).isEmpty()){
-            throw new BadRequest("Cannot delete Business Functions associated with Permissions");
-        }
+    public void cascadeDelete(Integer id){
+
+        BusinessFunction businessFunction = findByIdOrThrowNotFound(id);
+
+//        cascadeDeleteBusinessFunction(businessFunction);
+
+        businessFunctionRepository.delete(businessFunction);
+
     }
 
-    private static void assertApplicationNameAndFunctionNameIsNotNull(String applicationName, String functionName) {
-        if(applicationName == null || functionName == null){
-            new ResponseEntity<Void>(HttpStatus.BAD_REQUEST);
+    private void assertBusinessFunctionIsNotAssociatedWithPermission(BusinessFunction businessFunction) {
+
+        if(!businessFunctionRepository.findBusinessFunctionPermissionByBusinessFunction(businessFunction).isEmpty()){
+
+            throw new BadRequest("Cannot delete Business Functions associated with Permissions");
+
         }
     }
 

@@ -1,9 +1,9 @@
 package com.devoteam.accesscontrolservice.util;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunction;
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionPostRequest;
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionPutRequest;
-import com.devoteam.accesscontrolservice.domain.BusinessFunctionResponse;
+import com.devoteam.accesscontrolservice.post_request.BusinessFunctionPostRequest;
+import com.devoteam.accesscontrolservice.put_request.BusinessFunctionPutRequest;
+import com.devoteam.accesscontrolservice.response.BusinessFunctionResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

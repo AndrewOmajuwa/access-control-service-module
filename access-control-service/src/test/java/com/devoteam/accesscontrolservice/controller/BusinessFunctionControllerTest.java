@@ -2,7 +2,10 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
+import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
+import com.devoteam.accesscontrolservice.put_request.BusinessFunctionPutRequest;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
+import com.devoteam.accesscontrolservice.response.BusinessFunctionResponse;
 import com.devoteam.accesscontrolservice.util.Utility;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
@@ -143,30 +146,24 @@ class BusinessFunctionControllerTest {
     }
 
     @Test
-    @DisplayName("update business function returns 400 BadRequest when business function application name is null or blank")
+    @DisplayName("update business function returns 400 BadRequest when business function application or function name is null or blank")
     void updatedBusinessFunction_Returns400BadRequest_WhenBusinessFunctionApplicationNameIsNullOrBlank(){
 
-        BusinessFunctionPutRequest updatedBusinessFunction = BusinessFunctionPutRequest.builder().id(1).applicationName(null).functionName("Updated-Name").build();
+        BusinessFunctionPutRequest updatedBusinessFunction1 = BusinessFunctionPutRequest.builder().id(1).applicationName(null).functionName("Updated-Name").build();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction), Void.class);
+        ResponseEntity<Void> responseEntity1 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction1), Void.class);
 
-        Assertions.assertThat(responseEntity.getBody()).isNull();
+        BusinessFunctionPutRequest updatedBusinessFunction2 = BusinessFunctionPutRequest.builder().id(1).applicationName("Updated-Name").functionName(null).build();
 
-        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction2), Void.class);
 
-    }
+        Assertions.assertThat(responseEntity1.getBody()).isNull();
 
-    @Test
-    @DisplayName("update business function returns 400 BadRequest when business function function name is null or blank")
-    void updatedBusinessFunction_Returns400BadRequest_WhenBusinessFunctionFunctionNameIsNullOrBlank(){
+        Assertions.assertThat(responseEntity1.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
-        BusinessFunctionPutRequest updatedBusinessFunction = BusinessFunctionPutRequest.builder().id(1).applicationName("Updated-Name").functionName(null).build();
+        Assertions.assertThat(responseEntity2.getBody()).isNull();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction), Void.class);
-
-        Assertions.assertThat(responseEntity.getBody()).isNull();
-
-        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+        Assertions.assertThat(responseEntity2.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
 
     }
 
@@ -192,11 +189,25 @@ class BusinessFunctionControllerTest {
 
         BusinessFunctionPutRequest updatedBusinessFunction2 = BusinessFunctionPutRequest.builder().id(2).applicationName("Updated-Name").functionName("Updated-Name").build();
 
-        testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction1), Void.class);
+        BusinessFunctionPutRequest updatedBusinessFunction3 = BusinessFunctionPutRequest.builder().id(2).applicationName("Different").functionName("Updated-Name").build();
+
+        BusinessFunctionPutRequest updatedBusinessFunction4 = BusinessFunctionPutRequest.builder().id(2).applicationName("Updated-Name").functionName("Different").build();
+
+        ResponseEntity<Void> responseEntity1 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction1), Void.class);
 
         ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction2), Void.class);
 
-        Assertions.assertThat(responseEntity2.getStatusCode()).isNotEqualTo(HttpStatus.NO_CONTENT);
+        ResponseEntity<Void> responseEntity3 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction3), Void.class);
+
+        ResponseEntity<Void> responseEntity4 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction4), Void.class);
+
+        Assertions.assertThat(responseEntity1.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(responseEntity2.getStatusCode()).isEqualTo(HttpStatus.CONFLICT);
+
+        Assertions.assertThat(responseEntity3.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(responseEntity4.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
     }
 

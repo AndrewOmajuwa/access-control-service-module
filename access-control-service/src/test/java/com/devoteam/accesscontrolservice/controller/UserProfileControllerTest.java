@@ -2,7 +2,11 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
+import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
+import com.devoteam.accesscontrolservice.post_request.UserProfilePostRequest;
 import com.devoteam.accesscontrolservice.repository.UserProfileRepository;
+import com.devoteam.accesscontrolservice.response.UserProfileResponse;
+import com.devoteam.accesscontrolservice.response.UserResponse;
 import com.devoteam.accesscontrolservice.util.Utility;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;

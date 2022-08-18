@@ -1,9 +1,9 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.service.BusinessFunctionPermissionService;
+import com.devoteam.accesscontrolservice.post_request.ProfileBusinessFunctionPermissionPostRequest;
+import com.devoteam.accesscontrolservice.response.ProfileBusinessFunctionPermissionResponse;
 import com.devoteam.accesscontrolservice.service.ProfileBusinessFunctionPermissionService;
-import com.devoteam.accesscontrolservice.util.BusinessFunctionPermissionMapper;
 import com.devoteam.accesscontrolservice.util.ProfileBusinessFunctionPermissionMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;

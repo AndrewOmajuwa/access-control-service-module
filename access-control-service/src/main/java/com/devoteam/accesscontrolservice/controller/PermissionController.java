@@ -1,11 +1,11 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.*;
+import com.devoteam.accesscontrolservice.post_request.PermissionPostRequest;
+import com.devoteam.accesscontrolservice.put_request.PermissionPutRequest;
+import com.devoteam.accesscontrolservice.response.PermissionResponse;
 import com.devoteam.accesscontrolservice.service.PermissionService;
 import com.devoteam.accesscontrolservice.util.PermissionMapper;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,8 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
@@ -54,7 +52,7 @@ public class PermissionController {
 
     @PutMapping
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'permission', 'update')")
-    public ResponseEntity<Void> update(@RequestBody PermissionPutRequest permissionPutRequest) {
+    public ResponseEntity<Void> update(@RequestBody @Valid PermissionPutRequest permissionPutRequest) {
 
         Permission permission = PermissionMapper.INSTANCE.toPermission(permissionPutRequest);
 

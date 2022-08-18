@@ -1,9 +1,9 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.service.BusinessFunctionPermissionService;
+import com.devoteam.accesscontrolservice.post_request.UserProfilePostRequest;
+import com.devoteam.accesscontrolservice.response.UserProfileResponse;
 import com.devoteam.accesscontrolservice.service.UserProfileService;
-import com.devoteam.accesscontrolservice.util.BusinessFunctionPermissionMapper;
 import com.devoteam.accesscontrolservice.util.UserProfileMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +14,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 
 @RequestMapping(value = "api/v1/user-profiles")
 @RestController

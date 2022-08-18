@@ -1,9 +1,9 @@
 package com.devoteam.accesscontrolservice.util;
 
 import com.devoteam.accesscontrolservice.domain.Profile;
-import com.devoteam.accesscontrolservice.domain.ProfilePostRequest;
-import com.devoteam.accesscontrolservice.domain.ProfilePutRequest;
-import com.devoteam.accesscontrolservice.domain.ProfileResponse;
+import com.devoteam.accesscontrolservice.post_request.ProfilePostRequest;
+import com.devoteam.accesscontrolservice.put_request.ProfilePutRequest;
+import com.devoteam.accesscontrolservice.response.ProfileResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

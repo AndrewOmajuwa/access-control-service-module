@@ -1,6 +1,9 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.*;
+import com.devoteam.accesscontrolservice.post_request.ProfilePostRequest;
+import com.devoteam.accesscontrolservice.put_request.ProfilePutRequest;
+import com.devoteam.accesscontrolservice.response.ProfileResponse;
 import com.devoteam.accesscontrolservice.service.ProfileService;
 import com.devoteam.accesscontrolservice.util.ProfileMapper;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -13,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 
 @RequiredArgsConstructor
 @RestController
@@ -50,7 +52,7 @@ public class ProfileController {
 
     @PutMapping
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile', 'update')")
-    public ResponseEntity<Void> update(@RequestBody ProfilePutRequest profilePutRequest) {
+    public ResponseEntity<Void> update(@RequestBody @Valid ProfilePutRequest profilePutRequest) {
 
         Profile profile = ProfileMapper.INSTANCE.toProfile(profilePutRequest);
 
