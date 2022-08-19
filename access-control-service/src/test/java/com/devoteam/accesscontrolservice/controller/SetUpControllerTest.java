@@ -108,8 +108,6 @@ class SetUpControllerTest {
 
         Assertions.assertThat(businessFunctionPermissionRepository.findAll()).hasSize(6);
 
-        System.out.println(responseEntity.getStatusCode());
-
         Assertions.assertThat(responseEntity.getStatusCode()).isNotSameAs(HttpStatus.OK);
 
     }

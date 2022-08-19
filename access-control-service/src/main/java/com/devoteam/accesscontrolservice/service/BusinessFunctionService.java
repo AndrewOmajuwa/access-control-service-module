@@ -1,9 +1,13 @@
 package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunction;
+import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermission;
+import com.devoteam.accesscontrolservice.domain.ProfileBusinessFunctionPermission;
 import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
+import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
+import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +21,8 @@ import java.util.Optional;
 public class BusinessFunctionService {
 
     private final BusinessFunctionRepository businessFunctionRepository;
+    private final BusinessFunctionPermissionService businessFunctionPermissionService;
+    private final ProfileBusinessFunctionPermissionService profileBusinessFunctionPermissionService;
 
     public BusinessFunction save(BusinessFunction businessFunction){
 
@@ -59,10 +65,24 @@ public class BusinessFunctionService {
 
         BusinessFunction businessFunction = findByIdOrThrowNotFound(id);
 
-//        cascadeDeleteBusinessFunction(businessFunction);
+        deleteAssociationsWithBusinessFunction(businessFunction);
 
         businessFunctionRepository.delete(businessFunction);
+    }
 
+    private void deleteAssociationsWithBusinessFunction(BusinessFunction businessFunction) {
+
+        List<BusinessFunctionPermission> businessFunctionPermissions = businessFunctionPermissionService.listBusinessFunctionPermissionByBusinessFunctionId(businessFunction.getId());
+
+        for (BusinessFunctionPermission bfp : businessFunctionPermissions) {
+
+            List<ProfileBusinessFunctionPermission> profileBusinessFunctionPermissions = profileBusinessFunctionPermissionService.listProfileBusinessFunctionPermissionByBusinessFunctionPermissionId(bfp.getId());
+
+            profileBusinessFunctionPermissionService.deleteAll(profileBusinessFunctionPermissions);
+
+            businessFunctionPermissionService.delete(bfp);
+
+        }
     }
 
     private void assertBusinessFunctionIsNotAssociatedWithPermission(BusinessFunction businessFunction) {

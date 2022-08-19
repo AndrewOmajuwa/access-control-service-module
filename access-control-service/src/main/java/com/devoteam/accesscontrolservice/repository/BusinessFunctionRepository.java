@@ -2,12 +2,10 @@ package com.devoteam.accesscontrolservice.repository;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunction;
 import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermission;
+import com.devoteam.accesscontrolservice.domain.ProfileBusinessFunctionPermission;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 

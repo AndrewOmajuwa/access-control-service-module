@@ -36,6 +36,16 @@ public class ProfileBusinessFunctionPermissionService {
 
     }
 
+    public void deleteAll(List<ProfileBusinessFunctionPermission> profileBusinessFunctionPermissions){
+
+        profileBusinessFunctionPermissionRepository.deleteAll(profileBusinessFunctionPermissions);
+
+    }
+
+    public List<ProfileBusinessFunctionPermission> listProfileBusinessFunctionPermissionByBusinessFunctionPermissionId(Integer id){
+        return profileBusinessFunctionPermissionRepository.listProfileBusinessFunctionPermissionByBusinessFunctionPermissionId(id);
+    }
+
     private void assertProfileExists(Integer id){
         profileService.findByIdOrThrowNotFound(id);
     }

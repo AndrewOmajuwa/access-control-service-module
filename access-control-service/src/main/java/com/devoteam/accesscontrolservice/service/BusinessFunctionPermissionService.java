@@ -18,7 +18,6 @@ public class BusinessFunctionPermissionService {
 
     private final BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
     private final PermissionService permissionService;
-    private final BusinessFunctionService businessFunctionService;
 
     public BusinessFunctionPermission save(BusinessFunctionPermission businessFunctionPermission) {
 
@@ -41,10 +40,20 @@ public class BusinessFunctionPermissionService {
 
     }
 
+    public void delete(BusinessFunctionPermission businessFunctionPermission){
+
+        businessFunctionPermissionRepository.delete(businessFunctionPermission);
+
+    }
+
+    public List<BusinessFunctionPermission> listBusinessFunctionPermissionByBusinessFunctionId(Integer id){
+        return businessFunctionPermissionRepository.listBusinessFunctionPermissionByBusinessFunctionId(id);
+    }
+
     private void assertPermissionExists(Integer id){
         permissionService.findByIdOrThrowNotFound(id);
     }
     private void assertBusinessFunctionExists(Integer id){
-        businessFunctionService.findByIdOrThrowNotFound(id);
+        businessFunctionPermissionRepository.findBusinessFunctionById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));
     }
 }

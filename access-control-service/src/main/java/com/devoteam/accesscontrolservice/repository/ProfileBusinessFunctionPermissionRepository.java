@@ -20,4 +20,7 @@ public interface ProfileBusinessFunctionPermissionRepository extends JpaReposito
     @Query("SELECT pbfp FROM ProfileBusinessFunctionPermission pbfp WHERE pbfp.profile.name = ?1")
     Page<ProfileBusinessFunctionPermission> findBusinessFunctionPermissionByProfileName(String profileName, Pageable pageable);
 
+    @Query("SELECT pbfp FROM ProfileBusinessFunctionPermission pbfp WHERE pbfp.businessFunctionPermission.id = ?1")
+    List<ProfileBusinessFunctionPermission> listProfileBusinessFunctionPermissionByBusinessFunctionPermissionId(Integer businessFunctionPermissionId);
+
 }
