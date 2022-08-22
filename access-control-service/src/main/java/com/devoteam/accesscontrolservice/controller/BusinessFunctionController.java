@@ -1,8 +1,8 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunction;
-import com.devoteam.accesscontrolservice.post_request.BusinessFunctionPostRequest;
-import com.devoteam.accesscontrolservice.put_request.BusinessFunctionPutRequest;
+import com.devoteam.accesscontrolservice.requests.post.BusinessFunctionPostRequest;
+import com.devoteam.accesscontrolservice.requests.put.BusinessFunctionPutRequest;
 import com.devoteam.accesscontrolservice.response.BusinessFunctionResponse;
 import com.devoteam.accesscontrolservice.service.BusinessFunctionService;
 import com.devoteam.accesscontrolservice.util.BusinessFunctionMapper;

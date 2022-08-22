@@ -1,6 +1,6 @@
 package com.devoteam.accesscontrolservice.controller;
 
-import com.devoteam.accesscontrolservice.post_request.ValidateAccessPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.ValidateAccessPostRequest;
 import com.devoteam.accesscontrolservice.service.ValidateAccessService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;

@@ -1,4 +1,4 @@
-package com.devoteam.accesscontrolservice.post_request;
+package com.devoteam.accesscontrolservice.requests.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,10 +11,10 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class ProfileBusinessFunctionPermissionPostRequest {
+public class UserProfilePostRequest {
 
     @NotNull
-    private Integer businessFunctionPermissionId;
+    private String userKeyCloakId;
 
     @NotNull
     private Integer profileId;

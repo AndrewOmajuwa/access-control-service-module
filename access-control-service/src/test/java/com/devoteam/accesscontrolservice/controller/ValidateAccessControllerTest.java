@@ -1,8 +1,8 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
-import com.devoteam.accesscontrolservice.util.Utility;
+import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
+import com.devoteam.accesscontrolservice.util.UtilityTest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -31,7 +31,7 @@ class ValidateAccessControllerTest {
 
     @BeforeEach
     public void setUp(){
-        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
+        UserPostRequest userPostRequest = UtilityTest.createUserKeycloakToBeSaved();
 
         BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 

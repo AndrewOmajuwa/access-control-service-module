@@ -1,13 +1,11 @@
 package com.devoteam.accesscontrolservice.service;
 
-import com.devoteam.accesscontrolservice.domain.BusinessFunction;
 import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermission;
-import com.devoteam.accesscontrolservice.domain.Profile;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
+import com.devoteam.accesscontrolservice.util.Utility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 import java.util.List;
@@ -17,21 +15,22 @@ import java.util.List;
 public class BusinessFunctionPermissionService {
 
     private final BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
+
+    private final ProfileBusinessFunctionPermissionService profileBusinessFunctionPermissionService;
+
     private final PermissionService permissionService;
+
+    private final Utility utility;
 
     public BusinessFunctionPermission save(BusinessFunctionPermission businessFunctionPermission) {
 
         assertPermissionExists(businessFunctionPermission.getPermission().getId());
 
-        assertBusinessFunctionExists(businessFunctionPermission.getBusinessFunction().getId());
+        utility.assertBusinessFunctionExists(businessFunctionPermission.getBusinessFunction().getId());
 
         List<BusinessFunctionPermission> byPermissionAndBusinessFunctionName = businessFunctionPermissionRepository.findBusinessFunctionPermission(businessFunctionPermission.getBusinessFunction(), businessFunctionPermission.getPermission());
 
         return !byPermissionAndBusinessFunctionName.isEmpty() ? byPermissionAndBusinessFunctionName.get(0) : businessFunctionPermissionRepository.save(businessFunctionPermission);
-    }
-
-    public BusinessFunctionPermission findByIdOrThrowNotFound(Integer id){
-        return businessFunctionPermissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function Permission was not found"));
     }
 
     public Page<BusinessFunctionPermission> listAll(Pageable pageable, String applicationName){
@@ -40,20 +39,16 @@ public class BusinessFunctionPermissionService {
 
     }
 
-    public void delete(BusinessFunctionPermission businessFunctionPermission){
+    public void deleteBasedOnBusinessFunctionId(Integer id){
 
-        businessFunctionPermissionRepository.delete(businessFunctionPermission);
+        List<Integer> businessFunctionPermissionIds = businessFunctionPermissionRepository.listBusinessFunctionPermissionByBusinessFunctionId(id).stream().map(BusinessFunctionPermission::getId).toList();
 
-    }
+        profileBusinessFunctionPermissionService.deleteByBusinessFunctionPermissionIds(businessFunctionPermissionIds);
 
-    public List<BusinessFunctionPermission> listBusinessFunctionPermissionByBusinessFunctionId(Integer id){
-        return businessFunctionPermissionRepository.listBusinessFunctionPermissionByBusinessFunctionId(id);
+        businessFunctionPermissionRepository.deleteBusinessFunctionPermissionByBusinessFunctionId(id);
     }
 
     private void assertPermissionExists(Integer id){
         permissionService.findByIdOrThrowNotFound(id);
-    }
-    private void assertBusinessFunctionExists(Integer id){
-        businessFunctionPermissionRepository.findBusinessFunctionById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function was not found"));
     }
 }

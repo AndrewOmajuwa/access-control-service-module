@@ -2,14 +2,13 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.post_request.SetUpPostRequest;
-import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
-import com.devoteam.accesscontrolservice.put_request.BusinessFunctionPutRequest;
+import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
+import com.devoteam.accesscontrolservice.requests.put.BusinessFunctionPutRequest;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.response.BusinessFunctionResponse;
-import com.devoteam.accesscontrolservice.util.Utility;
+import com.devoteam.accesscontrolservice.util.UtilityTest;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +48,7 @@ class BusinessFunctionControllerTest {
     private TestRestTemplate testRestTemplate;
 
     @Autowired
-    private Utility utility;
+    private UtilityTest utilityTest;
 
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
@@ -60,7 +59,7 @@ class BusinessFunctionControllerTest {
     @BeforeEach
     public void setUp(){
 
-        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
+        UserPostRequest userPostRequest = UtilityTest.createUserKeycloakToBeSaved();
 
         BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
@@ -72,7 +71,7 @@ class BusinessFunctionControllerTest {
     @DisplayName("Save creates Business Function when successfull")
     void save_BusinessFunction_WhenSuccessfull(){
 
-        BusinessFunctionResponse businessFunctionResponse = utility.createBusinessFunction();
+        BusinessFunctionResponse businessFunctionResponse = utilityTest.createBusinessFunction();
 
         Assertions.assertThat(businessFunctionResponse).isNotNull();
 
@@ -86,9 +85,9 @@ class BusinessFunctionControllerTest {
     @DisplayName("Save does not create Business Function when already present")
     void doesNotSave_BusinessFunction_WhenAlreadyPresent(){
 
-        BusinessFunctionResponse businessFunction1 = utility.createBusinessFunction();
+        BusinessFunctionResponse businessFunction1 = utilityTest.createBusinessFunction();
 
-        BusinessFunctionResponse businessFunction2 = utility.createBusinessFunction();
+        BusinessFunctionResponse businessFunction2 = utilityTest.createBusinessFunction();
 
         Assertions.assertThat(businessFunction1.getId()).isEqualTo(businessFunction2.getId());
 
@@ -145,7 +144,7 @@ class BusinessFunctionControllerTest {
 
         BusinessFunctionPutRequest updatedBusinessFunction = BusinessFunctionPutRequest.builder().id(1).applicationName("Updated-Name").functionName("Updated-Name").build();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction), Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedBusinessFunction), Void.class);
 
         Assertions.assertThat(responseEntity).isNotNull();
 
@@ -163,11 +162,11 @@ class BusinessFunctionControllerTest {
 
         BusinessFunctionPutRequest updatedBusinessFunction1 = BusinessFunctionPutRequest.builder().id(1).applicationName(null).functionName("Updated-Name").build();
 
-        ResponseEntity<Void> responseEntity1 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction1), Void.class);
+        ResponseEntity<Void> responseEntity1 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedBusinessFunction1), Void.class);
 
         BusinessFunctionPutRequest updatedBusinessFunction2 = BusinessFunctionPutRequest.builder().id(1).applicationName("Updated-Name").functionName(null).build();
 
-        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction2), Void.class);
+        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedBusinessFunction2), Void.class);
 
         Assertions.assertThat(responseEntity1.getBody()).isNull();
 
@@ -185,7 +184,7 @@ class BusinessFunctionControllerTest {
 
         BusinessFunctionPutRequest updatedBusinessFunction = BusinessFunctionPutRequest.builder().id(100).applicationName("Updated-Name").functionName("Updated-Name").build();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction), Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedBusinessFunction), Void.class);
 
         Assertions.assertThat(responseEntity.getBody()).isNull();
 
@@ -205,13 +204,13 @@ class BusinessFunctionControllerTest {
 
         BusinessFunctionPutRequest updatedBusinessFunction4 = BusinessFunctionPutRequest.builder().id(2).applicationName("Updated-Name").functionName("Different").build();
 
-        ResponseEntity<Void> responseEntity1 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction1), Void.class);
+        ResponseEntity<Void> responseEntity1 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedBusinessFunction1), Void.class);
 
-        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction2), Void.class);
+        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedBusinessFunction2), Void.class);
 
-        ResponseEntity<Void> responseEntity3 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction3), Void.class);
+        ResponseEntity<Void> responseEntity3 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedBusinessFunction3), Void.class);
 
-        ResponseEntity<Void> responseEntity4 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedBusinessFunction4), Void.class);
+        ResponseEntity<Void> responseEntity4 = testRestTemplate.exchange("/api/v1/business-functions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedBusinessFunction4), Void.class);
 
         Assertions.assertThat(responseEntity1.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
@@ -234,7 +233,7 @@ class BusinessFunctionControllerTest {
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        Assertions.assertThat(businessFunctionRepository.findById(7).isEmpty());
+        Assertions.assertThat(businessFunctionRepository.findById(7)).isEmpty();
 
     }
 
@@ -274,11 +273,11 @@ class BusinessFunctionControllerTest {
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        Assertions.assertThat(businessFunctionRepository.findById(1).isEmpty());
+        Assertions.assertThat(businessFunctionRepository.findById(1)).isEmpty();
 
-        Assertions.assertThat(businessFunctionPermissionRepository.findById(1).isEmpty());
+        Assertions.assertThat(businessFunctionPermissionRepository.findById(1)).isEmpty();
 
-        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(1).isEmpty());
+        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(1)).isEmpty();
 
     }
 
@@ -300,15 +299,15 @@ class BusinessFunctionControllerTest {
     void
     cascadeDelete_rollsBackTransaction_whenExceptionIsThrown() throws RuntimeException{
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions/1/cascade", HttpMethod.DELETE, null, Void.class);
-
         BDDMockito.doThrow(new RuntimeException("Exception message")).when(businessFunctionRepository).delete(ArgumentMatchers.any());
 
-        Assertions.assertThat(businessFunctionRepository.findById(1).isPresent());
+        testRestTemplate.exchange("/api/v1/business-functions/1/cascade", HttpMethod.DELETE, null, Void.class);
 
-        Assertions.assertThat(businessFunctionPermissionRepository.findById(1).isPresent());
+        Assertions.assertThat(businessFunctionRepository.findById(1)).isPresent();
 
-        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(1).isPresent());
+        Assertions.assertThat(businessFunctionPermissionRepository.findById(1)).isPresent();
+
+        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(1)).isPresent();
 
     }
 }

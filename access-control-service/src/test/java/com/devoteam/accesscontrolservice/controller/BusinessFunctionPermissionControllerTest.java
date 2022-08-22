@@ -2,11 +2,11 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.post_request.BusinessFunctionPermissionPostRequest;
-import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.BusinessFunctionPermissionPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.response.BusinessFunctionPermissionResponse;
-import com.devoteam.accesscontrolservice.util.Utility;
+import com.devoteam.accesscontrolservice.util.UtilityTest;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ class BusinessFunctionPermissionControllerTest {
     @Autowired
     private BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
     @Autowired
-    private Utility utility;
+    private UtilityTest utilityTest;
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
     @MockBean
@@ -43,7 +43,7 @@ class BusinessFunctionPermissionControllerTest {
 
     @BeforeEach
     public void setUp(){
-        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
+        UserPostRequest userPostRequest = UtilityTest.createUserKeycloakToBeSaved();
 
         BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
@@ -56,7 +56,7 @@ class BusinessFunctionPermissionControllerTest {
     void save_BusinessFunctionPermission_WhenSuccessfull() {
 
         Integer expectedId = 1;
-        BusinessFunctionPermissionResponse businessFunctionPermission = utility.createBusinessFunctionPermission();
+        BusinessFunctionPermissionResponse businessFunctionPermission = utilityTest.createBusinessFunctionPermission();
         Assertions.assertThat(businessFunctionPermission).isNotNull();
         Assertions.assertThat(businessFunctionPermission.getId()).isNotNull();
         Assertions.assertThat(businessFunctionPermission.getId()).isEqualTo(expectedId);
@@ -67,7 +67,7 @@ class BusinessFunctionPermissionControllerTest {
     void saveDoesNot_SaveBusinessFunctionPermission_WhenBusinessFunctionDoesNotExist() {
 
         ResponseEntity<BusinessFunctionPermissionResponse> businessFunctionPermission = testRestTemplate
-                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(createBusinessFunctionPermissionNotToBeSaved1()), BusinessFunctionPermissionResponse.class);
+                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, UtilityTest.createJsonHttpEntity(createBusinessFunctionPermissionNotToBeSaved1()), BusinessFunctionPermissionResponse.class);
 
         Assertions.assertThat(businessFunctionPermission.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -77,7 +77,7 @@ class BusinessFunctionPermissionControllerTest {
     void saveDoesNot_SaveBusinessFunctionPermission_WhenPermissionDoesNotExist() {
 
         ResponseEntity<BusinessFunctionPermissionResponse> businessFunctionPermission = testRestTemplate
-                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(createBusinessFunctionPermissionNotToBeSaved2()), BusinessFunctionPermissionResponse.class);
+                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, UtilityTest.createJsonHttpEntity(createBusinessFunctionPermissionNotToBeSaved2()), BusinessFunctionPermissionResponse.class);
 
         Assertions.assertThat(businessFunctionPermission.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -86,8 +86,8 @@ class BusinessFunctionPermissionControllerTest {
     @DisplayName("Save does not create Business Function Permission when already present")
     void doesNotSave_BusinessFunctionPermission_WhenAlreadyPresent() {
 
-        BusinessFunctionPermissionResponse businessFunctionPermission1 = utility.createBusinessFunctionPermission();
-        BusinessFunctionPermissionResponse businessFunctionPermission2 = utility.createBusinessFunctionPermission();
+        BusinessFunctionPermissionResponse businessFunctionPermission1 = utilityTest.createBusinessFunctionPermission();
+        BusinessFunctionPermissionResponse businessFunctionPermission2 = utilityTest.createBusinessFunctionPermission();
         Assertions.assertThat(businessFunctionPermission1.getId()).isEqualTo(businessFunctionPermission2.getId());
         Assertions.assertThat(businessFunctionPermissionRepository.findById(7)).isEmpty();
     }

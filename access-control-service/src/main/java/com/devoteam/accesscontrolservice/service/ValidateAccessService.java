@@ -1,6 +1,6 @@
 package com.devoteam.accesscontrolservice.service;
 
-import com.devoteam.accesscontrolservice.post_request.ValidateAccessPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.ValidateAccessPostRequest;
 import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

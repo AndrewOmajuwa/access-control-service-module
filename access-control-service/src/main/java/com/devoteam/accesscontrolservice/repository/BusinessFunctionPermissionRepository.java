@@ -6,8 +6,10 @@ import com.devoteam.accesscontrolservice.domain.Permission;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,10 +20,11 @@ public interface BusinessFunctionPermissionRepository extends JpaRepository<Busi
     @Query("SELECT bfp FROM BusinessFunctionPermission bfp WHERE bfp.businessFunction.applicationName = ?1")
     Page<BusinessFunctionPermission> findBusinessFunctionPermissionByApplicationName(String applicationName, Pageable pageable);
 
-    @Query("SELECT bf FROM BusinessFunction bf WHERE bf.id = ?1")
-    Optional<BusinessFunction> findBusinessFunctionById(Integer id);
-
     @Query("SELECT bfp FROM BusinessFunctionPermission bfp WHERE bfp.businessFunction.id = ?1")
     List<BusinessFunctionPermission> listBusinessFunctionPermissionByBusinessFunctionId(Integer businessFunctionId);
+
+    @Modifying
+    @Query("DELETE FROM BusinessFunctionPermission bfp WHERE bfp.businessFunction.id IN ?1")
+    void deleteBusinessFunctionPermissionByBusinessFunctionId(Integer businessFunctionId);
 
 }

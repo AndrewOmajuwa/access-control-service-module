@@ -1,7 +1,7 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.post_request.UserProfilePostRequest;
+import com.devoteam.accesscontrolservice.requests.post.UserProfilePostRequest;
 import com.devoteam.accesscontrolservice.response.UserProfileResponse;
 import com.devoteam.accesscontrolservice.service.UserProfileService;
 import com.devoteam.accesscontrolservice.util.UserProfileMapper;

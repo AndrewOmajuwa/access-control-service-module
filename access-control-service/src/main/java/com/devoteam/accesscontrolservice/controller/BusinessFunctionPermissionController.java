@@ -1,7 +1,7 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.post_request.BusinessFunctionPermissionPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.BusinessFunctionPermissionPostRequest;
 import com.devoteam.accesscontrolservice.response.BusinessFunctionPermissionResponse;
 import com.devoteam.accesscontrolservice.service.BusinessFunctionPermissionService;
 import com.devoteam.accesscontrolservice.util.BusinessFunctionPermissionMapper;
