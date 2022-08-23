@@ -89,7 +89,7 @@ class BusinessFunctionPermissionControllerTest {
         BusinessFunctionPermissionResponse businessFunctionPermission1 = utility.createBusinessFunctionPermission();
         BusinessFunctionPermissionResponse businessFunctionPermission2 = utility.createBusinessFunctionPermission();
         Assertions.assertThat(businessFunctionPermission1.getId()).isEqualTo(businessFunctionPermission2.getId());
-        Assertions.assertThat(businessFunctionPermissionRepository.findById(7)).isEmpty();
+        Assertions.assertThat(businessFunctionPermissionRepository.findById(8)).isEmpty();
     }
 
 
@@ -104,7 +104,7 @@ class BusinessFunctionPermissionControllerTest {
 
         Assertions.assertThat(businessFunctionPermissions).isNotEmpty();
 
-        Assertions.assertThat(businessFunctionPermissions.stream().count()).isEqualTo(6);
+        Assertions.assertThat(businessFunctionPermissions.stream().count()).isEqualTo(7);
 
     }
 
@@ -118,6 +118,47 @@ class BusinessFunctionPermissionControllerTest {
         Assertions.assertThat(businessFunctionPermissions.getNumberOfElements()).isZero();
 
         Assertions.assertThat(businessFunctionPermissions).isEmpty();
+
+    }
+
+
+    @Test
+    @DisplayName("delete removes a business function permission when successfully executed")
+    void delete_RemovesABusinessFunctionPermission_WhenSuccessfullyExecuted(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions-permissions/7", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(businessFunctionPermissionRepository.findById(7)).isEmpty();
+
+    }
+
+
+    @Test
+    @DisplayName("delete business function permission returns 400 BadRequest when business function permission is associated with profile")
+    void deleteBusinessFunctionPermission_Returns400BadRequest_WhenBusinessFunctionPermissionIsAssociatedWithProfile(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions-permissions/1", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("delete business function permission returns 404 ResourceNotfound when business function permission id does not exist")
+    void deletePermission_Returns404ResourceNotFound_WhenPermissionIdDoesNotExist(){
+
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions-permissions/100", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 

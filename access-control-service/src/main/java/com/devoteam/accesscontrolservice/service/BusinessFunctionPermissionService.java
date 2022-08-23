@@ -1,6 +1,7 @@
 package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermission;
+import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.util.AssertionsUtil;
 import lombok.RequiredArgsConstructor;
@@ -48,6 +49,19 @@ public class BusinessFunctionPermissionService {
         profileBusinessFunctionPermissionService.deleteByBusinessFunctionPermissionIds(businessFunctionPermissionIds);
 
         businessFunctionPermissionRepository.deleteBusinessFunctionPermissionByBusinessFunctionId(id);
+    }
+
+    public void delete(Integer id){
+
+        BusinessFunctionPermission businessFunctionPermission = findByIdOrThrowNotFound(id);
+
+        assertionsUtil.assertBusinessFunctionPermissionIsNotAssociatedWithProfile(id);
+
+        businessFunctionPermissionRepository.delete(businessFunctionPermission);
+    }
+
+    public BusinessFunctionPermission findByIdOrThrowNotFound(Integer id){
+        return businessFunctionPermissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function Permission was not found"));
     }
 
     private void assertPermissionExists(Integer id){

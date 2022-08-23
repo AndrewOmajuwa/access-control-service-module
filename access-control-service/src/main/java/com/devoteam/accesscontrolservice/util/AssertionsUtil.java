@@ -5,6 +5,7 @@ import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
+import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +16,8 @@ public class AssertionsUtil {
     private final BusinessFunctionRepository businessFunctionRepository;
 
     private final BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
+
+    private final ProfileBusinessFunctionPermissionRepository profileBusinessFunctionPermissionRepository;
 
     public void assertBusinessFunctionExists(Integer id){
 
@@ -32,6 +35,14 @@ public class AssertionsUtil {
         if(!businessFunctionPermissionRepository.findBusinessFunctionPermissionByPermissionId(id).isEmpty()){
 
             throw new BadRequest("Cannot delete Permission associated with Business Function");
+
+        }
+    }
+    public void assertBusinessFunctionPermissionIsNotAssociatedWithProfile(Integer id) {
+
+        if(!profileBusinessFunctionPermissionRepository.findProfileBusinessFunctionPermissionByBusinessFunctionPermissionId(id).isEmpty()){
+
+            throw new BadRequest("Cannot delete Business Function Permission associated with Profile");
 
         }
     }
