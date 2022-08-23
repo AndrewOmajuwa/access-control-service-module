@@ -1,14 +1,12 @@
 package com.devoteam.accesscontrolservice.service;
 
-import com.devoteam.accesscontrolservice.domain.Permission;
 import com.devoteam.accesscontrolservice.domain.Profile;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.ProfileRepository;
+import com.devoteam.accesscontrolservice.util.AssertionsUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -17,6 +15,8 @@ import java.util.List;
 @Repository
 public class ProfileService {
     private final ProfileRepository profileRepository;
+
+    private final AssertionsUtil assertionsUtil;
 
     public Profile save(Profile profile){
 
@@ -41,6 +41,17 @@ public class ProfileService {
 
         profileRepository.save(profile);
 
+    }
+
+    public void delete(Integer id){
+
+        Profile profile = findByIdOrThrowNotFound(id);
+
+        assertionsUtil.assertProfileIsNotAssociatedWithProfileBusinessFunctionPermission(id);
+
+        assertionsUtil.assertProfileIsNotAssociatedWithUserProfile(id);
+
+        profileRepository.delete(profile);
     }
 
     public Profile findByIdOrThrowNotFound(Integer id){

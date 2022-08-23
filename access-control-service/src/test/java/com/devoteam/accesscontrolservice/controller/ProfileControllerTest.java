@@ -57,7 +57,7 @@ class ProfileControllerTest {
         ProfileResponse profileResponse = utility.createProfile();
         Assertions.assertThat(profileResponse).isNotNull();
         Assertions.assertThat(profileResponse.getId()).isNotNull();
-        Assertions.assertThat(profileResponse.getId()).isEqualTo(2);
+        Assertions.assertThat(profileResponse.getId()).isEqualTo(3);
     }
     @Test
     @DisplayName("Save does not create Profile when input is blank")
@@ -77,7 +77,7 @@ class ProfileControllerTest {
         ProfileResponse profileResponse1 = utility.createProfile();
         ProfileResponse profileResponse2 = utility.createProfile();
         Assertions.assertThat(profileResponse1.getId()).isEqualTo(profileResponse2.getId());
-        Assertions.assertThat(profileRepository.findById(3)).isEmpty();
+        Assertions.assertThat(profileRepository.findById(4)).isEmpty();
     }
 
     @Test
@@ -114,7 +114,7 @@ class ProfileControllerTest {
     @DisplayName("findById returns 404 Not Found when id doesnt exist")
     void findById_Returns404NotFound_WhenIdDoesntExist(){
 
-        ResponseEntity<Profile> profile = testRestTemplate.exchange("/api/v1/profiles/2", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        ResponseEntity<Profile> profile = testRestTemplate.exchange("/api/v1/profiles/3", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });
 
         Assertions.assertThat(profile.getBody().getId()).isNull();
@@ -180,6 +180,47 @@ class ProfileControllerTest {
         ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile2), Void.class);
 
         Assertions.assertThat(responseEntity2.getStatusCode()).isNotEqualTo(HttpStatus.NO_CONTENT);
+
+    }
+
+
+    @Test
+    @DisplayName("delete removes a profile when successfully executed")
+    void delete_RemovesAProfile_WhenSuccessfullyExecuted(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles/2", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(profileRepository.findById(2)).isEmpty();
+
+    }
+
+
+    @Test
+    @DisplayName("delete profile returns 400 BadRequest when profile is associated with profileBusinessFunctionPermission or userProfile")
+    void deleteProfile_Returns400BadRequest_WhenProfileIsAssociatedWithProfileBusinessFunctionPermissionOrUserProfile(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles/1", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("delete profile returns 404 ResourceNotfound when profile id does not exist")
+    void deleteProfile_Returns404ResourceNotFound_WhenProfileIdDoesNotExist(){
+
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles/100", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
 
     }
 

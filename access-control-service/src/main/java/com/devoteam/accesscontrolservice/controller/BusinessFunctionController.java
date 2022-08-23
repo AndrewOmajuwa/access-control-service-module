@@ -82,7 +82,7 @@ public class BusinessFunctionController {
     @DeleteMapping(path = "/{id}/cascade")
     @Transactional
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'business-function', 'cascade-delete')")
-    public ResponseEntity<Void> cascadeDelete(@PathVariable @NotBlank int id) {
+    public ResponseEntity<Void> cascadeDelete(@PathVariable int id) {
 
         businessFunctionService.cascadeDelete(id);
 

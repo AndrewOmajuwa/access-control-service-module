@@ -48,7 +48,19 @@ insert into profile_business_function_permission (business_function_permission_i
 values (6, 1);
 
 insert into business_function (application_name, function_name)
-values ('access-control-service', 'delete');
+values ('doctor-service', 'user');
+
+insert into business_function (application_name, function_name)
+values ('doctor-service', 'profile');
 
 insert into permission (name)
 values ('delete');
+
+insert into permission (name)
+values ('update');
+
+insert into profile (name)
+values ('test');
+
+insert into business_function_permission (business_function_id, permission_id)
+values (7, 2);

@@ -77,7 +77,7 @@ class BusinessFunctionControllerTest {
 
         Assertions.assertThat(businessFunctionResponse.getId()).isNotNull();
 
-        Assertions.assertThat(businessFunctionResponse.getId()).isEqualTo(8);
+        Assertions.assertThat(businessFunctionResponse.getId()).isEqualTo(9);
 
     }
 
@@ -91,7 +91,7 @@ class BusinessFunctionControllerTest {
 
         Assertions.assertThat(businessFunction1.getId()).isEqualTo(businessFunction2.getId());
 
-        Assertions.assertThat(businessFunctionRepository.findById(9)).isEmpty();
+        Assertions.assertThat(businessFunctionRepository.findById(10)).isEmpty();
 
     }
 
@@ -129,7 +129,7 @@ class BusinessFunctionControllerTest {
     @DisplayName("findById returns 404 Not Found when id doesnt exist")
     void findById_Returns404NotFound_WhenIdDoesntExist(){
 
-        ResponseEntity<BusinessFunction> businessFunction = testRestTemplate.exchange("/api/v1/business-functions/8", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        ResponseEntity<BusinessFunction> businessFunction = testRestTemplate.exchange("/api/v1/business-functions/9", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });
 
         Assertions.assertThat(businessFunction.getBody().getId()).isNull();
@@ -227,13 +227,13 @@ class BusinessFunctionControllerTest {
     @DisplayName("delete removes a business function when successfully executed")
     void delete_RemovesABusinessFunction_WhenSuccessfullyExecuted(){
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions/7", HttpMethod.DELETE, null, Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions/8", HttpMethod.DELETE, null, Void.class);
 
         Assertions.assertThat(responseEntity).isNotNull();
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        Assertions.assertThat(businessFunctionRepository.findById(7)).isEmpty();
+        Assertions.assertThat(businessFunctionRepository.findById(8)).isEmpty();
 
     }
 
