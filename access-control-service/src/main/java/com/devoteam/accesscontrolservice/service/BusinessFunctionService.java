@@ -18,6 +18,8 @@ public class BusinessFunctionService {
 
     private final BusinessFunctionRepository businessFunctionRepository;
 
+    private final BusinessFunctionPermissionService businessFunctionPermissionService;
+
     public BusinessFunction save(BusinessFunction businessFunction){
 
         Optional<BusinessFunction> byApplicationNameAndFunctionName = businessFunctionRepository.findByApplicationNameAndFunctionName(businessFunction.getApplicationName(), businessFunction.getFunctionName());
@@ -59,10 +61,9 @@ public class BusinessFunctionService {
 
         BusinessFunction businessFunction = findByIdOrThrowNotFound(id);
 
-//        cascadeDeleteBusinessFunction(businessFunction);
+        businessFunctionPermissionService.deleteBasedOnBusinessFunctionId(id);
 
         businessFunctionRepository.delete(businessFunction);
-
     }
 
     private void assertBusinessFunctionIsNotAssociatedWithPermission(BusinessFunction businessFunction) {

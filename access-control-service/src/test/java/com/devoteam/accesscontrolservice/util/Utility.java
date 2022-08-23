@@ -1,6 +1,6 @@
 package com.devoteam.accesscontrolservice.util;
 
-import com.devoteam.accesscontrolservice.post_request.*;
+import com.devoteam.accesscontrolservice.requests.post.*;
 import com.devoteam.accesscontrolservice.response.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.web.client.TestRestTemplate;

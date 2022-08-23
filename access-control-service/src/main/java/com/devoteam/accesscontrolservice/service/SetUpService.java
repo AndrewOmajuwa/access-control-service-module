@@ -2,7 +2,7 @@ package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.exception.BadRequest;
-import com.devoteam.accesscontrolservice.post_request.SetUpPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.SetUpPostRequest;
 import com.devoteam.accesscontrolservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

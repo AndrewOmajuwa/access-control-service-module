@@ -1,11 +1,10 @@
-package com.devoteam.accesscontrolservice.post_request;
+package com.devoteam.accesscontrolservice.requests.post;
 
 import lombok.Builder;
 import lombok.Getter;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Getter
 @Builder

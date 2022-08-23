@@ -1,4 +1,4 @@
-package com.devoteam.accesscontrolservice.put_request;
+package com.devoteam.accesscontrolservice.requests.put;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 
 @AllArgsConstructor
 @NoArgsConstructor

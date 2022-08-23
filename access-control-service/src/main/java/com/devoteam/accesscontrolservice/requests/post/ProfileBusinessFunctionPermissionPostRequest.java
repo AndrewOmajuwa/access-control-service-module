@@ -1,22 +1,20 @@
-package com.devoteam.accesscontrolservice.post_request;
+package com.devoteam.accesscontrolservice.requests.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.UUID;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-public class UserProfilePostRequest {
+public class ProfileBusinessFunctionPermissionPostRequest {
 
     @NotNull
-    private String userKeyCloakId;
+    private Integer businessFunctionPermissionId;
 
     @NotNull
     private Integer profileId;

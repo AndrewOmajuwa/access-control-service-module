@@ -1,7 +1,7 @@
 package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
 import com.devoteam.accesscontrolservice.util.Utility;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;

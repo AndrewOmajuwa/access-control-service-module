@@ -1,4 +1,4 @@
-package com.devoteam.accesscontrolservice.put_request;
+package com.devoteam.accesscontrolservice.requests.put;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,17 +8,15 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
-@Entity
 @Builder
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProfilePutRequest {
-
+public class PermissionPutRequest {
     @Id
     private Integer id;
 
-    @NotBlank(message = "Please insert a valid profile name")
+    @NotBlank(message = "Please insert a valid permission name")
     @Column(unique=true)
     private String name;
 }

@@ -2,9 +2,11 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
-import com.devoteam.accesscontrolservice.put_request.BusinessFunctionPutRequest;
+import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
+import com.devoteam.accesscontrolservice.requests.put.BusinessFunctionPutRequest;
+import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
+import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.response.BusinessFunctionResponse;
 import com.devoteam.accesscontrolservice.util.Utility;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
@@ -12,11 +14,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -31,7 +35,14 @@ import org.springframework.test.context.jdbc.Sql;
 class BusinessFunctionControllerTest {
 
     @Autowired
+    @SpyBean
     private BusinessFunctionRepository businessFunctionRepository;
+
+    @Autowired
+    private BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
+
+    @Autowired
+    private ProfileBusinessFunctionPermissionRepository profileBusinessFunctionPermissionRepository;
 
     @Autowired
     private TestRestTemplate testRestTemplate;
@@ -222,7 +233,7 @@ class BusinessFunctionControllerTest {
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        Assertions.assertThat(businessFunctionRepository.findById(7).isEmpty());
+        Assertions.assertThat(businessFunctionRepository.findById(7)).isEmpty();
 
     }
 
@@ -249,6 +260,54 @@ class BusinessFunctionControllerTest {
         Assertions.assertThat(responseEntity.getBody()).isNull();
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+
+    @Test
+    @DisplayName("cascade delete removes a business function and all its associations when successfully executed")
+    void delete_RemovesABusinessFunctionAndAllAssociations_WhenSuccessfullyExecuted(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions/1/cascade", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(businessFunctionRepository.findById(1)).isEmpty();
+
+        Assertions.assertThat(businessFunctionPermissionRepository.findById(1)).isEmpty();
+
+        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(1)).isEmpty();
+
+    }
+
+    @Test
+    @DisplayName("cascade delete business function returns 404 ResourceNotfound when business function id does not exist")
+    void cascadeDeleteBusinessFunction_Returns404ResourceNotFound_WhenBusinessFunctionIdDoesNotExist(){
+
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions/100/cascade", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+
+    @Test
+    @DisplayName("cascade delete rollsback transaction when exception is thrown")
+    void
+    cascadeDelete_rollsBackTransaction_whenExceptionIsThrown() throws RuntimeException{
+
+        BDDMockito.doThrow(new RuntimeException("Exception message")).when(businessFunctionRepository).delete(ArgumentMatchers.any());
+
+        testRestTemplate.exchange("/api/v1/business-functions/1/cascade", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(businessFunctionRepository.findById(1)).isPresent();
+
+        Assertions.assertThat(businessFunctionPermissionRepository.findById(1)).isPresent();
+
+        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(1)).isPresent();
 
     }
 }

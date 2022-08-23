@@ -2,8 +2,8 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.post_request.SetUpPostRequest;
-import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.SetUpPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
 import com.devoteam.accesscontrolservice.repository.PermissionRepository;
@@ -107,8 +107,6 @@ class SetUpControllerTest {
         Assertions.assertThat(permissionRepository.findAll()).hasSize(2);
 
         Assertions.assertThat(businessFunctionPermissionRepository.findAll()).hasSize(6);
-
-        System.out.println(responseEntity.getStatusCode());
 
         Assertions.assertThat(responseEntity.getStatusCode()).isNotSameAs(HttpStatus.OK);
 

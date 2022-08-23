@@ -2,8 +2,8 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
-import com.devoteam.accesscontrolservice.post_request.PermissionPostRequest;
-import com.devoteam.accesscontrolservice.post_request.UserPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.PermissionPostRequest;
+import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.PermissionRepository;
 import com.devoteam.accesscontrolservice.response.PermissionResponse;
 import com.devoteam.accesscontrolservice.util.Utility;
