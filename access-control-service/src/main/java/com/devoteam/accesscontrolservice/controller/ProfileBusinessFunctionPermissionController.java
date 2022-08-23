@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -45,6 +46,17 @@ public class ProfileBusinessFunctionPermissionController {
     public ResponseEntity<Page<ProfileBusinessFunctionPermission>> getProfileBusinessFunctionPermissions(Pageable pageable, @NotBlank @RequestParam String profileName){
 
         return ResponseEntity.ok(profileBusinessFunctionPermissionService.listAll(pageable, profileName));
+
+    }
+
+
+    @DeleteMapping(path = "{id}")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile-business-function-permissions', 'delete')")
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+
+        profileBusinessFunctionPermissionService.delete(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
 
     }
 }
