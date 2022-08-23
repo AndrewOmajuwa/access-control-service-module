@@ -51,7 +51,7 @@ public class BusinessFunctionPermissionController {
 
     @DeleteMapping(path = "{id}")
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'business-function-permissions', 'delete')")
-    public ResponseEntity<Void> delete(@PathVariable @NotBlank int id) {
+    public ResponseEntity<Void> delete(@PathVariable int id) {
 
         businessFunctionPermissionService.delete(id);
 

@@ -64,7 +64,7 @@ public class PermissionController {
 
     @DeleteMapping(path = "{id}")
     @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'permission', 'delete')")
-    public ResponseEntity<Void> delete(@PathVariable @NotBlank int id) {
+    public ResponseEntity<Void> delete(@PathVariable int id) {
 
         permissionService.delete(id);
 
