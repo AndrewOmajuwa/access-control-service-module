@@ -184,6 +184,46 @@ class PermissionControllerTest {
 
     }
 
+    @Test
+    @DisplayName("delete removes a permission when successfully executed")
+    void delete_RemovesAPermission_WhenSuccessfullyExecuted(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions/2", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(permissionRepository.findById(2)).isEmpty();
+
+    }
+
+
+    @Test
+    @DisplayName("delete permission returns 400 BadRequest when permission is associated with business function")
+    void deletePermission_Returns400BadRequest_WhenPermissionIsAssociatedWithBusinessFunction(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions/1", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.BAD_REQUEST);
+
+    }
+
+    @Test
+    @DisplayName("delete permission returns 404 ResourceNotfound when permission id does not exist")
+    void deletePermission_Returns404ResourceNotFound_WhenPermissionIdDoesNotExist(){
+
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions/100", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+
     public PermissionPostRequest createPermissionNotToBeSaved(){
         return PermissionPostRequest.builder()
                 .name("")

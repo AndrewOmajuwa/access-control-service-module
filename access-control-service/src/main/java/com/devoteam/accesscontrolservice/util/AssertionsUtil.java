@@ -1,5 +1,7 @@
 package com.devoteam.accesscontrolservice.util;
 
+import com.devoteam.accesscontrolservice.domain.Permission;
+import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
@@ -23,5 +25,14 @@ public class AssertionsUtil {
 
         businessFunctionPermissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("The business function permission does not exist"));
 
+    }
+
+    public void assertPermissionIsNotAssociatedWithBusinessFunction(Integer id) {
+
+        if(!businessFunctionPermissionRepository.findBusinessFunctionPermissionByPermissionId(id).isEmpty()){
+
+            throw new BadRequest("Cannot delete Permission associated with Business Function");
+
+        }
     }
 }

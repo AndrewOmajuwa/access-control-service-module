@@ -1,8 +1,11 @@
 package com.devoteam.accesscontrolservice.service;
 
+import com.devoteam.accesscontrolservice.domain.BusinessFunction;
 import com.devoteam.accesscontrolservice.domain.Permission;
+import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.PermissionRepository;
+import com.devoteam.accesscontrolservice.util.AssertionsUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,6 +20,8 @@ import java.util.Optional;
 public class PermissionService {
 
     private final PermissionRepository permissionRepository;
+
+    private final AssertionsUtil assertionsUtil;
 
     public Permission save(Permission permission){
 
@@ -35,19 +40,28 @@ public class PermissionService {
     }
 
 
-    public Permission findByIdOrThrowNotFound(Integer id){
-        return permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
-    }
-    public Permission findByPermissionNameOrThrowNotFound(String permission){
-        return permissionRepository.findByName(permission).stream().findAny().orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
-    }
-
     public void update(Permission permission){
 
         findByIdOrThrowNotFound(permission.getId());
 
         permissionRepository.save(permission);
 
+    }
+
+    public void delete(Integer id){
+
+        Permission permission = findByIdOrThrowNotFound(id);
+
+        assertionsUtil.assertPermissionIsNotAssociatedWithBusinessFunction(id);
+
+        permissionRepository.delete(permission);
+    }
+
+    public Permission findByIdOrThrowNotFound(Integer id){
+        return permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
+    }
+    public Permission findByPermissionNameOrThrowNotFound(String permission){
+        return permissionRepository.findByName(permission).stream().findAny().orElseThrow(() -> new ResourceNotFoundException("Permission was not found"));
     }
 
 }
