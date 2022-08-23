@@ -1,8 +1,10 @@
 package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermission;
+import com.devoteam.accesscontrolservice.domain.ProfileBusinessFunctionPermission;
 import com.devoteam.accesscontrolservice.domain.UserKeyCloak;
 import com.devoteam.accesscontrolservice.domain.UserProfile;
+import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.UserProfileRepository;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,17 @@ public class UserProfileService {
 
     public Page<UserProfile> listAll(Pageable pageable){
         return userProfileRepository.findAll(pageable);
+    }
+
+    public void delete(Integer id){
+
+        UserProfile userProfile = findByIdOrThrowNotFound(id);
+
+        userProfileRepository.delete(userProfile);
+    }
+
+    public UserProfile findByIdOrThrowNotFound(Integer id){
+        return userProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Profile was not found"));
     }
 
     private void assertProfileExists(Integer id){

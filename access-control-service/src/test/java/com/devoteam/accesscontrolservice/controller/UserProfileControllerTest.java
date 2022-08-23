@@ -107,6 +107,34 @@ class UserProfileControllerTest {
         Assertions.assertThat(userProfiles.toList().get(0).getId()).isEqualTo(1);
 
     }
+
+
+    @Test
+    @DisplayName("delete removes a profile when successfully executed")
+    void delete_RemovesAProfile_WhenSuccessfullyExecuted(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles/2", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(userProfileRepository.findById(2)).isEmpty();
+
+    }
+
+    @Test
+    @DisplayName("delete profile returns 404 ResourceNotfound when profile id does not exist")
+    void deleteProfile_Returns404ResourceNotFound_WhenProfileIdDoesNotExist(){
+
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profile-business-function-permissions/100", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
     
     public UserProfilePostRequest createUserProfileNotToBeSaved1() {
         return UserProfilePostRequest.builder().userKeyCloakId("0b00000f-ea0a-0b00-0000-00dff0000cb0").profileId(1)

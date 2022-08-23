@@ -47,7 +47,7 @@ public class ProfileBusinessFunctionPermissionService {
     }
 
     public ProfileBusinessFunctionPermission findByIdOrThrowNotFound(Integer id){
-        return profileBusinessFunctionPermissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Business Function Permission was not found"));
+        return profileBusinessFunctionPermissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Profile Business Function Permission was not found"));
     }
 
     public void deleteByBusinessFunctionPermissionIds(List<Integer> ids){
