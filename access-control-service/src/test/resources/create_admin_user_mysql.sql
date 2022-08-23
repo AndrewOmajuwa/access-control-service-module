@@ -64,3 +64,7 @@ values ('test');
 
 insert into business_function_permission (business_function_id, permission_id)
 values (7, 2);
+
+insert into user_profile (profile_id, userkeycloak_id)
+values (2, '48553c16-56e4-42e6-8cf4-25cee7609a33');
+

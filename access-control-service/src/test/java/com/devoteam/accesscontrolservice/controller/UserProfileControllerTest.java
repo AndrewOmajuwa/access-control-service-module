@@ -111,9 +111,9 @@ class UserProfileControllerTest {
 
     @Test
     @DisplayName("delete removes a user profile when successfully executed")
-    void delete_RemovesAProfile_WhenSuccessfullyExecuted(){
+    void delete_RemovesAUserProfile_WhenSuccessfullyExecuted(){
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles/2", HttpMethod.DELETE, null, Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/user-profiles/2", HttpMethod.DELETE, null, Void.class);
 
         Assertions.assertThat(responseEntity).isNotNull();
 
@@ -124,11 +124,11 @@ class UserProfileControllerTest {
     }
 
     @Test
-    @DisplayName("delete profile returns 404 ResourceNotfound when profile id does not exist")
-    void deleteProfile_Returns404ResourceNotFound_WhenProfileIdDoesNotExist(){
+    @DisplayName("delete user profile returns 404 ResourceNotfound when user profile id does not exist")
+    void deleteUserProfile_Returns404ResourceNotFound_WhenUserProfileIdDoesNotExist(){
 
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profile-business-function-permissions/100", HttpMethod.DELETE, null, Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/user-profiles/100", HttpMethod.DELETE, null, Void.class);
 
         Assertions.assertThat(responseEntity.getBody()).isNull();
 
