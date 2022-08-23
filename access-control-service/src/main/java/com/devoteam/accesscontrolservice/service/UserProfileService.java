@@ -46,7 +46,7 @@ public class UserProfileService {
     }
 
     public UserProfile findByIdOrThrowNotFound(Integer id){
-        return userProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Profile was not found"));
+        return userProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User Profile was not found"));
     }
 
     private void assertProfileExists(Integer id){

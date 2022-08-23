@@ -110,7 +110,7 @@ class UserProfileControllerTest {
 
 
     @Test
-    @DisplayName("delete removes a profile when successfully executed")
+    @DisplayName("delete removes a user profile when successfully executed")
     void delete_RemovesAProfile_WhenSuccessfullyExecuted(){
 
         ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles/2", HttpMethod.DELETE, null, Void.class);
