@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.*;
 
 @Configuration
-public class UtilityTest {
+public class Utility {
 
     @Autowired
     public TestRestTemplate testRestTemplate;
@@ -20,7 +20,7 @@ public class UtilityTest {
     }
 
     public static <T> HttpEntity<T> createJsonHttpEntity(T t){
-        return new HttpEntity<>(t, UtilityTest.createJsonHeader());
+        return new HttpEntity<>(t, Utility.createJsonHeader());
     }
 
     public static PermissionPostRequest createPermissionToBeSaved(){
@@ -66,47 +66,47 @@ public class UtilityTest {
     }
 
     public static HttpEntity<UserPostRequest> createUserJsonHttpEntity(UserPostRequest userPostRequest){
-        return new HttpEntity<>(userPostRequest, UtilityTest.createJsonHeader());
+        return new HttpEntity<>(userPostRequest, Utility.createJsonHeader());
     }
 
 
     public UserResponse createUser() {
-        UserPostRequest user = UtilityTest.createUserKeycloakToBeSaved();
+        UserPostRequest user = Utility.createUserKeycloakToBeSaved();
         return testRestTemplate
-                .exchange("/api/v1/users", HttpMethod.POST, UtilityTest.createUserJsonHttpEntity(user), UserResponse.class).getBody();
+                .exchange("/api/v1/users", HttpMethod.POST, Utility.createUserJsonHttpEntity(user), UserResponse.class).getBody();
     }
 
     public ProfileResponse createProfile() {
-        ProfilePostRequest profile = UtilityTest.createProfileToBeSaved();
+        ProfilePostRequest profile = Utility.createProfileToBeSaved();
         return testRestTemplate
-                .exchange("/api/v1/profiles", HttpMethod.POST, UtilityTest.createJsonHttpEntity(profile), ProfileResponse.class).getBody();
+                .exchange("/api/v1/profiles", HttpMethod.POST, Utility.createJsonHttpEntity(profile), ProfileResponse.class).getBody();
     }
 
     public BusinessFunctionResponse createBusinessFunction() {
-        BusinessFunctionPostRequest businessFunction = UtilityTest.createBusinessFunctionToBeSaved();
+        BusinessFunctionPostRequest businessFunction = Utility.createBusinessFunctionToBeSaved();
         return testRestTemplate
-                .exchange("/api/v1/business-functions", HttpMethod.POST, UtilityTest.createJsonHttpEntity(businessFunction), BusinessFunctionResponse.class).getBody();
+                .exchange("/api/v1/business-functions", HttpMethod.POST, Utility.createJsonHttpEntity(businessFunction), BusinessFunctionResponse.class).getBody();
     }
 
     public PermissionResponse createPermission() {
-        PermissionPostRequest permission = UtilityTest.createPermissionToBeSaved();
+        PermissionPostRequest permission = Utility.createPermissionToBeSaved();
 
         return testRestTemplate
-                .exchange("/api/v1/permissions", HttpMethod.POST, UtilityTest.createJsonHttpEntity(permission), PermissionResponse.class).getBody();
+                .exchange("/api/v1/permissions", HttpMethod.POST, Utility.createJsonHttpEntity(permission), PermissionResponse.class).getBody();
     }
     public BusinessFunctionPermissionResponse createBusinessFunctionPermission() {
-        BusinessFunctionPermissionPostRequest businessFunctionPermission = UtilityTest.createBusinessFunctionPermissionToBeSaved();
+        BusinessFunctionPermissionPostRequest businessFunctionPermission = Utility.createBusinessFunctionPermissionToBeSaved();
         return testRestTemplate
-                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, UtilityTest.createJsonHttpEntity(businessFunctionPermission), BusinessFunctionPermissionResponse.class).getBody();
+                .exchange("/api/v1/business-functions-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(businessFunctionPermission), BusinessFunctionPermissionResponse.class).getBody();
     }
     public ProfileBusinessFunctionPermissionResponse createProfileBusinessFunctionPermission() {
         return testRestTemplate
-                .exchange("/api/v1/profile-business-function-permissions", HttpMethod.POST, UtilityTest.createJsonHttpEntity(UtilityTest.createProfileBusinessFunctionPermissionToBeSaved()), ProfileBusinessFunctionPermissionResponse.class).getBody();
+                .exchange("/api/v1/profile-business-function-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createProfileBusinessFunctionPermissionToBeSaved()), ProfileBusinessFunctionPermissionResponse.class).getBody();
     }
 
     public UserProfileResponse createUserProfile(String uuid) {
         return testRestTemplate
-                .exchange("/api/v1/user-profiles", HttpMethod.POST, UtilityTest.createJsonHttpEntity(UtilityTest.createUserProfileToBeSaved(uuid)), UserProfileResponse.class).getBody();
+                .exchange("/api/v1/user-profiles", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createUserProfileToBeSaved(uuid)), UserProfileResponse.class).getBody();
     }
 
     public static SetUpPostRequest createSetUpToBeSaved() {
@@ -117,7 +117,7 @@ public class UtilityTest {
 
     public ResponseEntity<Void> createSetUpTestRestTemplate(SetUpPostRequest setUpPostRequest) {
 
-        return testRestTemplate.exchange("/api/v1/setup-users", HttpMethod.POST, UtilityTest.createJsonHttpEntity(setUpPostRequest), Void.class);
+        return testRestTemplate.exchange("/api/v1/setup-users", HttpMethod.POST, Utility.createJsonHttpEntity(setUpPostRequest), Void.class);
     }
 
 

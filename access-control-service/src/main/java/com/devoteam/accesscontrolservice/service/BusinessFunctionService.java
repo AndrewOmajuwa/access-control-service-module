@@ -66,21 +66,6 @@ public class BusinessFunctionService {
         businessFunctionRepository.delete(businessFunction);
     }
 
-//    private void deleteAssociationsWithBusinessFunction(BusinessFunction businessFunction) {
-//
-//        List<BusinessFunctionPermission> businessFunctionPermissions = businessFunctionPermissionService.listBusinessFunctionPermissionByBusinessFunctionId(businessFunction.getId());
-//
-//        for (BusinessFunctionPermission bfp : businessFunctionPermissions) {
-//
-//            List<ProfileBusinessFunctionPermission> profileBusinessFunctionPermissions = profileBusinessFunctionPermissionService.listProfileBusinessFunctionPermissionByBusinessFunctionPermissionId(bfp.getId());
-//
-//            profileBusinessFunctionPermissionService.deleteAll(profileBusinessFunctionPermissions);
-//
-//            businessFunctionPermissionService.delete(bfp);
-//
-//        }
-//    }
-
     private void assertBusinessFunctionIsNotAssociatedWithPermission(BusinessFunction businessFunction) {
 
         if(!businessFunctionRepository.findBusinessFunctionPermissionByBusinessFunction(businessFunction).isEmpty()){

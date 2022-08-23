@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @RequiredArgsConstructor
-public class Utility {
+public class AssertionsUtil {
 
     private final BusinessFunctionRepository businessFunctionRepository;
 

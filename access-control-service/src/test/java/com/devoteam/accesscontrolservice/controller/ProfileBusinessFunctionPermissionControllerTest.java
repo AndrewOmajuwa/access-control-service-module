@@ -6,7 +6,7 @@ import com.devoteam.accesscontrolservice.requests.post.ProfileBusinessFunctionPe
 import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.response.ProfileBusinessFunctionPermissionResponse;
-import com.devoteam.accesscontrolservice.util.UtilityTest;
+import com.devoteam.accesscontrolservice.util.Utility;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,7 +35,7 @@ class ProfileBusinessFunctionPermissionControllerTest {
     @Autowired
     private ProfileBusinessFunctionPermissionRepository profileBusinessFunctionPermissionRepository;
     @Autowired
-    UtilityTest utilityTest;
+    Utility utility;
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
     @MockBean
@@ -43,7 +43,7 @@ class ProfileBusinessFunctionPermissionControllerTest {
 
     @BeforeEach
     public void setUp(){
-        UserPostRequest userPostRequest = UtilityTest.createUserKeycloakToBeSaved();
+        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
 
         BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
@@ -57,7 +57,7 @@ class ProfileBusinessFunctionPermissionControllerTest {
     void save_BusinessFunctionPermission_WhenSuccessfull() {
 
         Integer expectedId = 1;
-        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission = utilityTest.createProfileBusinessFunctionPermission();
+        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission = utility.createProfileBusinessFunctionPermission();
         Assertions.assertThat(profileBusinessFunctionPermission).isNotNull();
         Assertions.assertThat(profileBusinessFunctionPermission.getId()).isNotNull();
         Assertions.assertThat(profileBusinessFunctionPermission.getId()).isEqualTo(expectedId);
@@ -68,7 +68,7 @@ class ProfileBusinessFunctionPermissionControllerTest {
     void saveDoesNot_createProfileBusinessFunctionPermission_WhenBusinessFunctionPermissionDoesNotExist() {
 
         ResponseEntity<ProfileBusinessFunctionPermissionResponse> profileBusinessFunctionPermission = testRestTemplate
-                .exchange("/api/v1/profile-business-function-permissions", HttpMethod.POST, UtilityTest.createJsonHttpEntity(createBusinessFunctionPermissionNotToBeSaved1()), ProfileBusinessFunctionPermissionResponse.class);
+                .exchange("/api/v1/profile-business-function-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(createBusinessFunctionPermissionNotToBeSaved1()), ProfileBusinessFunctionPermissionResponse.class);
 
         Assertions.assertThat(profileBusinessFunctionPermission.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -78,7 +78,7 @@ class ProfileBusinessFunctionPermissionControllerTest {
     void saveDoesNot_createProfileBusinessFunctionPermission_WhenProfileDoesNotExist() {
 
         ResponseEntity<ProfileBusinessFunctionPermissionResponse> profileBusinessFunctionPermission = testRestTemplate
-                .exchange("/api/v1/profile-business-function-permissions", HttpMethod.POST, UtilityTest.createJsonHttpEntity(createProfileBusinessFunctionPermissionNotToBeSaved2()), ProfileBusinessFunctionPermissionResponse.class);
+                .exchange("/api/v1/profile-business-function-permissions", HttpMethod.POST, Utility.createJsonHttpEntity(createProfileBusinessFunctionPermissionNotToBeSaved2()), ProfileBusinessFunctionPermissionResponse.class);
 
         Assertions.assertThat(profileBusinessFunctionPermission.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
     }
@@ -87,8 +87,8 @@ class ProfileBusinessFunctionPermissionControllerTest {
     @DisplayName("Save does not create Profile Business Function Permission when already present")
     void doesNotSave_BusinessFunctionPermission_WhenAlreadyPresent() {
 
-        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission1 = utilityTest.createProfileBusinessFunctionPermission();
-        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission2 = utilityTest.createProfileBusinessFunctionPermission();
+        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission1 = utility.createProfileBusinessFunctionPermission();
+        ProfileBusinessFunctionPermissionResponse profileBusinessFunctionPermission2 = utility.createProfileBusinessFunctionPermission();
         Assertions.assertThat(profileBusinessFunctionPermission1.getId()).isEqualTo(profileBusinessFunctionPermission2.getId());
         Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(7)).isEmpty();
     }

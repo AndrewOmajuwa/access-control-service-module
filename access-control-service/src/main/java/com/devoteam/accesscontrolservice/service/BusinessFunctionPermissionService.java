@@ -1,13 +1,14 @@
 package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.BusinessFunctionPermission;
-import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
-import com.devoteam.accesscontrolservice.util.Utility;
+import com.devoteam.accesscontrolservice.util.AssertionsUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
+
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Repository
@@ -20,13 +21,13 @@ public class BusinessFunctionPermissionService {
 
     private final PermissionService permissionService;
 
-    private final Utility utility;
+    private final AssertionsUtil assertionsUtil;
 
     public BusinessFunctionPermission save(BusinessFunctionPermission businessFunctionPermission) {
 
         assertPermissionExists(businessFunctionPermission.getPermission().getId());
 
-        utility.assertBusinessFunctionExists(businessFunctionPermission.getBusinessFunction().getId());
+        assertionsUtil.assertBusinessFunctionExists(businessFunctionPermission.getBusinessFunction().getId());
 
         List<BusinessFunctionPermission> byPermissionAndBusinessFunctionName = businessFunctionPermissionRepository.findBusinessFunctionPermission(businessFunctionPermission.getBusinessFunction(), businessFunctionPermission.getPermission());
 
@@ -39,6 +40,7 @@ public class BusinessFunctionPermissionService {
 
     }
 
+    @Transactional
     public void deleteBasedOnBusinessFunctionId(Integer id){
 
         List<Integer> businessFunctionPermissionIds = businessFunctionPermissionRepository.listBusinessFunctionPermissionByBusinessFunctionId(id).stream().map(BusinessFunctionPermission::getId).toList();

@@ -6,7 +6,7 @@ import com.devoteam.accesscontrolservice.requests.post.ProfilePostRequest;
 import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.ProfileRepository;
 import com.devoteam.accesscontrolservice.response.ProfileResponse;
-import com.devoteam.accesscontrolservice.util.UtilityTest;
+import com.devoteam.accesscontrolservice.util.Utility;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +34,7 @@ class ProfileControllerTest {
     @Autowired
     private ProfileRepository profileRepository;
     @Autowired
-    private UtilityTest utilityTest;
+    private Utility utility;
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
     @MockBean
@@ -42,7 +42,7 @@ class ProfileControllerTest {
 
     @BeforeEach
     public void setUp(){
-        UserPostRequest userPostRequest = UtilityTest.createUserKeycloakToBeSaved();
+        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
 
         BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
@@ -54,7 +54,7 @@ class ProfileControllerTest {
     @DisplayName("Save creates Profile when successfull")
     void save_Profile_WhenSuccessfull(){
 
-        ProfileResponse profileResponse = utilityTest.createProfile();
+        ProfileResponse profileResponse = utility.createProfile();
         Assertions.assertThat(profileResponse).isNotNull();
         Assertions.assertThat(profileResponse.getId()).isNotNull();
         Assertions.assertThat(profileResponse.getId()).isEqualTo(2);
@@ -64,7 +64,7 @@ class ProfileControllerTest {
     void save_DoesNotCreateProfile_WhenInputIsBlank(){
 
         ProfileResponse profileResponse = testRestTemplate
-                .exchange( "/api/v1/profiles", HttpMethod.POST, UtilityTest.createJsonHttpEntity(createProfileNotToBeSaved()), ProfileResponse.class)
+                .exchange( "/api/v1/profiles", HttpMethod.POST, Utility.createJsonHttpEntity(createProfileNotToBeSaved()), ProfileResponse.class)
                 .getBody();
 
         Assertions.assertThat(profileResponse.getId()).isNull();
@@ -74,8 +74,8 @@ class ProfileControllerTest {
     @DisplayName("Save does not create Profile when already present")
     void doesNotSave_Profile_WhenAlreadyPresent(){
 
-        ProfileResponse profileResponse1 = utilityTest.createProfile();
-        ProfileResponse profileResponse2 = utilityTest.createProfile();
+        ProfileResponse profileResponse1 = utility.createProfile();
+        ProfileResponse profileResponse2 = utility.createProfile();
         Assertions.assertThat(profileResponse1.getId()).isEqualTo(profileResponse2.getId());
         Assertions.assertThat(profileRepository.findById(3)).isEmpty();
     }
@@ -130,7 +130,7 @@ class ProfileControllerTest {
 
         Profile updatedProfile = Profile.builder().id(1).name("Updated-Name").build();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedProfile), Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile), Void.class);
 
         Assertions.assertThat(responseEntity).isNotNull();
 
@@ -146,7 +146,7 @@ class ProfileControllerTest {
 
         Profile updatedProfile = Profile.builder().id(1).name(null).build();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedProfile), Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile), Void.class);
 
         Assertions.assertThat(responseEntity.getBody()).isNull();
 
@@ -160,7 +160,7 @@ class ProfileControllerTest {
 
         Profile updatedProfile = Profile.builder().id(100).name("Updated-Name").build();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedProfile), Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile), Void.class);
 
         Assertions.assertThat(responseEntity.getBody()).isNull();
 
@@ -175,9 +175,9 @@ class ProfileControllerTest {
 
         Profile updatedProfile2 = Profile.builder().id(2).name("Updated-Name").build();
 
-        testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedProfile1), Void.class);
+        testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile1), Void.class);
 
-        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedProfile2), Void.class);
+        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/profiles", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedProfile2), Void.class);
 
         Assertions.assertThat(responseEntity2.getStatusCode()).isNotEqualTo(HttpStatus.NO_CONTENT);
 

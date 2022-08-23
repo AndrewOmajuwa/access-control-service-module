@@ -4,7 +4,7 @@ import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
 import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
 import com.devoteam.accesscontrolservice.response.UserResponse;
-import com.devoteam.accesscontrolservice.util.UtilityTest;
+import com.devoteam.accesscontrolservice.util.Utility;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,7 +32,7 @@ class CreateUserControllerTest {
     @BeforeEach
 
     public void setUp() {
-        UserPostRequest userPostRequest = UtilityTest.createUserKeycloakToBeSaved();
+        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
 
         BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
@@ -43,8 +43,8 @@ class CreateUserControllerTest {
     @DisplayName("Save creates user when successfull")
     void save_User_WhenSuccessfull() {
 
-        UserResponse userResponse = testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, UtilityTest.createJsonHttpEntity(UtilityTest.createUserKeycloakToBeSaved()), UserResponse.class).getBody();
-        System.out.println(testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, UtilityTest.createJsonHttpEntity(UtilityTest.createUserKeycloakToBeSaved()), UserResponse.class));
+        UserResponse userResponse = testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createUserKeycloakToBeSaved()), UserResponse.class).getBody();
+        System.out.println(testRestTemplate.exchange("/api/v1/users", HttpMethod.POST, Utility.createJsonHttpEntity(Utility.createUserKeycloakToBeSaved()), UserResponse.class));
         Assertions.assertThat(userResponse).isNotNull();
         Assertions.assertThat(userResponse.getUuid()).isNotNull();
     }

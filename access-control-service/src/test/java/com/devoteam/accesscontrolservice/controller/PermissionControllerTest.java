@@ -6,7 +6,7 @@ import com.devoteam.accesscontrolservice.requests.post.PermissionPostRequest;
 import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.PermissionRepository;
 import com.devoteam.accesscontrolservice.response.PermissionResponse;
-import com.devoteam.accesscontrolservice.util.UtilityTest;
+import com.devoteam.accesscontrolservice.util.Utility;
 import com.devoteam.accesscontrolservice.wrapper.PageableResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,7 +33,7 @@ class PermissionControllerTest {
     @Autowired
     private PermissionRepository permissionRepository;
     @Autowired
-    private UtilityTest utilityTest;
+    private Utility utility;
     @MockBean
     private CheckPermissionService checkPermissionServiceMock;
     @MockBean
@@ -41,7 +41,7 @@ class PermissionControllerTest {
 
     @BeforeEach
     public void setUp(){
-        UserPostRequest userPostRequest = UtilityTest.createUserKeycloakToBeSaved();
+        UserPostRequest userPostRequest = Utility.createUserKeycloakToBeSaved();
 
         BDDMockito.when(keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword())).thenReturn("48553c16-56e4-42e6-8cf4-25cee7609a33");
 
@@ -53,7 +53,7 @@ class PermissionControllerTest {
     @DisplayName("Save creates Permission when successfull")
     void save_Permission_WhenSuccessfull(){
 
-        PermissionResponse permissionResponse = utilityTest.createPermission();
+        PermissionResponse permissionResponse = utility.createPermission();
         Assertions.assertThat(permissionResponse).isNotNull();
         Assertions.assertThat(permissionResponse.getId()).isNotNull();
         Assertions.assertThat(permissionResponse.getId()).isEqualTo(1);
@@ -64,7 +64,7 @@ class PermissionControllerTest {
     void save_DoesNotCreatePermission_WhenInputIsBlank(){
 
         PermissionResponse permissionResponse = testRestTemplate
-                .exchange( "/api/v1/permissions", HttpMethod.POST, UtilityTest.createJsonHttpEntity(createPermissionNotToBeSaved()), PermissionResponse.class)
+                .exchange( "/api/v1/permissions", HttpMethod.POST, Utility.createJsonHttpEntity(createPermissionNotToBeSaved()), PermissionResponse.class)
                 .getBody();
 
         Assertions.assertThat(permissionResponse.getId()).isNull();
@@ -74,8 +74,8 @@ class PermissionControllerTest {
     @DisplayName("Save does not create Permission when already present")
     void doesNotSave_Permission_WhenAlreadyPresent(){
 
-        PermissionResponse permissionResponse1 = utilityTest.createPermission();
-        PermissionResponse permissionResponse2 = utilityTest.createPermission();
+        PermissionResponse permissionResponse1 = utility.createPermission();
+        PermissionResponse permissionResponse2 = utility.createPermission();
         Assertions.assertThat(permissionResponse1.getId()).isEqualTo(permissionResponse2.getId());
         Assertions.assertThat(permissionRepository.findById(3)).isEmpty();
 
@@ -131,7 +131,7 @@ class PermissionControllerTest {
 
         Permission updatedPermission = Permission.builder().id(1).name("Updated-Name").build();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedPermission), Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission), Void.class);
         
         Assertions.assertThat(responseEntity).isNotNull();
 
@@ -147,7 +147,7 @@ class PermissionControllerTest {
 
         Permission updatedPermission = Permission.builder().id(1).name(null).build();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedPermission), Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission), Void.class);
 
         Assertions.assertThat(responseEntity.getBody()).isNull();
 
@@ -161,7 +161,7 @@ class PermissionControllerTest {
 
         Permission updatedPermission = Permission.builder().id(100).name("Updated-Name").build();
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedPermission), Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission), Void.class);
 
         Assertions.assertThat(responseEntity.getBody()).isNull();
 
@@ -176,9 +176,9 @@ class PermissionControllerTest {
 
         Permission updatedPermission2 = Permission.builder().id(2).name("Updated-Name").build();
 
-        testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedPermission1), Void.class);
+        testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission1), Void.class);
 
-        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, UtilityTest.createJsonHttpEntity(updatedPermission2), Void.class);
+        ResponseEntity<Void> responseEntity2 = testRestTemplate.exchange("/api/v1/permissions", HttpMethod.PUT, Utility.createJsonHttpEntity(updatedPermission2), Void.class);
 
         Assertions.assertThat(responseEntity2.getStatusCode()).isNotEqualTo(HttpStatus.NO_CONTENT);
 

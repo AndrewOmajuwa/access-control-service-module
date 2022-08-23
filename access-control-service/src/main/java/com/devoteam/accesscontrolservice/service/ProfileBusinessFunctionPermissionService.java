@@ -2,7 +2,7 @@ package com.devoteam.accesscontrolservice.service;
 
 import com.devoteam.accesscontrolservice.domain.ProfileBusinessFunctionPermission;
 import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
-import com.devoteam.accesscontrolservice.util.Utility;
+import com.devoteam.accesscontrolservice.util.AssertionsUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,13 +18,13 @@ public class ProfileBusinessFunctionPermissionService {
 
     private final ProfileService profileService;
 
-    private final Utility utility;
+    private final AssertionsUtil assertionsUtil;
 
     public ProfileBusinessFunctionPermission save(ProfileBusinessFunctionPermission profileBusinessFunctionPermission) {
 
         assertProfileExists(profileBusinessFunctionPermission.getProfile().getId());
 
-        utility.assertBusinessFunctionPermissionExists(profileBusinessFunctionPermission.getBusinessFunctionPermission().getId());
+        assertionsUtil.assertBusinessFunctionPermissionExists(profileBusinessFunctionPermission.getBusinessFunctionPermission().getId());
 
         List<ProfileBusinessFunctionPermission> byProfileAndBusinessFunctionPermissionName = profileBusinessFunctionPermissionRepository.findProfileBusinessFunctionPermission(profileBusinessFunctionPermission.getBusinessFunctionPermission(), profileBusinessFunctionPermission.getProfile());
 
