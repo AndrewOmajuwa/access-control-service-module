@@ -60,4 +60,14 @@ public class ProfileController {
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @DeleteMapping(path = "{id}")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'profile', 'delete')")
+    public ResponseEntity<Void> delete(@PathVariable int id) {
+
+        profileService.delete(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
+    }
 }

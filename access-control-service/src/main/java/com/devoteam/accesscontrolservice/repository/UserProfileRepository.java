@@ -9,4 +9,7 @@ import java.util.List;
 public interface UserProfileRepository extends JpaRepository<UserProfile, Integer> {
     @Query("SELECT up FROM UserProfile up WHERE up.userKeyCloak = ?1 AND up.profile = ?2")
     List<UserProfile> findUserProfile(UserKeyCloak userKeyCloak, Profile profile);
+
+    @Query("SELECT up FROM UserProfile up WHERE up.profile.id = ?1")
+    List<UserProfile> findUserProfileByProfileId(Integer id);
 }
