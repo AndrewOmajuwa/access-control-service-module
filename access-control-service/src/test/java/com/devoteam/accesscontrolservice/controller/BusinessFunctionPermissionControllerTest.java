@@ -104,7 +104,7 @@ class BusinessFunctionPermissionControllerTest {
 
         Assertions.assertThat(businessFunctionPermissions).isNotEmpty();
 
-        Assertions.assertThat(businessFunctionPermissions.stream().count()).isEqualTo(7);
+        Assertions.assertThat(businessFunctionPermissions.stream().count()).isEqualTo(6);
 
     }
 

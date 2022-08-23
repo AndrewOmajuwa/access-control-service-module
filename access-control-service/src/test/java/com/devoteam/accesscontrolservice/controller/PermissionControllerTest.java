@@ -77,7 +77,7 @@ class PermissionControllerTest {
         PermissionResponse permissionResponse1 = utility.createPermission();
         PermissionResponse permissionResponse2 = utility.createPermission();
         Assertions.assertThat(permissionResponse1.getId()).isEqualTo(permissionResponse2.getId());
-        Assertions.assertThat(permissionRepository.findById(3)).isEmpty();
+        Assertions.assertThat(permissionRepository.findById(4)).isEmpty();
 
     }
 
@@ -115,7 +115,7 @@ class PermissionControllerTest {
     @DisplayName("findById returns 404 Not Found when id doesnt exist")
     void findById_Returns404NotFound_WhenIdDoesntExist(){
 
-        ResponseEntity<Permission> permission = testRestTemplate.exchange("/api/v1/permissions/3", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        ResponseEntity<Permission> permission = testRestTemplate.exchange("/api/v1/permissions/4", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });
 
         Assertions.assertThat(permission.getBody().getId()).isNull();
@@ -188,13 +188,13 @@ class PermissionControllerTest {
     @DisplayName("delete removes a permission when successfully executed")
     void delete_RemovesAPermission_WhenSuccessfullyExecuted(){
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions/2", HttpMethod.DELETE, null, Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/permissions/3", HttpMethod.DELETE, null, Void.class);
 
         Assertions.assertThat(responseEntity).isNotNull();
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        Assertions.assertThat(permissionRepository.findById(2)).isEmpty();
+        Assertions.assertThat(permissionRepository.findById(3)).isEmpty();
 
     }
 

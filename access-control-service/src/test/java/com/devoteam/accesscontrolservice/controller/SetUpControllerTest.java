@@ -102,11 +102,11 @@ class SetUpControllerTest {
 
         ResponseEntity<Void> responseEntity = utility.createSetUpTestRestTemplate(setUpPostRequest);
 
-        Assertions.assertThat(businessFunctionRepository.findAll()).hasSize(7);
+        Assertions.assertThat(businessFunctionRepository.findAll()).hasSize(8);
 
-        Assertions.assertThat(permissionRepository.findAll()).hasSize(2);
+        Assertions.assertThat(permissionRepository.findAll()).hasSize(3);
 
-        Assertions.assertThat(businessFunctionPermissionRepository.findAll()).hasSize(6);
+        Assertions.assertThat(businessFunctionPermissionRepository.findAll()).hasSize(7);
 
         Assertions.assertThat(responseEntity.getStatusCode()).isNotSameAs(HttpStatus.OK);
 
