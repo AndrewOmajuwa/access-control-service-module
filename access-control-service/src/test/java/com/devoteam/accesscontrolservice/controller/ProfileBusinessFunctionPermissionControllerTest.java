@@ -129,4 +129,32 @@ class ProfileBusinessFunctionPermissionControllerTest {
         Assertions.assertThat(profileBusinessFunctionPermissions).isEmpty();
 
     }
+
+
+    @Test
+    @DisplayName("delete removes a profileBusinessFunctionPermission when successfully executed")
+    void delete_RemovesAProfileBusinessFunctionPermission_WhenSuccessfullyExecuted(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profile-business-function-permissions/6", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(6)).isEmpty();
+
+    }
+
+    @Test
+    @DisplayName("delete profileBusinessFunctionPermission returns 404 ResourceNotfound when profileBusinessFunctionPermission id does not exist")
+    void deleteProfileBusinessFunctionPermission_Returns404ResourceNotFound_WhenProfileBusinessFunctionPermissionIdDoesNotExist(){
+
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profile-business-function-permissions/100", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
 }
