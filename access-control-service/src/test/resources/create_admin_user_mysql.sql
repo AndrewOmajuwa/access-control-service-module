@@ -62,6 +62,9 @@ values ('update');
 insert into profile (name)
 values ('test');
 
+insert into profile (name)
+values ('testDelete');
+
 insert into business_function_permission (business_function_id, permission_id)
 values (7, 2);
 
