@@ -16,6 +16,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 
 @RequiredArgsConstructor
 @RestController
@@ -59,5 +60,15 @@ public class PermissionController {
         permissionService.update(permission);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @DeleteMapping(path = "{id}")
+    @PreAuthorize("@checkPermissionService.validateAccess('access-control-service', 'permission', 'delete')")
+    public ResponseEntity<Void> delete(@PathVariable @NotBlank int id) {
+
+        permissionService.delete(id);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+
     }
 }

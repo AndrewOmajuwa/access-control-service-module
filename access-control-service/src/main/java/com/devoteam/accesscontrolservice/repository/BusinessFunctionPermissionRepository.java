@@ -23,6 +23,9 @@ public interface BusinessFunctionPermissionRepository extends JpaRepository<Busi
     @Query("SELECT bfp FROM BusinessFunctionPermission bfp WHERE bfp.businessFunction.id = ?1")
     List<BusinessFunctionPermission> listBusinessFunctionPermissionByBusinessFunctionId(Integer businessFunctionId);
 
+    @Query("SELECT bfp FROM BusinessFunctionPermission bfp WHERE bfp.permission.id = ?1")
+    List<BusinessFunctionPermission> findBusinessFunctionPermissionByPermissionId(Integer id);
+
     @Modifying
     @Query("DELETE FROM BusinessFunctionPermission bfp WHERE bfp.businessFunction.id = ?1")
     void deleteBusinessFunctionPermissionByBusinessFunctionId(Integer businessFunctionId);

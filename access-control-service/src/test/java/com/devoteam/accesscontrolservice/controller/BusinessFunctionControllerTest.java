@@ -240,7 +240,7 @@ class BusinessFunctionControllerTest {
 
     @Test
     @DisplayName("delete business function returns 400 BadRequest when business function is associated with permission")
-    void updatedBusinessFunction_Returns400BadRequest_WhenBusinessFunctionIsAssociatedWithPermission(){
+    void deleteBusinessFunction_Returns400BadRequest_WhenBusinessFunctionIsAssociatedWithPermission(){
 
         ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/business-functions/1", HttpMethod.DELETE, null, Void.class);
 
