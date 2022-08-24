@@ -46,6 +46,11 @@ public class ProfileBusinessFunctionPermissionService {
         profileBusinessFunctionPermissionRepository.delete(profileBusinessFunctionPermission);
     }
 
+    public void deleteBasedOnBusinessFunctionPermissionId(Integer businessFunctionPermissionId){
+        profileBusinessFunctionPermissionRepository.deleteByBusinessFunctionPermissionIds(businessFunctionPermissionId);
+    }
+
+
     public ProfileBusinessFunctionPermission findByIdOrThrowNotFound(Integer id){
         return profileBusinessFunctionPermissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Profile Business Function Permission was not found"));
     }
