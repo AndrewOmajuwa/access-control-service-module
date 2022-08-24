@@ -37,4 +37,8 @@ public interface ProfileBusinessFunctionPermissionRepository extends JpaReposito
     @Query("DELETE FROM ProfileBusinessFunctionPermission pbfp WHERE pbfp.businessFunctionPermission.id = ?1")
     void deleteByBusinessFunctionPermissionIds(Integer businessFunctionPermissionId);
 
+    @Modifying
+    @Query("DELETE FROM ProfileBusinessFunctionPermission pbfp WHERE pbfp.profile.id = ?1")
+    void deleteByProfileId(Integer profileId);
+
 }

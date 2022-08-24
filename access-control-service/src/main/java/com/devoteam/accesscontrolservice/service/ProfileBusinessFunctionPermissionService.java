@@ -18,8 +18,6 @@ public class ProfileBusinessFunctionPermissionService {
 
     private final ProfileBusinessFunctionPermissionRepository profileBusinessFunctionPermissionRepository;
 
-    private final ProfileService profileService;
-
     private final AssertionsUtil assertionsUtil;
 
     public ProfileBusinessFunctionPermission save(ProfileBusinessFunctionPermission profileBusinessFunctionPermission) {
@@ -46,6 +44,10 @@ public class ProfileBusinessFunctionPermissionService {
         profileBusinessFunctionPermissionRepository.delete(profileBusinessFunctionPermission);
     }
 
+    public void deleteByProfileId(Integer profileId){
+        profileBusinessFunctionPermissionRepository.deleteByProfileId(profileId);
+    }
+
     public void deleteBasedOnBusinessFunctionPermissionId(Integer businessFunctionPermissionId){
         profileBusinessFunctionPermissionRepository.deleteByBusinessFunctionPermissionIds(businessFunctionPermissionId);
     }
@@ -60,6 +62,6 @@ public class ProfileBusinessFunctionPermissionService {
     }
 
     private void assertProfileExists(Integer id){
-        profileService.findByIdOrThrowNotFound(id);
+        assertionsUtil.assertProfileExists(id);
     }
 }

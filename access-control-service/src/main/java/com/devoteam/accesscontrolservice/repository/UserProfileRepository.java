@@ -2,6 +2,7 @@ package com.devoteam.accesscontrolservice.repository;
 
 import com.devoteam.accesscontrolservice.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -12,4 +13,9 @@ public interface UserProfileRepository extends JpaRepository<UserProfile, Intege
 
     @Query("SELECT up FROM UserProfile up WHERE up.profile.id = ?1")
     List<UserProfile> findUserProfileByProfileId(Integer id);
+
+    @Modifying
+    @Query("DELETE FROM UserProfile up WHERE up.profile.id = ?1")
+    void deleteByProfileId(Integer id);
+
 }

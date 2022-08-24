@@ -2,6 +2,8 @@ package com.devoteam.accesscontrolservice.controller;
 
 import com.devoteam.CheckPermissionService;
 import com.devoteam.accesscontrolservice.domain.*;
+import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
+import com.devoteam.accesscontrolservice.repository.UserProfileRepository;
 import com.devoteam.accesscontrolservice.requests.post.ProfilePostRequest;
 import com.devoteam.accesscontrolservice.requests.post.UserPostRequest;
 import com.devoteam.accesscontrolservice.repository.ProfileRepository;
@@ -12,11 +14,13 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
@@ -32,7 +36,12 @@ class ProfileControllerTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
     @Autowired
+    @SpyBean
     private ProfileRepository profileRepository;
+    @Autowired
+    private UserProfileRepository userProfileRepository;
+    @Autowired
+    private ProfileBusinessFunctionPermissionRepository profileBusinessFunctionPermissionRepository;
     @Autowired
     private Utility utility;
     @MockBean
@@ -221,6 +230,55 @@ class ProfileControllerTest {
         Assertions.assertThat(responseEntity.getBody()).isNull();
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+
+
+    @Test
+    @DisplayName("cascade delete removes a profile and all its associations when successfully executed")
+    void delete_RemovesAProfileAndAllAssociations_WhenSuccessfullyExecuted(){
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles/1/cascade", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity).isNotNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
+
+        Assertions.assertThat(profileRepository.findById(1)).isEmpty();
+
+        Assertions.assertThat(userProfileRepository.findById(1)).isEmpty();
+
+        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(1)).isEmpty();
+
+    }
+
+    @Test
+    @DisplayName("cascade delete profile returns 404 ResourceNotfound when profile id does not exist")
+    void cascadeDeleteProfile_Returns404ResourceNotFound_WhenProfileIdDoesNotExist(){
+
+
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles/100/cascade", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(responseEntity.getBody()).isNull();
+
+        Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+
+    }
+
+    @Test
+    @DisplayName("cascade delete rollsback transaction when exception is thrown")
+    void
+    cascadeDelete_rollsBackTransaction_whenExceptionIsThrown() throws RuntimeException{
+
+        BDDMockito.doThrow(new RuntimeException("Exception message")).when(profileRepository).delete(ArgumentMatchers.any());
+
+        testRestTemplate.exchange("/api/v1/profiles/1/cascade", HttpMethod.DELETE, null, Void.class);
+
+        Assertions.assertThat(profileRepository.findById(1)).isPresent();
+
+        Assertions.assertThat(userProfileRepository.findById(1)).isPresent();
+
+        Assertions.assertThat(profileBusinessFunctionPermissionRepository.findById(1)).isPresent();
 
     }
 
