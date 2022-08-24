@@ -21,12 +21,14 @@ import java.util.UUID;
 public class UserProfileService {
 
     private final UserProfileRepository userProfileRepository;
+
     private final AssertionsUtil assertionsUtil;
+
     private final UserService userService;
 
     public UserProfile save(UserProfile userProfile) {
 
-        assertProfileExists(userProfile.getProfile().getId());
+        assertionsUtil.assertProfileExists(userProfile.getProfile().getId());
 
         assertUserExists(userProfile.getUserKeyCloak().getUuid());
 
@@ -54,9 +56,6 @@ public class UserProfileService {
         return userProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User Profile was not found"));
     }
 
-    private void assertProfileExists(Integer id){
-        assertionsUtil.assertProfileExists(id);
-    }
     private void assertUserExists(String uuid){
         userService.findByIdOrThrowNotFound(uuid);
     }

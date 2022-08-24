@@ -22,7 +22,7 @@ public class ProfileBusinessFunctionPermissionService {
 
     public ProfileBusinessFunctionPermission save(ProfileBusinessFunctionPermission profileBusinessFunctionPermission) {
 
-        assertProfileExists(profileBusinessFunctionPermission.getProfile().getId());
+        assertionsUtil.assertProfileExists(profileBusinessFunctionPermission.getProfile().getId());
 
         assertionsUtil.assertBusinessFunctionPermissionExists(profileBusinessFunctionPermission.getBusinessFunctionPermission().getId());
 
@@ -61,7 +61,4 @@ public class ProfileBusinessFunctionPermissionService {
         profileBusinessFunctionPermissionRepository.deleteProfileBusinessFunctionPermissionByBusinessFunctionPermissionId(ids);
     }
 
-    private void assertProfileExists(Integer id){
-        assertionsUtil.assertProfileExists(id);
-    }
 }
