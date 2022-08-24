@@ -30,4 +30,8 @@ public interface BusinessFunctionPermissionRepository extends JpaRepository<Busi
     @Query("DELETE FROM BusinessFunctionPermission bfp WHERE bfp.businessFunction.id = ?1")
     void deleteBusinessFunctionPermissionByBusinessFunctionId(Integer businessFunctionId);
 
+    @Modifying
+    @Query("DELETE FROM BusinessFunctionPermission bfp WHERE bfp.permission.id = ?1")
+    void deleteBusinessFunctionPermissionByPermissionId(Integer permissionId);
+
 }
