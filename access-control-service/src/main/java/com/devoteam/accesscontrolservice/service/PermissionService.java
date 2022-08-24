@@ -23,6 +23,8 @@ public class PermissionService {
 
     private final AssertionsUtil assertionsUtil;
 
+    private final BusinessFunctionPermissionService businessFunctionPermissionService;
+
     public Permission save(Permission permission){
 
         Optional<Permission> findByName = permissionRepository.findByName(permission.getName());
@@ -53,6 +55,15 @@ public class PermissionService {
         Permission permission = findByIdOrThrowNotFound(id);
 
         assertionsUtil.assertPermissionIsNotAssociatedWithBusinessFunction(id);
+
+        permissionRepository.delete(permission);
+    }
+
+    public void cascadeDelete(Integer id){
+
+        Permission permission = findByIdOrThrowNotFound(id);
+
+        businessFunctionPermissionService.deleteBasedOnPermissionId(id);
 
         permissionRepository.delete(permission);
     }

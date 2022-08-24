@@ -20,8 +20,6 @@ public class BusinessFunctionPermissionService {
 
     private final ProfileBusinessFunctionPermissionService profileBusinessFunctionPermissionService;
 
-    private final PermissionService permissionService;
-
     private final AssertionsUtil assertionsUtil;
 
     public BusinessFunctionPermission save(BusinessFunctionPermission businessFunctionPermission) {
@@ -41,6 +39,15 @@ public class BusinessFunctionPermissionService {
 
     }
 
+    public void delete(Integer id){
+
+        BusinessFunctionPermission businessFunctionPermission = findByIdOrThrowNotFound(id);
+
+        assertionsUtil.assertBusinessFunctionPermissionIsNotAssociatedWithProfile(id);
+
+        businessFunctionPermissionRepository.delete(businessFunctionPermission);
+    }
+
     @Transactional
     public void deleteBasedOnBusinessFunctionId(Integer id){
 
@@ -51,13 +58,14 @@ public class BusinessFunctionPermissionService {
         businessFunctionPermissionRepository.deleteBusinessFunctionPermissionByBusinessFunctionId(id);
     }
 
-    public void delete(Integer id){
+    @Transactional
+    public void deleteBasedOnPermissionId(Integer id){
 
-        BusinessFunctionPermission businessFunctionPermission = findByIdOrThrowNotFound(id);
+        List<Integer> businessFunctionPermissionIds = businessFunctionPermissionRepository.findBusinessFunctionPermissionByPermissionId(id).stream().map(BusinessFunctionPermission::getId).toList();
 
-        assertionsUtil.assertBusinessFunctionPermissionIsNotAssociatedWithProfile(id);
+        profileBusinessFunctionPermissionService.deleteByBusinessFunctionPermissionIds(businessFunctionPermissionIds);
 
-        businessFunctionPermissionRepository.delete(businessFunctionPermission);
+        businessFunctionPermissionRepository.deleteBusinessFunctionPermissionByPermissionId(id);
     }
 
     public BusinessFunctionPermission findByIdOrThrowNotFound(Integer id){
@@ -65,6 +73,6 @@ public class BusinessFunctionPermissionService {
     }
 
     private void assertPermissionExists(Integer id){
-        permissionService.findByIdOrThrowNotFound(id);
+        assertionsUtil.assertPermissionExists(id);
     }
 }

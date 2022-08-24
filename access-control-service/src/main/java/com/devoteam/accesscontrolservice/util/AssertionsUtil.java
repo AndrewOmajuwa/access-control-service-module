@@ -3,10 +3,7 @@ package com.devoteam.accesscontrolservice.util;
 import com.devoteam.accesscontrolservice.domain.Permission;
 import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
-import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
-import com.devoteam.accesscontrolservice.repository.BusinessFunctionRepository;
-import com.devoteam.accesscontrolservice.repository.ProfileBusinessFunctionPermissionRepository;
-import com.devoteam.accesscontrolservice.repository.UserProfileRepository;
+import com.devoteam.accesscontrolservice.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,6 +12,8 @@ import org.springframework.context.annotation.Configuration;
 public class AssertionsUtil {
 
     private final BusinessFunctionRepository businessFunctionRepository;
+
+    private final PermissionRepository permissionRepository;
 
     private final BusinessFunctionPermissionRepository businessFunctionPermissionRepository;
 
@@ -25,6 +24,12 @@ public class AssertionsUtil {
     public void assertBusinessFunctionExists(Integer id){
 
         businessFunctionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("The business function does not exist"));
+
+    }
+
+    public void assertPermissionExists(Integer id){
+
+        permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("The business function does not exist"));
 
     }
     public void assertBusinessFunctionPermissionExists(Integer id){
