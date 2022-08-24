@@ -7,6 +7,7 @@ import com.devoteam.accesscontrolservice.domain.UserProfile;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.BusinessFunctionPermissionRepository;
 import com.devoteam.accesscontrolservice.repository.UserProfileRepository;
+import com.devoteam.accesscontrolservice.util.AssertionsUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -20,12 +21,14 @@ import java.util.UUID;
 public class UserProfileService {
 
     private final UserProfileRepository userProfileRepository;
-    private final ProfileService profileService;
+
+    private final AssertionsUtil assertionsUtil;
+
     private final UserService userService;
 
     public UserProfile save(UserProfile userProfile) {
 
-        assertProfileExists(userProfile.getProfile().getId());
+        assertionsUtil.assertProfileExists(userProfile.getProfile().getId());
 
         assertUserExists(userProfile.getUserKeyCloak().getUuid());
 
@@ -45,13 +48,14 @@ public class UserProfileService {
         userProfileRepository.delete(userProfile);
     }
 
+    public void deleteByProfileId(Integer id){
+        userProfileRepository.deleteByProfileId(id);
+    }
+
     public UserProfile findByIdOrThrowNotFound(Integer id){
         return userProfileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User Profile was not found"));
     }
 
-    private void assertProfileExists(Integer id){
-        profileService.findByIdOrThrowNotFound(id);
-    }
     private void assertUserExists(String uuid){
         userService.findByIdOrThrowNotFound(uuid);
     }

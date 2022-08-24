@@ -48,6 +48,15 @@ public class BusinessFunctionPermissionService {
         businessFunctionPermissionRepository.delete(businessFunctionPermission);
     }
 
+    public void cascadeDelete(Integer id){
+
+        BusinessFunctionPermission businessFunctionPermission = findByIdOrThrowNotFound(id);
+
+        profileBusinessFunctionPermissionService.deleteBasedOnBusinessFunctionPermissionId(id);
+
+        businessFunctionPermissionRepository.delete(businessFunctionPermission);
+    }
+
     @Transactional
     public void deleteBasedOnBusinessFunctionId(Integer id){
 

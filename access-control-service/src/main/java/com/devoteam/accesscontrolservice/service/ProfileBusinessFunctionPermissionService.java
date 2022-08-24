@@ -18,13 +18,11 @@ public class ProfileBusinessFunctionPermissionService {
 
     private final ProfileBusinessFunctionPermissionRepository profileBusinessFunctionPermissionRepository;
 
-    private final ProfileService profileService;
-
     private final AssertionsUtil assertionsUtil;
 
     public ProfileBusinessFunctionPermission save(ProfileBusinessFunctionPermission profileBusinessFunctionPermission) {
 
-        assertProfileExists(profileBusinessFunctionPermission.getProfile().getId());
+        assertionsUtil.assertProfileExists(profileBusinessFunctionPermission.getProfile().getId());
 
         assertionsUtil.assertBusinessFunctionPermissionExists(profileBusinessFunctionPermission.getBusinessFunctionPermission().getId());
 
@@ -46,6 +44,15 @@ public class ProfileBusinessFunctionPermissionService {
         profileBusinessFunctionPermissionRepository.delete(profileBusinessFunctionPermission);
     }
 
+    public void deleteByProfileId(Integer profileId){
+        profileBusinessFunctionPermissionRepository.deleteByProfileId(profileId);
+    }
+
+    public void deleteBasedOnBusinessFunctionPermissionId(Integer businessFunctionPermissionId){
+        profileBusinessFunctionPermissionRepository.deleteByBusinessFunctionPermissionIds(businessFunctionPermissionId);
+    }
+
+
     public ProfileBusinessFunctionPermission findByIdOrThrowNotFound(Integer id){
         return profileBusinessFunctionPermissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Profile Business Function Permission was not found"));
     }
@@ -54,7 +61,4 @@ public class ProfileBusinessFunctionPermissionService {
         profileBusinessFunctionPermissionRepository.deleteProfileBusinessFunctionPermissionByBusinessFunctionPermissionId(ids);
     }
 
-    private void assertProfileExists(Integer id){
-        profileService.findByIdOrThrowNotFound(id);
-    }
 }

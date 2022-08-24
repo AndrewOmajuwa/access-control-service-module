@@ -1,5 +1,6 @@
 package com.devoteam.accesscontrolservice.service;
 
+import com.devoteam.accesscontrolservice.domain.Permission;
 import com.devoteam.accesscontrolservice.domain.Profile;
 import com.devoteam.accesscontrolservice.exception.ResourceNotFoundException;
 import com.devoteam.accesscontrolservice.repository.ProfileRepository;
@@ -17,6 +18,10 @@ public class ProfileService {
     private final ProfileRepository profileRepository;
 
     private final AssertionsUtil assertionsUtil;
+
+    private final UserProfileService userProfileService;
+
+    private final ProfileBusinessFunctionPermissionService profileBusinessFunctionPermissionService;
 
     public Profile save(Profile profile){
 
@@ -50,6 +55,17 @@ public class ProfileService {
         assertionsUtil.assertProfileIsNotAssociatedWithProfileBusinessFunctionPermission(id);
 
         assertionsUtil.assertProfileIsNotAssociatedWithUserProfile(id);
+
+        profileRepository.delete(profile);
+    }
+
+    public void cascadeDelete(Integer id){
+
+        Profile profile = findByIdOrThrowNotFound(id);
+
+        userProfileService.deleteByProfileId(id);
+
+        profileBusinessFunctionPermissionService.deleteByProfileId(id);
 
         profileRepository.delete(profile);
     }

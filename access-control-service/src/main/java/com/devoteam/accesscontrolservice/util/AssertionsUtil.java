@@ -21,6 +21,8 @@ public class AssertionsUtil {
 
     private final UserProfileRepository userProfileRepository;
 
+    private final ProfileRepository profileRepository;
+
     public void assertBusinessFunctionExists(Integer id){
 
         businessFunctionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("The business function does not exist"));
@@ -29,7 +31,13 @@ public class AssertionsUtil {
 
     public void assertPermissionExists(Integer id){
 
-        permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("The business function does not exist"));
+        permissionRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("The Permission does not exist"));
+
+    }
+
+    public void assertProfileExists(Integer id){
+
+        profileRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("The Profile does not exist"));
 
     }
     public void assertBusinessFunctionPermissionExists(Integer id){
