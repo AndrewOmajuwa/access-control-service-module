@@ -57,7 +57,7 @@ class ProfileControllerTest {
         ProfileResponse profileResponse = utility.createProfile();
         Assertions.assertThat(profileResponse).isNotNull();
         Assertions.assertThat(profileResponse.getId()).isNotNull();
-        Assertions.assertThat(profileResponse.getId()).isEqualTo(3);
+        Assertions.assertThat(profileResponse.getId()).isEqualTo(4);
     }
     @Test
     @DisplayName("Save does not create Profile when input is blank")
@@ -77,7 +77,7 @@ class ProfileControllerTest {
         ProfileResponse profileResponse1 = utility.createProfile();
         ProfileResponse profileResponse2 = utility.createProfile();
         Assertions.assertThat(profileResponse1.getId()).isEqualTo(profileResponse2.getId());
-        Assertions.assertThat(profileRepository.findById(4)).isEmpty();
+        Assertions.assertThat(profileRepository.findById(5)).isEmpty();
     }
 
     @Test
@@ -114,7 +114,7 @@ class ProfileControllerTest {
     @DisplayName("findById returns 404 Not Found when id doesnt exist")
     void findById_Returns404NotFound_WhenIdDoesntExist(){
 
-        ResponseEntity<Profile> profile = testRestTemplate.exchange("/api/v1/profiles/3", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
+        ResponseEntity<Profile> profile = testRestTemplate.exchange("/api/v1/profiles/4", HttpMethod.GET, null, new ParameterizedTypeReference<>() {
         });
 
         Assertions.assertThat(profile.getBody().getId()).isNull();
@@ -188,13 +188,13 @@ class ProfileControllerTest {
     @DisplayName("delete removes a profile when successfully executed")
     void delete_RemovesAProfile_WhenSuccessfullyExecuted(){
 
-        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles/2", HttpMethod.DELETE, null, Void.class);
+        ResponseEntity<Void> responseEntity = testRestTemplate.exchange("/api/v1/profiles/3", HttpMethod.DELETE, null, Void.class);
 
         Assertions.assertThat(responseEntity).isNotNull();
 
         Assertions.assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.NO_CONTENT);
 
-        Assertions.assertThat(profileRepository.findById(2)).isEmpty();
+        Assertions.assertThat(profileRepository.findById(3)).isEmpty();
 
     }
 
