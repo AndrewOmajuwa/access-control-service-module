@@ -13,6 +13,7 @@
     <module>gateway-service</module>
     <module>eureka-server</module>
     <module>access-control-service</module>
+    <module>test-service</module>
   </modules>
 
 </project>
