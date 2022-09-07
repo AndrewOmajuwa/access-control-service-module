@@ -26,11 +26,11 @@ public class SwaggerConfig {
 
         definitions.stream().filter(routeDefinition -> routeDefinition.getId().matches(".*-SERVICE")).forEach(routeDefinition -> {
 
-            String name = routeDefinition.getId().toLowerCase().replaceAll("reactivecompositediscoveryclient_", "");
+            String name = routeDefinition.getId().toLowerCase().replace("reactivecompositediscoveryclient_", "");
 
             swaggerUiConfigParameters.addGroup(name);
 
-            GroupedOpenApi.builder().pathsToMatch("/" + name + "/**").group(name).build();
+            groups.add(GroupedOpenApi.builder().pathsToMatch("/" + name + "/**").group(name).build());
 
         });
 
