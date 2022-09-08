@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: TEST-SERVICE
+
+server:
+  port: 8060
+  error:
+    include-stacktrace: always
+
+eureka:
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER:http://localhost:8761/eureka}
+
+keycloak:
+  realm: devoteam
+  resource: access-control-service
+  auth-server-url: http://localhost:8180
+  ssl-required: external
+  public-client: false
+
+
