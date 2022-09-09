@@ -19,7 +19,7 @@ services:
       test: "mysqladmin ping -u root -p$${MYSQL_ROOT_PASSWORD}"
 
   keycloak:
-    image: quay.io/keycloak/keycloak:18.0.0
+    image: quay.io/keycloak/keycloak:19.0.1
     container_name: keycloak
     environment:
       KEYCLOAK_ADMIN: ${USERNAME_KEYCLOAK}
@@ -29,8 +29,12 @@ services:
       KC_DB_URL_DATABASE: keycloak
       KC_DB_USERNAME: ${KEYCLOAK_USER}
       KC_DB_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KC_HOSTNAME: localhost
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HTTP_ENABLED: "true"
     ports:
       - "8180:8080"
-    command: start-dev
+    command: start
     depends_on:
       - mysql
