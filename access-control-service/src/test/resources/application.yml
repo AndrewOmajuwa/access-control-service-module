@@ -12,9 +12,9 @@ user:
   token: ${TOKEN:}
 
 keycloak:
-  realm: devoteam
+  realm: new-realm
   resource: access-control-client
-  auth-server-url: https://valhalla-keycloak.azurewebsites.net/auth/
+  auth-server-url: http://localhost:8180
   ssl-required: external
   public-client: false
 
