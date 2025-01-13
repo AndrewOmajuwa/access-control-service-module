@@ -2,8 +2,8 @@ package com.devoteam.accesscontrolservice.domain;
 
 import com.devoteam.accesscontrolservice.exception.BadRequest;
 import com.devoteam.accesscontrolservice.repository.UserRepository;
-import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 import javax.ws.rs.core.Response;
 import lombok.RequiredArgsConstructor;
 import org.keycloak.OAuth2Constants;
@@ -43,12 +43,11 @@ public class KeycloakAdminClient {
     }
 
     private Keycloak getKeycloakClient() {
-        Keycloak keycloak = KeycloakBuilder.builder()
+      return KeycloakBuilder.builder()
                 .serverUrl("http://localhost:8180").realm(realm)
                 .grantType(OAuth2Constants.CLIENT_CREDENTIALS)
                 .clientId(clientId)
                 .clientSecret(clientSecret).build();
-        return keycloak;
     }
 
     private UserRepresentation getUserRepresentation(String firstName, String lastName, String email) {
@@ -58,7 +57,7 @@ public class KeycloakAdminClient {
         user.setFirstName(firstName);
         user.setLastName(lastName);
         user.setEmail(email);
-        user.setAttributes(Collections.singletonMap("origin", Arrays.asList("demo")));
+        user.setAttributes(Collections.singletonMap("origin", List.of("demo")));
         return user;
     }
 
