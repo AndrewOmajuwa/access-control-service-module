@@ -10,9 +10,9 @@ services:
     ports:
       - "3306:3306"
     environment:
-      MYSQL_DATABASE: keycloak
-      MYSQL_USER: ${KEYCLOAK_USER}
-      MYSQL_PASSWORD: ${KEYCLOAK_PASSWORD}
+      MYSQL_DATABASE: access-control-service
+      MYSQL_USER: ${USER}
+      MYSQL_PASSWORD: ${PASSWORD}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
     healthcheck:
@@ -22,13 +22,13 @@ services:
     image: quay.io/keycloak/keycloak:19.0.1
     container_name: keycloak
     environment:
-      KEYCLOAK_ADMIN: ${USERNAME_KEYCLOAK}
-      KEYCLOAK_ADMIN_PASSWORD: ${PASSWORD_KEYCLOAK}
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
       KC_DB: mysql
       KC_DB_URL_HOST: mysql
-      KC_DB_URL_DATABASE: keycloak
-      KC_DB_USERNAME: ${KEYCLOAK_USER}
-      KC_DB_PASSWORD: ${KEYCLOAK_PASSWORD}
+      KC_DB_URL_DATABASE: access-control-service
+      KC_DB_USERNAME: ${USER}
+      KC_DB_PASSWORD: ${PASSWORD}
       KC_HOSTNAME: localhost
       KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"

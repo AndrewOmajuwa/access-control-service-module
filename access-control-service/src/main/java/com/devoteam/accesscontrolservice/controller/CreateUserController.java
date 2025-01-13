@@ -39,19 +39,20 @@ public class CreateUserController {
     public ResponseEntity<UserResponse> save(@Valid @RequestBody UserPostRequest userPostRequest){
 
         String userUuid = keycloakAdminClient.createUserUuid(userPostRequest.getFirstName(), userPostRequest.getLastName(), userPostRequest.getEmail(), userPostRequest.getPassword());
-
         assertUuidIsNotNull(userUuid);
-        UserKeyCloak userKeyCloak = UserKeyCloak.builder()
-                .uuid(userUuid)
-                .firstName(userPostRequest.getFirstName())
-                .lastName(userPostRequest.getLastName())
-                .email(userPostRequest.getEmail())
-                .build();
-
+        UserKeyCloak userKeyCloak = createUserKeycloak(userPostRequest, userUuid);
         userService.save(userKeyCloak);
         UserResponse userResponse = UserKeycloakMapper.INSTANCE.toUserResponse(userUuid);
-
         return ResponseEntity.ok(userResponse);
+    }
+
+    private UserKeyCloak createUserKeycloak(UserPostRequest userPostRequest, String userUuid) {
+        return UserKeyCloak.builder()
+            .uuid(userUuid)
+            .firstName(userPostRequest.getFirstName())
+            .lastName(userPostRequest.getLastName())
+            .email(userPostRequest.getEmail())
+            .build();
     }
 
     public void assertUuidIsNotNull(String uuid){
